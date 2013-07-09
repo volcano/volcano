@@ -1,7 +1,8 @@
 <?php
 return array(
-	'_root_'  => 'welcome/index',  // The default route
-	'_404_'   => 'welcome/404',    // The main 404 route
+	// Default route.
+	'_root_'  => 'dashboard',
 	
-	'hello(/:name)?' => array('welcome/hello', 'name' => 'hello'),
+	// Error route.
+	'_404_'   => 'error/404',
 );
