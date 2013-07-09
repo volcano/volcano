@@ -1,18 +1,30 @@
-/composer.lock
-*~
-*.bak
-Thumbs.db
-desktop.ini
-.DS_Store
+# Project Files
 .buildpath
+.idea
 .project
 .settings
-*.tmproj
-build
-.idea
-/fuel/vendor
-/fuel/app/logs/*/*/*
-/fuel/app/cache/*/*
-/fuel/app/config/crypt.php
-nbproject/
+*.sublime-project
+*.sublime-workspace
 
+# OS Files
+.DS_Store
+Thumbs.db
+._*
+.nfs*
+*~
+*.bak
+
+# Ruby
+Gemfile.lock
+
+# fuel
+/composer.lock
+fuel/app/cache/*
+fuel/app/logs/*
+fuel/app/tmp/*
+/fuel/app/config/crypt.php
+/fuel/vendor
+public/assets/cache/*
+
+# dev
+fuel/app/config/development/*
