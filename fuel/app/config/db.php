@@ -6,5 +6,17 @@
  */
 
 return array(
-
+	'active' => 'default',
+	
+	/**
+	 * Base config.
+	 */
+	'default' => array(
+		'type'        => 'pdo',
+		'identifier'   => '`',
+		'table_prefix' => '',
+		'charset'      => 'utf8',
+		'enable_cache' => false,
+		'profiling'    => true,
+	),
 );
