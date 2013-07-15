@@ -3,7 +3,7 @@
 namespace Api;
 
 /**
- * Contact Controller.
+ * Contacts Controller.
  * 
  * @author Daniel Sposito <dsposito@static.com>
  */

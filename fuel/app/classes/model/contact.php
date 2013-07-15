@@ -5,7 +5,7 @@
  *
  * @author Daniel Sposito <dsposito@static.com>
  */
-class Model_Contact extends \Orm\Model
+class Model_Contact extends Model_Base
 {
 	protected static $_properties = array(
 		'id',

@@ -46,15 +46,12 @@ class Service_Contact extends Service_Model
 		$contact->first_name = $first_name;
 		$contact->last_name = $last_name;
 		
-		foreach ($data as $property => $value) {
-			if ($contact::property($property) !== false) {
-				$contact->$property = $value;
-			}
-		}
+		$contact->populate($data);
 		
 		try {
 			$contact->save();
 		} catch (FuelException $e) {
+			print_r($e);die;
 			Log::error($e);
 			return false;
 		}
@@ -72,11 +69,7 @@ class Service_Contact extends Service_Model
 	 */
 	public static function update(Model_Contact $contact, array $data = array())
 	{
-		foreach ($data as $property => $value) {
-			if ($contact::property($property) !== false) {
-				$contact->$property = $value;
-			}
-		}
+		$contact->populate($data);
 		
 		try {
 			$contact->save();
