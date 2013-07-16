@@ -23,8 +23,7 @@ class Controller_Contacts extends Controller
 		} else {
 			$contacts = \Service_Contact::find_one($id);
 			if (!$contacts) {
-				$this->error('invalid');
-				return;
+				throw new HttpNotFoundException;
 			}
 		}
 		
@@ -40,16 +39,14 @@ class Controller_Contacts extends Controller
 	{
 		$validator = \Validation_Contact::create();
 		if (!$validator->run()) {
-			$this->error($validator->error());
-			return;
+			throw new HttpBadRequestException($validator->errors());
 		}
 		
 		$data = $validator->validated();
 		
 		$contact = \Service_Contact::create($data['first_name'], $data['last_name'], $data);
 		if (!$contact) {
-			$this->error('create');
-			return;
+			throw new HttpServerErrorException;
 		}
 		
 		$this->response($contact);
@@ -65,28 +62,24 @@ class Controller_Contacts extends Controller
 	public function put_index($id = null)
 	{
 		if (!$id) {
-			$this->error(array('id'));
-			return;
+			throw new HttpNotFoundException;
 		}
 		
 		$contact = \Service_Contact::find_one($id);
 		if (!$contact) {
-			$this->error('invalid');
-			return;
+			throw new HttpNotFoundException;
 		}
 		
 		$validator = \Validation_Contact::update();
 		if (!$validator->run(\Input::put())) {
-			$this->error($validator->error());
-			return;
+			throw new HttpBadRequestException($validator->errors());
 		}
 		
 		$data = $validator->validated();
 		
 		$contact = \Service_Contact::update($contact, $data);
 		if (!$contact) {
-			$this->error('update');
-			return;
+			throw new HttpServerErrorException;
 		}
 		
 		$this->response($contact);
@@ -102,20 +95,17 @@ class Controller_Contacts extends Controller
 	public function delete_index($id = null)
 	{
 		if (!$id) {
-			$this->error(array('id'));
-			return;
+			throw new HttpNotFoundException;
 		}
 		
 		$contact = \Service_Contact::find_one($id);
 		if (!$contact) {
-			$this->error('invalid');
-			return;
+			throw new HttpNotFoundException;
 		}
 		
 		$deleted = \Service_Contact::delete($contact);
 		if (!$deleted) {
-			$this->error('delete');
-			return;
+			throw new HttpServerErrorException;
 		}
 	}
 }

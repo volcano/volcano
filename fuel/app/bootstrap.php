@@ -10,8 +10,13 @@ require COREPATH.'bootstrap.php';
 
 Autoloader::add_classes(array(
 	// Add classes you want to override here.
-	'Controller' => APPPATH . 'classes/controller.php',
-	'Validation' => APPPATH . 'classes/validation.php',
+	'Controller'                    => APPPATH . 'classes/controller.php',
+	'Model'                         => APPPATH . 'classes/model.php',
+	'Validation'                    => APPPATH . 'classes/validation.php',
+	'Api\\HttpErrorException'       => APPPATH . '../modules/api/classes/httpexceptions.php',
+	'Api\\HttpBadRequestException'  => APPPATH . '../modules/api/classes/httpexceptions.php',
+	'Api\\HttpNotFoundException'    => APPPATH . '../modules/api/classes/httpexceptions.php',
+	'Api\\HttpServerErrorException' => APPPATH . '../modules/api/classes/httpexceptions.php',
 ));
 
 // Register the autoloader

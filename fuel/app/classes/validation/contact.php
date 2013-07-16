@@ -5,7 +5,7 @@
  *
  * @author Daniel Sposito <dsposito@static.com>
  */
-class Validation_Contact
+class Validation_Contact extends Validation
 {
 	/**
 	 * Creates a new validation instance for contact create.
