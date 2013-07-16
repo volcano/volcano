@@ -16,6 +16,9 @@ class Setup
 	 */
 	public static function run()
 	{
+		// Ensure all framework directories exist and are writable.
+		\Oil\Refine::run('install');
+		
 		// Migrate all.
 		\Migrate::latest();
 		
