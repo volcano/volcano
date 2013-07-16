@@ -1,38 +1,28 @@
-#FuelPHP
+# eReceivables 2.0
 
-* Version: 1.6.1.
-* [Website](http://fuelphp.com/)
-* [Release Documentation](http://docs.fuelphp.com)
-* [Release API browser](http://api.fuelphp.com)
-* [Development branch Documentation](http://dev-docs.fuelphp.com)
-* [Development branch API browser](http://dev-api.fuelphp.com)
-* [Support Forum](http://fuelphp.com/forums) for comments, discussion and community support
+## Introduction
 
-## Description
+This should help you get started with the eReceivables 2.0 project.
 
-FuelPHP is a fast, lightweight PHP 5.3 framework. In an age where frameworks are a dime a dozen, We believe that FuelPHP will stand out in the crowd.  It will do this by combining all the things you love about the great frameworks out there, while getting rid of the bad.
+## Installation
+Clone the repo:
 
-## More information
+	$ git clone ssh://git@code.onesite.com/er/ereceivables.git
 
-For more detailed information, see the [development wiki](https://github.com/fuelphp/fuelphp/wiki).
+Initialize all submodules:
 
-##Development Team
+	$ cd ereceivables && git submodule update --init --recursive
 
-* Harro Verton - Project Manager, Developer ([http://wanwizard.eu/](http://wanwizard.eu/))
-* Frank de Jonge - Developer ([http://frenky.net/](http://frenky.net/))
+Update Composer dependencies:
 
-### Want to join?
+	$ php composer.phar self-update
+	$ php composer.phar update
 
-The FuelPHP development team is always looking for new team members, who are willing
-to help lift the framework to the next level, and have the commitment to not only
-produce awesome code, but also great documentation, and support to our users.
+## Configuration
+Create a new local database.
 
-You can not apply for membership. Start by sending in pull-requests, work on outstanding
-feature requests or bugs, and become active in the #fuelphp IRC channel. If your skills
-are up to scratch, we will notice you, and will ask you to become a team member.
+Update the dev database config (`fuel/app/config/development/db.php`).
 
-### Alumni
+Set up file permissions and run migrations:
 
-* Jelmer Schreuder - Developer ([http://jelmerschreuder.nl/](http://jelmerschreuder.nl/))
-* Phil Sturgeon - Developer ([http://philsturgeon.co.uk](http://philsturgeon.co.uk))
-* Dan Horrigan - Founder, Developer ([http://dhorrigan.com](http://dhorrigan.com))
+	$ php oil r setup
