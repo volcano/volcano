@@ -5,7 +5,7 @@
  *
  * @author Daniel Sposito <dsposito@static.com>
  */
-class Service_Contact extends Service_Model
+class Service_Contact extends Service_Base
 {
 	/**
 	 * Query models based on optional filters passed in.
@@ -34,9 +34,11 @@ class Service_Contact extends Service_Model
 	}
 	
 	/**
-	 * Create a new contact.
+	 * Creates a new contact.
 	 *
-	 * @param array $data Optional data.
+	 * @param string $first_name Contact first name.
+	 * @param string $last_name  Contact last name.
+	 * @param array  $data       Optional data.
 	 *
 	 * @return Model_Contact
 	 */
@@ -51,7 +53,6 @@ class Service_Contact extends Service_Model
 		try {
 			$contact->save();
 		} catch (FuelException $e) {
-			print_r($e);die;
 			Log::error($e);
 			return false;
 		}

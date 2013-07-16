@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Service Model class.
+ * Base service class.
  *
  * @author Derek Myers <dmyers@static.com>
  */
-class Service_Model
+class Service_Base
 {
 	/**
 	 * Query models based on optional filters passed in.

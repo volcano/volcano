@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Base model.
+ * Base model class.
  *
  * @author Daniel Sposito <dsposito@static.com>
  */

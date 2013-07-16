@@ -35,7 +35,7 @@ class Validation_Contact
 		$input = Input::put();
 		
 		if (array_key_exists('first_name', $input)) {
-			$validator->add('first_name', 'First Name')->add_rule('trim')->add_rule('required');;
+			$validator->add('first_name', 'First Name')->add_rule('trim')->add_rule('required');
 		}
 		
 		if (array_key_exists('last_name', $input)) {
