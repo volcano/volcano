@@ -5,7 +5,7 @@
  *
  * @author Daniel Sposito <dsposito@static.com>
  */
-class Model_Base extends \Orm\Model
+class Model extends \Orm\Model
 {
 	/**
 	 * Populates a model with key value pair data.

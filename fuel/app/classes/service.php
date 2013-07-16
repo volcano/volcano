@@ -5,7 +5,7 @@
  *
  * @author Derek Myers <dmyers@static.com>
  */
-class Service_Base
+class Service
 {
 	/**
 	 * Query models based on optional filters passed in.

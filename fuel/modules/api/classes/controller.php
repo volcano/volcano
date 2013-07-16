@@ -7,7 +7,7 @@ namespace Api;
  * 
  * @author Daniel Sposito <dsposito@static.com>
  */
-class Controller_Base extends \Controller_Rest
+class Controller extends \Fuel\Core\Controller_Rest
 {
 	/**
 	 * Updates API response to include an HTTP error code and message.

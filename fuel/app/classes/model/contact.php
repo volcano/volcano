@@ -5,7 +5,7 @@
  *
  * @author Daniel Sposito <dsposito@static.com>
  */
-class Model_Contact extends Model_Base
+class Model_Contact extends Model
 {
 	protected static $_properties = array(
 		'id',

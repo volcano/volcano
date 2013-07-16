@@ -6,7 +6,7 @@
  * @author Mark Manos <mmanos@static.com>
  * @author Daniel Sposito <dsposito@static.com>
  */
-class Controller_Base extends Controller
+class Controller extends \Fuel\Core\Controller
 {
 	/**
 	 * Whether to auto render the view or not.

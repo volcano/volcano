@@ -6,7 +6,7 @@
  * @author Mark Manos <mmanos@static.com>
  * @author Daniel Sposito <dsposito@static.com>
  */
-class Controller_Error extends Controller_Base
+class Controller_Error extends Controller
 {
 	/**
 	 * The 404 action for the application.

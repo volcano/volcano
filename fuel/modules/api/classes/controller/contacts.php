@@ -7,7 +7,7 @@ namespace Api;
  * 
  * @author Daniel Sposito <dsposito@static.com>
  */
-class Controller_Contacts extends Controller_Base
+class Controller_Contacts extends Controller
 {
 	/**
 	 * Gets one or more contacts.

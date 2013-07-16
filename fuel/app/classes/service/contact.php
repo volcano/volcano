@@ -5,7 +5,7 @@
  *
  * @author Daniel Sposito <dsposito@static.com>
  */
-class Service_Contact extends Service_Base
+class Service_Contact extends Service
 {
 	/**
 	 * Query models based on optional filters passed in.
