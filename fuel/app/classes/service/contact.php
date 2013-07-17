@@ -16,10 +16,6 @@ class Service_Contact extends Service
 	 */
 	protected static function query(array $options = array())
 	{
-		$options = array_merge(array(
-			'status' => 'active',
-		), $options);
-		
 		$contacts = Model_Contact::query();
 		
 		if (!empty($options['id'])) {

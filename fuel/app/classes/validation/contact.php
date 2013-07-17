@@ -32,7 +32,7 @@ class Validation_Contact extends Validation
 	{
 		$validator = Validation::forge();
 		
-		$input = Input::put();
+		$input = Input::all();
 		
 		if (array_key_exists('first_name', $input)) {
 			$validator->add('first_name', 'First Name')->add_rule('trim')->add_rule('required');
