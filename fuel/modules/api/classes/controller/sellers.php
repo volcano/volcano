@@ -27,8 +27,6 @@ class Controller_Sellers extends Controller
 			}
 		}
 		
-		print_r($sellers::relations());die;
-		
 		$this->response($sellers);
 	}
 	
