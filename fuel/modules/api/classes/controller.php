@@ -22,16 +22,16 @@ class Controller extends \Fuel\Core\Controller_Rest
 	public function router($resource, $arguments)
 	{
 		\Config::load('rest', true);
-
+		
 		// If no (or an invalid) format is given, auto detect the format
 		if (is_null($this->format) or ! array_key_exists($this->format, $this->_supported_formats)) {
 			// auto-detect the format
 			$this->format = array_key_exists(\Input::extension(), $this->_supported_formats) ? \Input::extension() : $this->_detect_format();
 		}
-
+		
 		// Get the configured auth method if none is defined
 		$this->auth === null and $this->auth = \Config::get('rest.auth');
-
+		
 		//Check method is authorized if required, and if we're authorized
 		if ($this->auth == 'basic') {
 			$valid_login = $this->_prepare_basic_auth();
@@ -50,12 +50,12 @@ class Controller extends \Fuel\Core\Controller_Rest
 		if (empty($this->auth) or $valid_login) {
 			// If they call user, go to $this->post_user();
 			$controller_method = strtolower(\Input::method()) . '_' . $resource;
-
+			
 			// Fall back to action_ if no rest method is provided
 			if ( ! method_exists($this, $controller_method)) {
 				$controller_method = 'action_'.$resource;
 			}
-
+			
 			// If method is not available, set status code to 404
 			if (method_exists($this, $controller_method)) {
 				return call_user_func_array(array($this, $controller_method), $arguments);
@@ -90,7 +90,9 @@ class Controller extends \Fuel\Core\Controller_Rest
 			return false;
 		}
 		
-		\Seller::set($api_key->seller);
+		if ($api_key->seller) {
+			\Seller::set($api_key->seller);
+		}
 		
 		return true;
 	}

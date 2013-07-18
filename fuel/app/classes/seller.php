@@ -10,7 +10,7 @@ class Seller
 	/**
 	 * The active seller.
 	 *
-	 * @var Model_Reseller
+	 * @var Model_Seller
 	 */
 	protected static $active = null;
 	
