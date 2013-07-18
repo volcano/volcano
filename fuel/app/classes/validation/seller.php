@@ -31,7 +31,7 @@ class Validation_Seller
 	{
 		$validator = Validation::forge();
 		
-		$input = Input::all();
+		$input = Input::param();
 		
 		if (array_key_exists('name', $input)) {
 			$validator->add('name', 'Name')->add_rule('trim')->add_rule('required');
