@@ -16,8 +16,10 @@ class Model extends \Orm\Model
 	 */
 	public function populate(array $data)
 	{
+		$properties = $this::properties();
+		
 		foreach ($data as $property => $value) {
-			if ($this::property($property) !== false) {
+			if (Arr::key_exists($properties, $property)) {
 				$this->$property = $value;
 			}
 		}
