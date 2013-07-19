@@ -21,6 +21,7 @@ class Model_Contact extends Model
 		'email',
 		'phone',
 		'fax',
+		'status' => array('default' => 'active'),
 		'created_at',
 		'updated_at',
 	);

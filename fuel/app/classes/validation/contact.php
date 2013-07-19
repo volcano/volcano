@@ -14,7 +14,7 @@ class Validation_Contact extends Validation
 	 */
 	public static function create()
 	{
-		$validator = Validation::forge();
+		$validator = Validation::forge('contact');
 		
 		$validator->add('first_name', 'First Name')->add_rule('trim')->add_rule('required');
 		$validator->add('last_name', 'Last Name')->add_rule('trim')->add_rule('required');
@@ -30,7 +30,7 @@ class Validation_Contact extends Validation
 	 */
 	public static function update()
 	{
-		$validator = Validation::forge();
+		$validator = Validation::forge('contact');
 		
 		$input = Input::param();
 		

@@ -16,6 +16,10 @@ class Service_Contact extends Service
 	 */
 	protected static function query(array $options = array())
 	{
+		$options = array_merge(array(
+			'status' => 'active',
+		), $options);
+		
 		$contacts = Model_Contact::query();
 		
 		if (!empty($options['id'])) {
@@ -89,6 +93,50 @@ class Service_Contact extends Service
 	{
 		try {
 			$contact->delete();
+		} catch (FuelException $e) {
+			Log::error($e);
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Links a contact to another model.
+	 *
+	 * @param Model_Contact $contact The contact to link.
+	 * @param Model         $model   The model to link the contact to.
+	 *
+	 * @return bool
+	 */
+	public static function link(Model_Contact $contact, Model $model)
+	{
+		$model->contacts[] = $contact;
+		
+		try {
+			$model->save();
+		} catch (FuelException $e) {
+			Log::error($e);
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Unlinks a contact from a model.
+	 *
+	 * @param Model_Contact $contact The contact to link.
+	 * @param Model         $model   The model to unlink the contact from.
+	 *
+	 * @return bool
+	 */
+	public static function unlink(Model_Contact $contact, Model $model)
+	{
+		unset($model->contacts[$contact->id]);
+		
+		try {
+			$model->save();
 		} catch (FuelException $e) {
 			Log::error($e);
 			return false;

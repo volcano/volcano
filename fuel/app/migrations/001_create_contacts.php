@@ -25,6 +25,7 @@ class Create_Contacts
 			'email'        => array('type' => 'varchar', 'constraint' => 50, 'null' => true),
 			'phone'        => array('type' => 'varchar', 'constraint' => 20, 'null' => true),
 			'fax'          => array('type' => 'varchar', 'constraint' => 20, 'null' => true),
+			'status'       => array('type' => 'varchar', 'constraint' => 50),
 			'created_at'   => array('type' => 'datetime'),
 			'updated_at'   => array('type' => 'datetime'),
 		), array('id'));
