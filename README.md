@@ -23,6 +23,10 @@ Create a new local database.
 
 Update the dev database config (`fuel/app/config/development/db.php`).
 
-Set up file permissions and run migrations:
+Set file permissions and run migrations:
 
 	$ php oil r setup
+
+Insert a new record into the api_keys table.
+
+Copy the key you inserted and add it to `fuel/app/config/development/api.php` so that you don't have to specify the api_key param when testing locally.
