@@ -10,6 +10,17 @@ return array(
 	'default_format' => 'json',
 	
 	/*
+	| Is login required and if so, which type of login?
+	|
+	|	'' = no login required,
+	| 'basic' = unsecure login,
+	| 'digest' = more secure login
+	| or define a method name in your REST controller that handles authorization
+	|
+	*/
+	'auth' => '_prepare_key_auth',
+	
+	/*
 	| Ignore HTTP_ACCEPT
 	|
 	| A lot of work can go into detecting incoming data,
