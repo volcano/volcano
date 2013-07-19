@@ -23,7 +23,7 @@ class Controller_Sellers extends Controller
 		}
 		
 		$seller = \Service_Seller::find_one($id);
-		if (!$seller) {
+		if (!$seller || $seller != \Seller::active()) {
 			throw new HttpNotFoundException;
 		}
 		
@@ -71,7 +71,7 @@ class Controller_Sellers extends Controller
 		}
 		
 		$seller = \Service_Seller::find_one($id);
-		if (!$seller) {
+		if (!$seller || $seller != \Seller::active()) {
 			throw new HttpNotFoundException;
 		}
 		

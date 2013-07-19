@@ -69,6 +69,26 @@ class Controller extends \Fuel\Core\Controller_Rest
 	}
 	
 	/**
+	 * Creates a formatted response from the data provided.
+	 *
+	 * @param mixed $data        Data to include in the response.
+	 * @param int   $http_status HTTP Code.
+	 * @return Response
+	 */
+	protected function response($data = array(), $http_status = null)
+	{
+		// Ensures that the data of all of the model's relations are included in the response.
+		if ($data instanceof \Orm\Model) {
+			$relations = $data->relations();
+			foreach ($relations as $property => $relation) {
+				$data->$property;
+			}
+		}
+		
+		return parent::response($data, $http_status);
+	}
+	
+	/**
 	 * Checks for api key authentication.
 	 *
 	 * @return bool
