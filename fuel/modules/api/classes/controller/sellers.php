@@ -10,7 +10,7 @@ namespace Api;
 class Controller_Sellers extends Controller
 {
 	/**
-	 * Gets one or more sellers.
+	 * Gets a seller (find() not allowed for this API).
 	 *
 	 * @param int $id Seller ID.
 	 *
@@ -19,15 +19,15 @@ class Controller_Sellers extends Controller
 	public function get_index($id = null)
 	{
 		if (!$id) {
-			$sellers = \Service_Seller::find();
-		} else {
-			$sellers = \Service_Seller::find_one($id);
-			if (!$sellers) {
-				throw new HttpNotFoundException;
-			}
+			throw new HttpNotFoundException;
 		}
 		
-		$this->response($sellers);
+		$seller = \Service_Seller::find_one($id);
+		if (!$seller) {
+			throw new HttpNotFoundException;
+		}
+		
+		$this->response($seller);
 	}
 	
 	/**
@@ -44,12 +44,12 @@ class Controller_Sellers extends Controller
 		
 		$data = $validator->validated();
 		
-		$contact = \Service_Contact::find_one(\Arr::get($data, 'contact_id'));
-		if (!$contact) {
-			throw new HttpBadRequestException('contact_id');
+		$validator = \Validation_Contact::create();
+		if (!$validator->run($data['contact'])) {
+			throw new HttpBadRequestException($validator->errors());
 		}
 		
-		$seller = \Service_Seller::create($data['name'], $contact, $data);
+		$seller = \Service_Seller::create($data['name'], $data);
 		if (!$seller) {
 			throw new HttpServerErrorException;
 		}
@@ -88,29 +88,5 @@ class Controller_Sellers extends Controller
 		}
 		
 		$this->response($seller);
-	}
-	
-	/**
-	 * Deletes a seller.
-	 *
-	 * @param int $id Seller ID.
-	 *
-	 * @return void
-	 */
-	public function delete_index($id = null)
-	{
-		if (!$id) {
-			throw new HttpNotFoundException;
-		}
-		
-		$seller = \Service_Seller::find_one($id);
-		if (!$seller) {
-			throw new HttpNotFoundException;
-		}
-		
-		$deleted = \Service_Seller::delete($seller);
-		if (!$deleted) {
-			throw new HttpServerErrorException;
-		}
 	}
 }

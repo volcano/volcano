@@ -13,7 +13,6 @@ class Create_Sellers
 	{
 		\DBUtil::create_table('sellers', array(
 			'id'         => array('type' => 'int', 'constraint' => 11, 'auto_increment' => true),
-			'contact_id' => array('type' => 'int', 'constraint' => 11),
 			'name'       => array('type' => 'varchar', 'constraint' => 255),
 			'status'     => array('type' => 'varchar', 'constraint' => 50),
 			'created_at' => array('type' => 'datetime'),

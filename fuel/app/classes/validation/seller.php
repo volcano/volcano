@@ -14,10 +14,10 @@ class Validation_Seller
 	 */
 	public static function create()
 	{
-		$validator = Validation::forge();
+		$validator = Validation::forge('seller');
 		
 		$validator->add('name', 'Name')->add_rule('trim')->add_rule('required');
-		$validator->add('contact_id', 'Contact ID')->add_rule('trim')->add_rule('valid_string', 'integer')->add_rule('required');
+		$validator->add('contact', 'Contact')->add_rule('required');
 		
 		return $validator;
 	}
@@ -29,7 +29,7 @@ class Validation_Seller
 	 */
 	public static function update()
 	{
-		$validator = Validation::forge();
+		$validator = Validation::forge('seller');
 		
 		$input = Input::param();
 		

@@ -9,7 +9,6 @@ class Model_Seller extends Model
 {
 	protected static $_properties = array(
 		'id',
-		'contact_id',
 		'name',
 		'status' => array('default' => 'active'),
 		'created_at',
@@ -27,9 +26,17 @@ class Model_Seller extends Model
 		),
 	);
 	
-	protected static $_belongs_to = array(
-		'contact' => array(
-			'model_to' => 'Model_Contact',
+	protected static $_many_many = array(
+		'contacts' => array(
+			'key_from'         => 'id',
+			'key_through_from' => 'seller_id',
+			'table_through'    => 'seller_contacts',
+			'key_through_to'   => 'contact_id',
+			'model_to'         => 'Model_Contact',
+			'key_to'           => 'id',
+			'conditions'       => array(
+				'where' => array('status' => 'active'),
+			),
 		),
 	);
 }

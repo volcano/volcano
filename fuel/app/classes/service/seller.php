@@ -40,16 +40,18 @@ class Service_Seller extends Service
 	/**
 	 * Creates a new seller.
 	 *
-	 * @param string        $name    The name of the seller.
-	 * @param Model_Contact $contact The contact record for the seller.
-	 * @param array         $data    Optional data.
+	 * @param string $name The name of the seller.
+	 * @param array  $data Optional data.
 	 *
 	 * @return Model_Seller
 	 */
-	public static function create($name, Model_Contact $contact, array $data = array())
+	public static function create($name, array $data = array())
 	{
+		if (!$contact_data = Arr::get($data, 'contact')) {
+			return false;
+		}
+		
 		$seller = Model_Seller::forge();
-		$contact->contact = $contact;
 		$seller->name = $name;
 		
 		$seller->populate($data);
@@ -58,6 +60,16 @@ class Service_Seller extends Service
 			$seller->save();
 		} catch (FuelException $e) {
 			Log::error($e);
+			return false;
+		}
+		
+		$contact = \Service_Contact::create(
+			Arr::get($contact_data, 'first_name'),
+			Arr::get($contact_data, 'last_name'),
+			$contact_data
+		);
+		
+		if (!$contact || !Service_Contact::link($contact, $seller)) {
 			return false;
 		}
 		
