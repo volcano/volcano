@@ -40,9 +40,9 @@ class Service_Gateway extends Service
 	/**
 	 * Creates a new gateway.
 	 *
-	 * @param string $type Gateway type.
-	 * @param string $processor Gateway processor.
-	 * @param array  $data Optional data.
+	 * @param string	$type		Gateway type.
+	 * @param string	$processor	Gateway processor.
+	 * @param array		$data		Optional data.
 	 *
 	 * @return Model_Gateway
 	 */
@@ -78,8 +78,8 @@ class Service_Gateway extends Service
 	/**
 	 * Updates a gateway.
 	 *
-	 * @param Model_Gateway $gateway The gateway to update.
-	 * @param array          $data   The data to use to update the gateway.
+	 * @param Model_Gateway	$gateway	The gateway to update.
+	 * @param array			$data		The data to use to update the gateway.
 	 *
 	 * @return Model_Gateway
 	 */
