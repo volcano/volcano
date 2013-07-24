@@ -28,7 +28,7 @@ class Service
 		$query = static::query($options);
 		
 		if (!empty($options['limit'])) {
-			$query->limit($options['limit']);
+			$query->rows_limit($options['limit']);
 		}
 		
 		return $query->get();
