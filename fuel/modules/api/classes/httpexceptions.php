@@ -29,7 +29,7 @@ class HttpErrorException extends \HttpException
 
 class HttpBadRequestException extends HttpErrorException
 {
-	protected $code = 400;
+	protected $code = 422;
 }
 
 class HttpNotFoundException extends HttpErrorException

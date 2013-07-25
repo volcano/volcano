@@ -24,4 +24,25 @@ class Model extends \Orm\Model
 			}
 		}
 	}
+	
+	/**
+	 * Builds an array of api-safe model data.
+	 *
+	 * @return array
+	 */
+	public function to_api_array()
+	{
+		$data = array();
+		
+		$properties = $this::$_properties;
+		foreach ($properties as $key => $value) {
+			if (is_numeric($key)) {
+				$data[$value] = $this->$value;
+			} else {
+				$data[$key] = $this->$key;
+			}
+		}
+		
+		return $data;
+	}
 }

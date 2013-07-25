@@ -30,10 +30,6 @@ class Service_Gateway extends Service
 			$gateways->where('status', $options['status']);
 		}
 		
-		if (!empty($options['limit'])) {
-			$gateways->limit($options['limit']);
-		}
-		
 		return $gateways;
 	}
 	

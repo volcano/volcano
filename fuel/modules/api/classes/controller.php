@@ -77,15 +77,24 @@ class Controller extends \Fuel\Core\Controller_Rest
 	 */
 	protected function response($data = array(), $http_status = null)
 	{
-		// Ensures that the data of all of the model's relations are included in the response.
-		if ($data instanceof \Orm\Model) {
-			$relations = $data->relations();
-			foreach ($relations as $property => $relation) {
-				$data->$property;
+		$output_single = !is_array($data);
+		$output = $output_single ? array($data) : $data;
+		
+		foreach ($output as $key => $value) {
+			if ($value instanceof \Orm\Model) {
+				if (method_exists($value, 'to_api_array')) {
+					$output[$key] = $value->to_api_array();
+				} else {
+					$output[$key] = $value->to_array();
+				}
+			} else {
+				$output[$key] = $value;
 			}
 		}
 		
-		return parent::response($data, $http_status);
+		$output = $output_single ? current($output) : $output;
+		
+		return parent::response($output, $http_status);
 	}
 	
 	/**

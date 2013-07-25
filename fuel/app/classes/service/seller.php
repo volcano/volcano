@@ -30,10 +30,6 @@ class Service_Seller extends Service
 			$sellers->where('status', $options['status']);
 		}
 		
-		if (!empty($options['limit'])) {
-			$sellers->limit($options['limit']);
-		}
-		
 		return $sellers;
 	}
 	
