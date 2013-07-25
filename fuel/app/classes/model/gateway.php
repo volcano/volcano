@@ -26,13 +26,27 @@ class Model_Gateway extends Model
 			'mysql_timestamp' => true,
 		),
 	);
-
+	
 	protected static $_has_many = array(
 		'meta' => array(
 		'model_to' => 'Model_Gateway_Meta',
 		),
 	);
-
+	
+	protected static $_many_many = array(
+		'sellers' => array(
+			'key_from'         => 'id',
+			'key_through_from' => 'gateway_id',
+			'table_through'    => 'seller_gateways',
+			'key_through_to'   => 'seller_id',
+			'model_to'         => 'Model_Seller',
+			'key_to'           => 'id',
+			'conditions'       => array(
+				'where' => array('status' => 'active'),
+			),
+		),
+	);
+	
 	/**
 	* Returns meta data for this gateway instance.
 	*

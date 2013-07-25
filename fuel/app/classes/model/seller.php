@@ -38,5 +38,16 @@ class Model_Seller extends Model
 				'where' => array('status' => 'active'),
 			),
 		),
+		'gateways' => array(
+			'key_from'         => 'id',
+			'key_through_from' => 'seller_id',
+			'table_through'    => 'seller_gateways',
+			'key_through_to'   => 'gateway_id',
+			'model_to'         => 'Model_Gateway',
+			'key_to'           => 'id',
+			'conditions'       => array(
+				'where' => array('status' => 'active'),
+			),
+		),
 	);
 }
