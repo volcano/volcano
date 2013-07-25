@@ -34,10 +34,6 @@ class Service_Customer extends Service
 			$customers->where('status', $options['status']);
 		}
 		
-		if (!empty($options['limit'])) {
-			$customers->limit($options['limit']);
-		}
-		
 		return $customers;
 	}
 	

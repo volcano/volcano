@@ -34,10 +34,6 @@ class Service_Product extends Service
 			$products->where('status', $options['status']);
 		}
 		
-		if (!empty($options['limit'])) {
-			$products->limit($options['limit']);
-		}
-		
 		return $products;
 	}
 	

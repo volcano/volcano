@@ -26,8 +26,8 @@ class Service_Contact extends Service
 			$contacts->where('id', $options['id']);
 		}
 		
-		if (!empty($options['limit'])) {
-			$contacts->limit($options['limit']);
+		if (!empty($options['status'])) {
+			$contacts->where('status', $options['status']);
 		}
 		
 		return $contacts;

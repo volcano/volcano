@@ -35,10 +35,6 @@ class Service_Product_Option_Fee extends Service
 			$fees->where('status', $options['status']);
 		}
 		
-		if (!empty($options['limit'])) {
-			$fees->limit($options['limit']);
-		}
-		
 		return $fees;
 	}
 	
