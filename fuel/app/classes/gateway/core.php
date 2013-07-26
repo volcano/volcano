@@ -10,7 +10,7 @@ abstract class Gateway_Core
 	/**
 	 * The gateway driver instance.
 	 *
-	 * @var Billing_Driver
+	 * @var Gateway_Driver
 	 */
 	protected $driver;
 	
