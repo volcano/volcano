@@ -10,27 +10,11 @@ class Gateway_Authorizenet_Customer extends Gateway_Core_Customer
 	/**
 	 * Gets the customer profile.
 	 *
-	 * @param int $profile_id The profile ID to get.
+	 * @param int|array $options Instance identifier or filter data.
 	 *
-	 * @return array|bool
+	 * @return array|null
 	 */
-	public function find_one($options = array())
-	{
-		if (is_numeric($options)) {
-			$id = $options;
-		}
-		
-		$request = new AuthorizeNetCIM();
-		
-		$response = $request->getCustomerProfile($id);
-		
-		if (!$response->isOk()) {
-			Log::error('Unable to get Authorize.net customer profile.');
-			return false;
-		}
-		
-		return $response->xml->profile;
-	}
+	public function find_one($options = array()) {}
 	
 	/**
 	 * Creates the customer profile.
@@ -41,16 +25,24 @@ class Gateway_Authorizenet_Customer extends Gateway_Core_Customer
 	 */
 	public function create(array $data)
 	{
+		if (!$customer = Arr::get($data, 'customer')) {
+			return false;
+		}
+		
+		if (!$contact = Arr::get($data, 'contact')) {
+			return false;
+		}
+		
 		$request = new AuthorizeNetCIM();
 		
 		$profile = new AuthorizeNetCustomer();
-		$profile->merchantCustomerId = $data['client_id'];
-		$profile->email = $data['email'];
+		$profile->merchantCustomerId = $customer->id;
+		$profile->email = $contact->email;
 		
 		$response = $request->createCustomerProfile($profile);
 		
 		if (!$response->isOk()) {
-			$profile_id = preg_match('/A duplicate record with ID ([0-9]+) already exists./i', $response->getMessageText(), $matches);
+			preg_match('/A duplicate record with ID ([0-9]+) already exists./i', $response->getMessageText(), $matches);
 			
 			if (isset($matches[1])) {
 				return $matches[1];
