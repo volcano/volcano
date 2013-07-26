@@ -26,8 +26,17 @@ class Service_Gateway extends Service
 			$gateways->where('id', $options['id']);
 		}
 		
+		if (!empty($options['processor'])) {
+			$gateways->where('processor', $options['processor']);
+		}
+		
 		if (!empty($options['status'])) {
 			$gateways->where('status', $options['status']);
+		}
+		
+		if (!empty($options['seller'])) {
+			$gateways->related('sellers');
+			$gateways->where('sellers.id', $options['seller']->id);
 		}
 		
 		return $gateways;
@@ -54,7 +63,7 @@ class Service_Gateway extends Service
 		
 		if (!empty($data['meta'])) {
 			foreach ($data['meta'] as $name => $value) {
-				$name_meta = Model_Gateway_Meta::name($name, $value);				
+				$name_meta = Model_Gateway_Meta::name($name, $value);
 				$gateway->meta[] = $name_meta;
 			}
 		}
