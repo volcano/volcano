@@ -35,4 +35,33 @@ class Model_Customer_Paymentmethod extends Model
 		'contact',
 		'gateway',
 	);
+	
+	/**
+	 * Builds an array of api-safe model data.
+	 *
+	 * @return array
+	 */
+	public function to_api_array()
+	{
+		$gateway_payment_method = \Gateway::instance($this->gateway, $this->customer)->paymentmethod($this->external_id);
+		if (!$gateway_payment_method) {
+			return false;
+		}
+		
+		$data = array(
+			'id'          => $this->id,
+			'customer_id' => $this->customer_id,
+			'gateway_id'  => $this->gateway_id,
+			'account'     => array(
+				'number' => $gateway_payment_method->data('number'),
+			),
+			'contact'     => $this->contact,
+			'default'     => $this->default,
+			'status'      => $this->status,
+			'created_at'  => $this->created_at,
+			'updated_at'  => $this->updated_at,
+		);
+		
+		return $data;
+	}
 }

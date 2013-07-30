@@ -34,9 +34,12 @@ class Gateway_Authorizenet_Paymentmethod extends Gateway_Core_Paymentmethod
 			return null;
 		}
 		
+		$credit_card = $response->xml->paymentProfile->payment->creditCard;
+		
 		return array(
 			'id'          => $response->getPaymentProfileId(),
 			'customer_id' => $customer_gateway_id,
+			'number'      => '****' . substr($credit_card->cardNumber, 4),
 		);
 	}
 	
