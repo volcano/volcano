@@ -10,7 +10,7 @@ class Gateway
 	/**
 	 * Loaded gateway driver instance.
 	 *
-	 * @var Billing
+	 * @var Gateway_Driver
 	 */
 	protected static $_instance;
 	
@@ -24,16 +24,17 @@ class Gateway
 	/**
 	 * Gets a new instance of gateway driver class.
 	 *
-	 * @param Model_Gateway $model The gateway model to use (for gateway auth and such).
+	 * @param Model_Gateway  $gateway  The gateway model to use (for gateway auth and such).
+	 * @param Model_Customer $customer The customer model to use.
 	 *
 	 * @return Gateway_Driver
 	 */
-	public static function forge(Model_Gateway $model)
+	public static function forge(Model_Gateway $gateway, Model_Customer $customer = null)
 	{
-		$driver_name = $model->processor;
+		$driver_name = $gateway->processor;
 		
 		$class = 'Gateway_' . Str::ucwords(Inflector::denamespace($driver_name)) . '_Driver';
-		$driver = new $class($model);
+		$driver = new $class($gateway, $customer);
 		
 		static::$_instances[$driver_name] = $driver;
 		is_null(static::$_instance) and static::$_instance = $driver;
@@ -44,20 +45,21 @@ class Gateway
 	/**
 	 * Create or return the driver instance.
 	 *
-	 * @param Model_Gateway $model The gateway model to use (for gateway auth and such).
+	 * @param Model_Gateway  $gateway  The gateway model to use (for gateway auth and such).
+	 * @param Model_Customer $customer The customer model to use.
 	 *
 	 * @return Gateway_Driver
 	 */
-	public static function instance(Model_Gateway $model)
+	public static function instance(Model_Gateway $gateway, Model_Customer $customer = null)
 	{
-		$instance = $model->processor;
+		$instance = $gateway->processor;
 		
 		if (array_key_exists($instance, static::$_instances)) {
 			return static::$_instances[$instance];
 		}
 		
 		if (static::$_instance === null) {
-			static::$_instance = static::forge($model);
+			static::$_instance = static::forge($gateway, $customer);
 		}
 		
 		return static::$_instance;

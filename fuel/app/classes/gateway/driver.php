@@ -12,18 +12,27 @@ abstract class Gateway_Driver
 	 *
 	 * @var Model_Gateway
 	 */
-	public $model;
+	public $gateway;
+	
+	/**
+	 * The customer model for the driver.
+	 *
+	 * @var Model_Customer
+	 */
+	public $customer;
 	
 	/**
 	 * Class constructor.
 	 * 
-	 * @param Model_Gateway $model The gateway model to use for the driver.
+	 * @param Model_Gateway  $gateway  The gateway model to use for the driver.
+	 * @param Model_Customer $customer The customer model to use for the driver.
 	 *
 	 * @return void
 	 */
-	public function __construct(Model_Gateway $model)
+	public function __construct(Model_Gateway $gateway, Model_Customer $customer = null)
 	{
-		$this->model = $model;
+		$this->gateway = $gateway;
+		$this->customer = $customer;
 	}
 	
 	/**
@@ -36,24 +45,29 @@ abstract class Gateway_Driver
 	 */
 	public function __call($method, $args)
 	{
-		$instance = self::forge($this->model, $method);
+		$instance = self::forge($this->gateway, $this->customer, $method);
 		
 		if (!empty($args)) {
-			$instance = $instance->find_one($args[0]);
+			$data = $instance->find_one($args[0]);
+			
+			if (!empty($data)) {
+				$instance->set($data);
+			}
 		}
 		
 		return $instance;
 	}
 	
 	/**
-	 * Gets a new instance of gateway model $class_name.
+	 * Gets a new instance of gateway $class_name.
 	 *
-	 * @param Model_Gateway $model      The gateway model to use for the driver.
-	 * @param string        $class_name The class name to call on the driver.
+	 * @param Model_Gateway  $gateway    The gateway model to use for the driver.
+	 * @param Model_Customer $customer   The customer model to use for the driver.
+	 * @param string         $class_name The class name to call on the driver.
 	 *
 	 * @return Gateway_Model
 	 */
-	public static function forge(Model_Gateway $model, $class_name)
+	public static function forge(Model_Gateway $gateway, Model_Customer $customer = null, $class_name)
 	{
 		$driver_name = str_replace('Gateway_', '', get_called_class());
 		$driver_name = str_replace('_Driver', '', $driver_name);
@@ -64,7 +78,7 @@ abstract class Gateway_Driver
 			throw new GatewayException('Call to undefined class ' . $class);
 		}
 		
-		$driver = Gateway::instance($model);
+		$driver = Gateway::instance($gateway, $customer);
 		
 		return new $class($driver);
 	}
