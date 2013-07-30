@@ -5,7 +5,7 @@
  *
  * @author Daniel Sposito <dsposito@static.com>
  */
-class Gateway_Authorizenet_Payment_Method extends Gateway_Core_Payment_Method
+class Gateway_Authorizenet_Paymentmethod extends Gateway_Core_Paymentmethod
 {
 	/**
 	 * Finds a single instance.
@@ -14,22 +14,55 @@ class Gateway_Authorizenet_Payment_Method extends Gateway_Core_Payment_Method
 	 *
 	 * @return array|null
 	 */
-	public function find_one($options = array()) {}
+	public function find_one($options = array())
+	{
+		$customer_gateway_id = Service_Customer_Gateway::external_id($this->driver->customer, $this->driver->gateway);
+		if (!$customer_gateway_id) {
+			return null;
+		}
+		
+		if (is_numeric($options)) {
+			$payment_method_id = $options;
+		}
+		
+		$request = new AuthorizeNetCIM();
+		
+		$response = $request->getCustomerPaymentProfile($customer_gateway_id, $payment_method_id);
+		
+		if (!$response->isOk()) {
+			Log::error('Unable to retrieve Authorize.net payment method.');
+			return null;
+		}
+		
+		return array(
+			'id'          => $response->getPaymentProfileId(),
+			'customer_id' => $customer_gateway_id,
+		);
+	}
 	
 	/**
 	 * Creates a new payment method.
 	 *
 	 * @param array $data The data to use to create the payment method.
 	 *
-	 * @return bool
+	 * @return int|bool
 	 */
 	public function create(array $data)
 	{
-		if (!$this->auth_transaction($data)) {
+		$customer_gateway_id = Service_Customer_Gateway::external_id($this->driver->customer, $this->driver->gateway);
+		if (!$customer_gateway_id) {
 			return false;
 		}
 		
-		if (!$profile_id = Arr::get($data, 'profile_id')) {
+		if (!$credit_card = Arr::get($data, 'account')) {
+			return false;
+		}
+		
+		if (!$contact = Arr::get($data, 'contact')) {
+			return false;
+		}
+		
+		if (!$this->auth($credit_card)) {
 			return false;
 		}
 		
@@ -37,25 +70,23 @@ class Gateway_Authorizenet_Payment_Method extends Gateway_Core_Payment_Method
 		
 		$payment_profile = new AuthorizeNetPaymentProfile();
 		
-		$payment_profile->billTo->firstName   = Arr::get($data, 'first_name', '');
-		$payment_profile->billTo->lastName    = Arr::get($data, 'last_name', '');
-		$payment_profile->billTo->company     = Arr::get($data, 'company', '');
-		$payment_profile->billTo->address     = Arr::get($data, 'address', '') . Arr::get($data, 'address2', '');
-		$payment_profile->billTo->city        = Arr::get($data, 'city', '');
-		$payment_profile->billTo->state       = Arr::get($data, 'state', '');
-		$payment_profile->billTo->zip         = Arr::get($data, 'zip_code', '');
-		$payment_profile->billTo->country     = Arr::get($data, 'country', '');
-		$payment_profile->billTo->phoneNumber = Arr::get($data, 'phone_number', '');
-		$payment_profile->billTo->faxNumber   = Arr::get($data, 'fax_number', '');
+		$payment_profile->payment->creditCard->cardNumber = preg_replace('/\D+/', '', $credit_card['number']);
+		$payment_profile->payment->creditCard->expirationDate = '20' . $credit_card['expiration_year'] . '-' . $credit_card['expiration_month'];
+		//$payment_profile->payment->creditCard->cardCode = $credit_card['cvv_code'];
 		
-		$payment_profile->payment->creditCard->cardNumber = preg_replace('/\D+/', '', $data['card_number']);
-		$payment_profile->payment->creditCard->expirationDate = '20' . $data['card_exp_year'] . '-' . $data['card_exp_month'];
-		//$payment_profile->payment->creditCard->cardCode = $data['cvv_code'];
+		$payment_profile->billTo->firstName   = Arr::get($contact, 'first_name', '');
+		$payment_profile->billTo->lastName    = Arr::get($contact, 'last_name', '');
+		$payment_profile->billTo->address     = Arr::get($contact, 'address', '') . Arr::get($contact, 'address2', '');
+		$payment_profile->billTo->city        = Arr::get($contact, 'city', '');
+		$payment_profile->billTo->state       = Arr::get($contact, 'state', '');
+		$payment_profile->billTo->zip         = Arr::get($contact, 'zip', '');
+		$payment_profile->billTo->country     = Arr::get($contact, 'country', '');
+		$payment_profile->billTo->phoneNumber = Arr::get($contact, 'phone', '');
 		
-		$response = $request->createCustomerPaymentProfile($profile_id, $payment_profile);
+		$response = $request->createCustomerPaymentProfile($customer_gateway_id, $payment_profile);
 		
 		if (!$response->isOk()) {
-			Log::error('Unable to create Authorize.net payment profile.');
+			Log::error('Unable to create Authorize.net payment method.');
 			return false;
 		}
 		
@@ -65,46 +96,54 @@ class Gateway_Authorizenet_Payment_Method extends Gateway_Core_Payment_Method
 	/**
 	 * Updates a payment method.
 	 *
-	 * @param int   $payment_profile_id The payment profile ID to update.
-	 * @param array $data               The data to use to update the payment method.
+	 * @param array $data The data to use to update the payment method.
 	 *
 	 * @return bool
 	 */
-	public function update($payment_profile_id, array $data)
+	public function update(array $data)
 	{
-		if (!$this->auth_transaction($data)) {
+		if (!$id = $this->id()) {
 			return false;
 		}
 		
-		if (!$profile_id = Arr::get($data, 'profile_id')) {
+		if (!$customer_gateway_id = $this->data('customer_id')) {
 			return false;
 		}
 		
-		// @TODO Get $payment_profile_id from $this->id().
+		if (!$credit_card = Arr::get($data, 'account')) {
+			return false;
+		}
+		
+		if (!$contact = Arr::get($data, 'contact')) {
+			return false;
+		}
+		
+		if (!$this->auth($credit_card)) {
+			return false;
+		}
 		
 		$request = new AuthorizeNetCIM();
 		
 		$payment_profile = new AuthorizeNetPaymentProfile();
 		
-		$payment_profile->billTo->firstName = Arr::get($data, 'first_name', '');
-		$payment_profile->billTo->lastName = Arr::get($data, 'last_name', '');
-		$payment_profile->billTo->company = Arr::get($data, 'company', '');
-		$payment_profile->billTo->address = Arr::get($data, 'address', '') . Arr::get($data, 'address2', '');
-		$payment_profile->billTo->city = Arr::get($data, 'city', '');
-		$payment_profile->billTo->state = Arr::get($data, 'state', '');
-		$payment_profile->billTo->zip = Arr::get($data, 'zip_code', '');
-		$payment_profile->billTo->country = Arr::get($data, 'country', '');
-		$payment_profile->billTo->phoneNumber = Arr::get($data, 'phone_number', '');
-		$payment_profile->billTo->faxNumber = Arr::get($data, 'fax_number', '');
+		$payment_profile->payment->creditCard->cardNumber = preg_replace('/\D+/', '', $credit_card['number']);
+		$payment_profile->payment->creditCard->expirationDate = '20' . $credit_card['expiration_year'] . '-' . $credit_card['expiration_month'];
+		//$payment_profile->payment->creditCard->cardCode = $credit_card['cvv_code'];
 		
-		$payment_profile->payment->creditCard->cardNumber = preg_replace('/\D+/', '', $data['card_number']);
-		$payment_profile->payment->creditCard->expirationDate = '20' . $data['card_exp_year'] . '-' . $data['card_exp_month'];
-		//$payment_profile->payment->creditCard->cardCode = $data['cvv_code'];
+		$payment_profile->billTo->firstName = Arr::get($contact, 'first_name', '');
+		$payment_profile->billTo->lastName = Arr::get($contact, 'last_name', '');
+		$payment_profile->billTo->address = Arr::get($contact, 'address', '') . Arr::get($contact, 'address2', '');
+		$payment_profile->billTo->city = Arr::get($contact, 'city', '');
+		$payment_profile->billTo->state = Arr::get($contact, 'state', '');
+		$payment_profile->billTo->zip = Arr::get($contact, 'zip', '');
+		$payment_profile->billTo->country = Arr::get($contact, 'country', '');
+		$payment_profile->billTo->phoneNumber = Arr::get($contact, 'phone', '');
 		
-		$response = $request->updateCustomerPaymentProfile($profile_id, $payment_profile_id, $payment_profile);
+		$response = $request->updateCustomerPaymentProfile($customer_gateway_id, $id, $payment_profile);
 		
 		if (!$response->isOk()) {
-			Log::error('Unable to update Authorize.net payment profile.');
+			dar($response);die;
+			Log::error('Unable to update Authorize.net payment method.');
 			return false;
 		}
 		
@@ -114,24 +153,53 @@ class Gateway_Authorizenet_Payment_Method extends Gateway_Core_Payment_Method
 	/**
 	 * Deletes a payment method.
 	 *
-	 * @param int $profile_id         The profile ID to use.
-	 * @param int $payment_profile_id The payment method ID to delete.
-	 *
 	 * @return bool
 	 */
-	public function delete($profile_id, $payment_profile_id)
+	public function delete()
 	{
-		// @TODO Get $payment_profile_id from $this->id().
-		
-		$request = new AuthorizeNetCIM();
-		
-		$response = $request->deleteCustomerPaymentProfile($profile_id, $payment_profile_id);
-		
-		if (!$response->isOk()) {
-			Log::error('Unable to delete Authorize.net payment profile.');
+		if (!$id = $this->id()) {
 			return false;
 		}
 		
-		return $this->driver->gateway()->update_gateway_id('', $data['client_id']);
+		if (!$customer_gateway_id = $this->data('customer_id')) {
+			return false;
+		}
+		
+		$request = new AuthorizeNetCIM();
+		
+		$response = $request->deleteCustomerPaymentProfile($customer_gateway_id, $id);
+		
+		if (!$response->isOk()) {
+			Log::error('Unable to delete Authorize.net payment method.');
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Validates the provided credit card data by posting a temporary $1.00 authorization charge.
+	 *
+	 * @param array $data The credit card data to use to verify.
+	 *
+	 * @return bool
+	 */
+	public function auth(array $data)
+	{
+		$authorize_aim = new AuthorizeNetAIM();
+		$authorize_aim->amount = 1.00;
+		$authorize_aim->card_num = $data['number'];
+		$authorize_aim->exp_date = $data['expiration_month'] . '/' . $data['expiration_year'];
+		$authorize_aim->allow_partial_auth = true;
+		
+		$response = $authorize_aim->authorizeOnly();
+		
+		if ($response->approved == true) {
+			return true;
+		}
+		
+		Log::error('Authorize.net auth transaction failed.');
+		
+		return false;
 	}
 }

@@ -40,30 +40,4 @@ class Gateway_Authorizenet_Transaction extends Gateway_Core_Transaction
 	 * @return bool
 	 */
 	public function delete() {}
-	
-	/**
-	 * Creates an auth transaction to verify credit card.
-	 *
-	 * @param array $data The credit card data to use to verify.
-	 *
-	 * @return bool
-	 */
-	public function auth(array $data)
-	{
-		$authorize_aim = new AuthorizeNetAIM();
-		$authorize_aim->amount = 1.00;
-		$authorize_aim->card_num = $data['card_number'];
-		$authorize_aim->exp_date = $data['card_exp_month'] . '/' . $data['card_exp_year'];
-		$authorize_aim->allow_partial_auth = true;
-		
-		$response = $authorize_aim->authorizeOnly();
-		
-		if ($response->approved == true) {
-			return true;
-		}
-		
-		Log::error('Auth transaction failed.');
-		
-		return false;
-	}
 }
