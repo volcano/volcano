@@ -28,8 +28,6 @@ class Model_Api_Key extends Model
 	);
 	
 	protected static $_belongs_to = array(
-		'seller' => array(
-			'model_to' => 'Model_Seller',
-		),
+		'seller',
 	);
 }
