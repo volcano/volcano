@@ -37,7 +37,7 @@ class Model_Gateway_Meta extends Model
 	 * @param string $name  The name of the meta.
 	 * @param string $value The value of the meta.
 	 *
-	 * @return Model_Client_Meta
+	 * @return Model_Gateway_Meta
 	 */
 	public static function name($name, $value)
 	{

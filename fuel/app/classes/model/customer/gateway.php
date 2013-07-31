@@ -13,4 +13,9 @@ class Model_Customer_Gateway extends Model
 		'gateway_id',
 		'external_id',
 	);
+	
+	protected static $_belongs_to = array(
+		'customer',
+		'gateway',
+	);
 }
