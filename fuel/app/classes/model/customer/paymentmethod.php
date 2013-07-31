@@ -53,7 +53,7 @@ class Model_Customer_Paymentmethod extends Model
 			'customer_id' => $this->customer_id,
 			'gateway_id'  => $this->gateway_id,
 			'account'     => array(
-				'number' => $gateway_payment_method->data('number'),
+				'number' => $gateway_payment_method->data('account_number'),
 			),
 			'contact'     => $this->contact,
 			'default'     => $this->default,
