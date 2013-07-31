@@ -29,7 +29,7 @@ class Model_Gateway extends Model
 	
 	protected static $_has_many = array(
 		'meta' => array(
-		'model_to' => 'Model_Gateway_Meta',
+			'model_to' => 'Model_Gateway_Meta',
 		),
 	);
 	
@@ -62,14 +62,28 @@ class Model_Gateway extends Model
 			->where('gateway_id', $this->id)
 			->where('name', 'in', $name)
 			->get();
-
+			
 			foreach ($metas as $meta) {
 				$meta_array[$meta->name] = $meta;
 			}
-
+			
 			return $meta_array;
 		}
-
+		
 		return Model_Gateway_Meta::find_by_gateway_id_and_name($this->id, $name);
+	}
+	
+	/**
+	 * Determines whether the gateway is a credit card processor.
+	 *
+	 * @return bool
+	 */
+	public function processes_credit_cards()
+	{
+		if ($this->type != 'credit_card') {
+			return false;
+		}
+		
+		return true;
 	}
 }

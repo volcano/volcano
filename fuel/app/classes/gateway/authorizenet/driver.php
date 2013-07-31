@@ -10,13 +10,14 @@ class Gateway_Authorizenet_Driver extends Gateway_Driver
 	/**
 	 * Class constructor.
 	 * 
-	 * @param Model_Gateway $model The gateway model to use for the driver.
+	 * @param Model_Gateway  $model    The gateway model to use for the driver.
+	 * @param Model_Customer $customer The customer model to use for the driver.
 	 *
 	 * @return void
 	 */
-	public function __construct(Model_Gateway $model)
+	public function __construct(Model_Gateway $model, Model_Customer $customer = null)
 	{
-		parent::__construct($model);
+		parent::__construct($model, $customer);
 		
 		if (!$model->meta('api_login_id')) {
 			throw new GatewayException('Missing Gateway Meta: api_login_id');

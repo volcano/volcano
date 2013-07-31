@@ -28,9 +28,7 @@ class Model_Product extends Model
 	);
 	
 	protected static $_belongs_to = array(
-		'seller' => array(
-			'model_to' => 'Model_Seller',
-		),
+		'seller',
 	);
 	
 	protected static $_has_many = array(

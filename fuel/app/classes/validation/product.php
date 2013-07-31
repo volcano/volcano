@@ -16,7 +16,7 @@ class Validation_Product
 	{
 		$validator = Validation::forge('product');
 		
-		$validator->add('name', 'Name')->add_rule('required');
+		$validator->add('name', 'Name')->add_rule('trim')->add_rule('required');
 		
 		return $validator;
 	}
@@ -33,7 +33,7 @@ class Validation_Product
 		$input = Input::param();
 		
 		if (array_key_exists('name', $input)) {
-			$validator->add('name', 'Name')->add_rule('required');
+			$validator->add('name', 'Name')->add_rule('trim')->add_rule('required');
 		}
 		
 		return $validator;

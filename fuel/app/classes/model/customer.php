@@ -28,9 +28,7 @@ class Model_Customer extends Model
 	);
 	
 	protected static $_belongs_to = array(
-		'seller' => array(
-			'model_to' => 'Model_Seller',
-		),
+		'seller',
 	);
 	
 	protected static $_many_many = array(
