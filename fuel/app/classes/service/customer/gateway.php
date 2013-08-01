@@ -38,10 +38,11 @@ class Service_Customer_Gateway extends Service
 	 *
 	 * @param Model_Customer $customer The customer.
 	 * @param Model_Gateway  $gateway  The gateway.
+	 * @param array          $data     Optional data.
 	 *
 	 * @return Model_Customer
 	 */
-	public static function create(Model_Customer $customer, Model_Gateway $gateway)
+	public static function create(Model_Customer $customer, Model_Gateway $gateway, array $data = array())
 	{
 		if (!$contact = Arr::get($data, 'contact')) {
 			$contact = current($customer->contacts);
