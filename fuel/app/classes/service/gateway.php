@@ -151,4 +151,48 @@ class Service_Gateway extends Service
 		
 		return true;
 	}
+	
+	/**
+	 * Links a gateway to a seller.
+	 *
+	 * @param Model_Gateway $gateway The gateway to link.
+	 * @param Model_Seller  $seller  The seller to link the gateway to.
+	 *
+	 * @return bool
+	 */
+	public static function link(Model_Gateway $gateway, Model_Seller $seller)
+	{
+		$seller->gateways[] = $gateway;
+		
+		try {
+			$seller->save();
+		} catch (FuelException $e) {
+			Log::error($e);
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Unlinks a gateway from a seller.
+	 *
+	 * @param Model_Gateway $gateway The gateway to unlink.
+	 * @param Model_Seller  $seller  The seller to unlink the gateway from.
+	 *
+	 * @return bool
+	 */
+	public static function unlink(Model_Gateway $gateway, Model_Seller $seller)
+	{
+		unset($seller->gateways[$gateway->id]);
+		
+		try {
+			$seller->save();
+		} catch (FuelException $e) {
+			Log::error($e);
+			return false;
+		}
+		
+		return true;
+	}
 }
