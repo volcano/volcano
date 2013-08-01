@@ -29,7 +29,32 @@ class Validation extends \Fuel\Core\Validation
 		return implode(', ', $errors);
 	}
 	
-	public function _validation_contact($data, $type = 'create')
+	/**
+	 * Validates that the provided value is allowed.
+	 *
+	 * @param string $value  Value to validate.
+	 * @param array  $values Acceptable values.
+	 *
+	 * @return bool
+	 */
+	public function _validation_valid_value($value, array $values)
+	{
+		if (!in_array($value, $values)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Validates contact data.
+	 *
+	 * @param array  $data Contact data to validate.
+	 * @param string $type Type of contact validation (create or update).
+	 *
+	 * @return bool
+	 */
+	public function _validation_contact(array $data, $type = 'create')
 	{
 		if (!in_array($type, array('create', 'update'))) {
 			return false;

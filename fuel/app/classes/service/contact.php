@@ -126,7 +126,7 @@ class Service_Contact extends Service
 	/**
 	 * Unlinks a contact from a model.
 	 *
-	 * @param Model_Contact $contact The contact to link.
+	 * @param Model_Contact $contact The contact to unlink.
 	 * @param Model         $model   The model to unlink the contact from.
 	 *
 	 * @return bool
