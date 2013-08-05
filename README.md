@@ -7,7 +7,7 @@ This should help you get started with the eReceivables 2.0 project.
 ## Installation
 Clone the repo:
 
-	$ git clone ssh://git@code.onesite.com/er/ereceivables.git
+	$ git clone -b dev ssh://git@code.onesite.com/er/ereceivables.git
 
 Initialize all submodules:
 
