@@ -17,7 +17,7 @@ class Create_Customer_Paymentmethods
 			'contact_id'  => array('type' => 'int', 'constraint' => 11),
 			'gateway_id'  => array('type' => 'int', 'constraint' => 11),
 			'external_id' => array('type' => 'varchar', 'constraint' => 255),
-			'default'     => array('type' => 'bool', 'null' => true),
+			'primary'     => array('type' => 'bool', 'null' => true),
 			'status'      => array('type' => 'varchar', 'constraint' => 50),
 			'created_at'  => array('type' => 'datetime'),
 			'updated_at'  => array('type' => 'datetime'),
