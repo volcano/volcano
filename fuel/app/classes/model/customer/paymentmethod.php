@@ -13,6 +13,8 @@ class Model_Customer_Paymentmethod extends Model
 		'contact_id',
 		'gateway_id',
 		'external_id',
+		'provider',
+		'account',
 		'primary',
 		'status' => array('default' => 'active'),
 		'created_at',
@@ -43,17 +45,13 @@ class Model_Customer_Paymentmethod extends Model
 	 */
 	public function to_api_array()
 	{
-		$gateway_payment_method = \Gateway::instance($this->gateway, $this->customer)->paymentmethod($this->external_id);
-		if (!$gateway_payment_method) {
-			return false;
-		}
-		
 		$data = array(
 			'id'          => $this->id,
 			'customer_id' => $this->customer_id,
 			'gateway_id'  => $this->gateway_id,
 			'account'     => array(
-				'number' => $gateway_payment_method->data('account_number'),
+				'provider' => $this->provider,
+				'number'   => $this->account,
 			),
 			'contact'     => $this->contact,
 			'primary'     => $this->primary,

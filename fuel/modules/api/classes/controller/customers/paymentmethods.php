@@ -3,7 +3,7 @@
 namespace Api;
 
 /**
- * Payment methods Controller.
+ * Customer payment methods Controller.
  * 
  * @author Daniel Sposito <dsposito@static.com>
  */

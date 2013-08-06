@@ -130,6 +130,9 @@ class Validation extends \Fuel\Core\Validation
 			return true;
 		}
 		
+		// Add credit card type to the array of validated data.
+		Arr::set($this->validated, 'account.provider', $this->creditcard_type($val, 'name'));
+		
 		return $this->luhn_check($val);
 	}
 	
