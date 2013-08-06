@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Customer payment method model.
+ * Customer transaction model.
  *
  * @author Daniel Sposito <dsposito@static.com>
  */
-class Model_Customer_Paymentmethod extends Model
+class Model_Customer_Transaction extends Model
 {
 	protected static $_properties = array(
 		'id',
 		'customer_id',
-		'contact_id',
 		'gateway_id',
 		'external_id',
+		'type',
 		'provider',
 		'account',
-		'primary',
-		'status' => array('default' => 'active'),
+		'amount',
+		'status' => array('default' => 'pending'),
 		'created_at',
 		'updated_at',
 	);
@@ -34,7 +34,6 @@ class Model_Customer_Paymentmethod extends Model
 	
 	protected static $_belongs_to = array(
 		'customer',
-		'contact',
 		'gateway',
 	);
 	
@@ -48,13 +47,12 @@ class Model_Customer_Paymentmethod extends Model
 		return array(
 			'id'          => $this->id,
 			'customer_id' => $this->customer_id,
-			'gateway_id'  => $this->gateway_id,
 			'account'     => array(
+				'type'     => $this->type,
 				'provider' => $this->provider,
 				'number'   => $this->account,
 			),
-			'contact'     => $this->contact,
-			'primary'     => $this->primary,
+			'amount'      => $this->amount,
 			'status'      => $this->status,
 			'created_at'  => $this->created_at,
 			'updated_at'  => $this->updated_at,
