@@ -36,13 +36,12 @@ return array(
 		'length' => '15',
 		'prefix' => '3[47]',
 		'luhn'   => true,
-		'name'   => 'American Express',
+		'name'   => 'AmEx',
 	),
 	
 	'default' => array(
 		'length' => '13,14,15,16,17,18,19',
 		'prefix' => '',
 		'luhn'   => true,
-		'name'   => 'Default',
 	),
 );

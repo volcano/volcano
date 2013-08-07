@@ -37,9 +37,9 @@ class Gateway_Authorizenet_Paymentmethod extends Gateway_Core_Paymentmethod
 		$credit_card = $response->xml->paymentProfile->payment->creditCard;
 		
 		return array(
-			'id'             => $response->getPaymentProfileId(),
-			'customer_id'    => $customer_gateway_id,
-			'account_number' => '****' . substr($credit_card->cardNumber, 4),
+			'id'          => $response->getPaymentProfileId(),
+			'customer_id' => $customer_gateway_id,
+			'account'     => '****' . substr($credit_card->cardNumber, 4),
 		);
 	}
 	
@@ -65,6 +65,9 @@ class Gateway_Authorizenet_Paymentmethod extends Gateway_Core_Paymentmethod
 			return false;
 		}
 		
+		$credit_card['expiration_month'] = (strlen($credit_card['expiration_month']) == 2) ? $credit_card['expiration_month'] : '0' . $credit_card['expiration_month'];
+		$credit_card['expiration_year']  = (strlen($credit_card['expiration_year']) == 4) ? $credit_card['expiration_year'] : '20' . $credit_card['expiration_year'];
+		
 		if (!$this->auth($credit_card)) {
 			return false;
 		}
@@ -74,7 +77,7 @@ class Gateway_Authorizenet_Paymentmethod extends Gateway_Core_Paymentmethod
 		$payment_profile = new AuthorizeNetPaymentProfile();
 		
 		$payment_profile->payment->creditCard->cardNumber = preg_replace('/\D+/', '', $credit_card['number']);
-		$payment_profile->payment->creditCard->expirationDate = '20' . $credit_card['expiration_year'] . '-' . $credit_card['expiration_month'];
+		$payment_profile->payment->creditCard->expirationDate = $credit_card['expiration_year'] . '-' . $credit_card['expiration_month'];
 		//$payment_profile->payment->creditCard->cardCode = $credit_card['cvv_code'];
 		
 		$payment_profile->billTo->firstName   = Arr::get($contact, 'first_name', '');
@@ -121,6 +124,9 @@ class Gateway_Authorizenet_Paymentmethod extends Gateway_Core_Paymentmethod
 			return false;
 		}
 		
+		$credit_card['expiration_month'] = (strlen($credit_card['expiration_month']) == 2) ? $credit_card['expiration_month'] : '0' . $credit_card['expiration_month'];
+		$credit_card['expiration_year']  = (strlen($credit_card['expiration_year']) == 4) ? $credit_card['expiration_year'] : '20' . $credit_card['expiration_year'];
+		
 		if (!$this->auth($credit_card)) {
 			return false;
 		}
@@ -130,7 +136,7 @@ class Gateway_Authorizenet_Paymentmethod extends Gateway_Core_Paymentmethod
 		$payment_profile = new AuthorizeNetPaymentProfile();
 		
 		$payment_profile->payment->creditCard->cardNumber = preg_replace('/\D+/', '', $credit_card['number']);
-		$payment_profile->payment->creditCard->expirationDate = '20' . $credit_card['expiration_year'] . '-' . $credit_card['expiration_month'];
+		$payment_profile->payment->creditCard->expirationDate = $credit_card['expiration_year'] . '-' . $credit_card['expiration_month'];
 		//$payment_profile->payment->creditCard->cardCode = $credit_card['cvv_code'];
 		
 		$payment_profile->billTo->firstName = Arr::get($contact, 'first_name', '');

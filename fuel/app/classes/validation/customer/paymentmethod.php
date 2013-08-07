@@ -25,6 +25,7 @@ class Validation_Customer_Paymentmethod
 		}
 		
 		$validator->add('contact', 'Payment Method Contact')->add_rule('contact');
+		$validator->add('primary', 'Primary Payment Method');
 		
 		return $validator;
 	}

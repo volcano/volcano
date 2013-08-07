@@ -54,8 +54,10 @@ class Validation extends \Fuel\Core\Validation
 	 *
 	 * @return bool
 	 */
-	public function _validation_contact(array $data, $type = 'create')
+	public function _validation_contact($data, $type = 'create')
 	{
+		$data = !is_array($data) ? (array) $data : $data;
+		
 		if (!in_array($type, array('create', 'update'))) {
 			return false;
 		}
@@ -127,6 +129,9 @@ class Validation extends \Fuel\Core\Validation
 		if ($cards[$type]['luhn'] == false) {
 			return true;
 		}
+		
+		// Add credit card type to the array of validated data.
+		Arr::set($this->validated, 'account.provider', $this->creditcard_type($val, 'name'));
 		
 		return $this->luhn_check($val);
 	}

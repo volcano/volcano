@@ -30,6 +30,14 @@ class Service_Customer_Paymentmethod extends Service
 			$payment_methods->where('customer_id', $options['customer']->id);
 		}
 		
+		if (!empty($options['gateway'])) {
+			$payment_methods->where('gateway_id', $options['gateway']->id);
+		}
+		
+		if (!empty($options['primary'])) {
+			$payment_methods->where('primary', $options['primary']);
+		}
+		
 		if (!empty($options['status'])) {
 			$payment_methods->where('status', $options['status']);
 		}
@@ -67,32 +75,38 @@ class Service_Customer_Paymentmethod extends Service
 			}
 		}
 		
-		$payment_method = Model_Customer_Paymentmethod::forge();
-		$payment_method->customer = $customer;
-		$payment_method->contact  = $contact;
-		$payment_method->gateway  = $gateway;
+		$gateway_instance = \Gateway::instance($gateway, $customer);
 		
-		$gateway_payment_method = \Gateway::instance($gateway, $customer)->paymentmethod()->create(array(
+		$gateway_payment_method_id = $gateway_instance->paymentmethod()->create(array(
 			'account' => $account,
 			'contact' => $contact,
 		));
 		
-		if (!$gateway_payment_method) {
+		if (!$gateway_payment_method_id) {
 			return false;
 		}
 		
-		$payment_method->external_id = $gateway_payment_method;
+		$gateway_payment_method = $gateway_instance->paymentmethod($gateway_payment_method_id);
 		
-		if (Arr::get($data, 'default')) {
-			$payment_method->default = 1;
-		}
+		$payment_method = Model_Customer_Paymentmethod::forge();
+		$payment_method->customer    = $customer;
+		$payment_method->contact     = $contact;
+		$payment_method->gateway     = $gateway;
+		$payment_method->external_id = $gateway_payment_method->data('id');
+		$payment_method->provider    = Arr::get($data, 'account.provider');
+		$payment_method->account     = $gateway_payment_method->data('account');
 		
 		try {
 			$payment_method->save();
 		} catch (FuelException $e) {
-			dar($e);die;
 			Log::error($e);
 			return false;
+		}
+		
+		// Set as primary if customer has none.
+		$primary = self::primary($customer, $gateway);
+		if (Arr::get($data, 'primary') || empty($primary)) {
+			self::set_primary($payment_method);
 		}
 		
 		return $payment_method;
@@ -134,6 +148,10 @@ class Service_Customer_Paymentmethod extends Service
 			}
 		}
 		
+		if (Arr::get($data, 'primary')) {
+			self::set_primary($payment_method);
+		}
+		
 		return $payment_method;
 	}
 	
@@ -162,6 +180,56 @@ class Service_Customer_Paymentmethod extends Service
 		
 		try {
 			$payment_method->save();
+		} catch (FuelException $e) {
+			Log::error($e);
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Gets a customer's primary payment method for a gateway.
+	 *
+	 * @param Model_Customer $customer The customer.
+	 * @param Model_Gateway  $gateway  The gateway.
+	 *
+	 * @return Model_Customer_Paymentmethod
+	 */
+	public static function primary(Model_Customer $customer, Model_Gateway $gateway)
+	{
+		return self::find_one(array(
+			'customer' => $customer,
+			'gateway'  => $gateway,
+			'primary'  => true,
+		));
+	}
+	
+	/**
+	 * Sets a customer's primary payment method for a gateway.
+	 *
+	 * @param Model_Customer_Paymentmethod $new Primary payment method.
+	 * 
+	 * @return bool
+	 */
+	protected static function set_primary(Model_Customer_Paymentmethod $new)
+	{
+		$existing = self::primary($new->customer, $new->gateway);
+		if ($existing) {
+			$existing->primary = null;
+			
+			try {
+				$existing->save();
+			} catch (FuelException $e) {
+				Log::error($e);
+				return false;
+			}
+		}
+		
+		$new->primary = 1;
+		
+		try {
+			$new->save();
 		} catch (FuelException $e) {
 			Log::error($e);
 			return false;
