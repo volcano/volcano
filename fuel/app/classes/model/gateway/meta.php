@@ -26,11 +26,11 @@ class Model_Gateway_Meta extends Model
 			'mysql_timestamp' => true,
 		),
 	);
-
+	
 	protected static $_belongs_to = array(
 		'gateway',
 	);
-
+	
 	/**
 	 * Generates a new meta instance.
 	 *
