@@ -49,6 +49,9 @@ class Service_Event extends Service
 			return false;
 		}
 		
+		// Event name should always be included in the post data.
+		$data['event'] = $name;
+		
 		$request = Request::forge($seller_event->callback, 'curl');
 		$request->set_method('post');
 		$request->set_params($data);
