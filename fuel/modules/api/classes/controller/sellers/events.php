@@ -86,11 +86,12 @@ class Controller_Sellers_Events extends Controller
 	/**
 	 * Deletes a seller event.
 	 *
-	 * @param int $id Seller event ID.
+	 * @param int $seller_id Seller ID.
+	 * @param int $id        Seller event ID.
 	 *
 	 * @return void
 	 */
-	public function delete_index($id = null)
+	public function delete_index($seller_id = null, $id = null)
 	{
 		$seller_event = $this->get_event($id);
 		
