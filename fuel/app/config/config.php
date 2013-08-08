@@ -97,6 +97,7 @@ return array(
 		 */
 		'packages' => array(
 			'orm',
+			'casset',
 			'less',
 			'authorizenet',
 		),
