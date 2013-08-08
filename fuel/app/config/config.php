@@ -16,6 +16,7 @@ return array(
 	 * Security settings
 	 */
 	'security' => array(
+		'db_enc_key'     => 'MZx63AzdEzjdw6EtFvfoyM1kvqXF1p9w',
 		'csrf_token_key' => 'WlC4g7OqeyJZb0syMg8OYMa1bEGF2d7r',
 		
 		/**

@@ -25,10 +25,12 @@ class Gateway_Authorizenet_Driver extends Gateway_Driver
 			throw new GatewayException('Missing Gateway Meta: transaction_key');
 		}
 		
-		$api_login_id    = $model->meta('api_login_id')->value;
-		$transaction_key = $model->meta('transaction_key')->value;
-		$sandbox         = $model->meta('sandbox') ? $model->meta('sandbox')->value : false;
-
+		$enc_key = Config::get('security.db_enc_key');
+		
+		$api_login_id    = Crypt::decode($model->meta('api_login_id')->value, $enc_key);
+		$transaction_key = Crypt::decode($model->meta('transaction_key')->value, $enc_key);
+		$sandbox         = $model->meta('sandbox') ? Crypt::decode($model->meta('sandbox')->value, $enc_key) : false;
+		
 		define('AUTHORIZENET_API_LOGIN_ID', $api_login_id);
 		define('AUTHORIZENET_TRANSACTION_KEY', $transaction_key);
 		define('AUTHORIZENET_SANDBOX', $sandbox);

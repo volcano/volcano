@@ -89,20 +89,21 @@ class Controller_Sellers_Gateways extends Controller
 	/**
 	 * Deletes a gateway.
 	 *
-	 * @param int $id Gateway ID.
+	 * @param int $seller_id Seller ID.
+	 * @param int $id        Gateway ID.
 	 *
 	 * @return void
 	 */
-	public function delete_index($id = null)
+	public function delete_index($seller_id = null, $id = null)
 	{
 		$gateway = $this->get_gateway($id);
 		
-		$deleted = \Service_Gateway::delete($gateway);
-		if (!$deleted) {
+		if (!\Service_Gateway::unlink($gateway, \Seller::active())) {
 			throw new HttpServerErrorException;
 		}
 		
-		if (!\Service_Gateway::unlink($gateway, \Seller::active())) {
+		$deleted = \Service_Gateway::delete($gateway);
+		if (!$deleted) {
 			throw new HttpServerErrorException;
 		}
 	}
