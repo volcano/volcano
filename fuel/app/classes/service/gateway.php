@@ -62,8 +62,12 @@ class Service_Gateway extends Service
 		}
 		
 		if (!empty($data['meta'])) {
+			$enc_key = Config::get('security.db_enc_key');
+			
 			foreach ($data['meta'] as $name => $value) {
-				$name_meta = Model_Gateway_Meta::name($name, $value);
+				$enc_value = Crypt::encode($value, $enc_key);
+				
+				$name_meta = Model_Gateway_Meta::name($name, $enc_value);
 				$gateway->meta[] = $name_meta;
 			}
 		}
