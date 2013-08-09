@@ -19,10 +19,59 @@ class Setup
 		// Ensure all framework directories exist and are writable.
 		\Oil\Refine::run('install');
 		
-		// Migrate all.
-		\Migrate::latest();
+		// Attempt to create and chmod directories.
+		\Oil\Refine::run('setup:directories', array());
+		
+		// Create all the table structure.
+		\Oil\Refine::run('migrate', array());
 		
 		\Cli::write('Migration Complete', 'green');
+	}
+	
+	/**
+	 * Sets up permissions for directories.
+	 *
+	 * @return void
+	 */
+	public static function directories()
+	{
+		$paths = array(
+			rtrim(\Casset::$cache_path, '/'),
+		);
+		
+		foreach ($paths as $path) {
+			$path = DOCROOT . 'public' . DS . $path;
+			
+			if (@chmod($path, 0777)) {
+				\Cli::write('Made writable: ' . $path, 'green');
+			} else {
+				\Cli::write('Failed to make writable: ' .  $path, 'red');
+			}
+		}
+	}
+	
+	/**
+	 * Flushes cached assets in the public directory.
+	 *
+	 * @return void
+	 */
+	public static function flush()
+	{
+		// Remove all the caches for js/css in casset cache folder.
+		$types = array('js', 'css');
+		
+		foreach ($types as $type) {
+			$files = glob(DOCROOT . 'public' . DS . \Casset::$cache_path . '*.' . $type);
+			
+			foreach ($files as $file) {
+				unlink($file);
+			}
+		}
+		
+		\Cli::write('Flushed: cache', 'green');
+		
+		// Remove all the app's caches in cache folder.
+		\Cache::delete_all(null, 'file');
 	}
 	
 	/**
