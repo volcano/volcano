@@ -16,7 +16,7 @@ class Model_Customer_Transaction extends Model
 		'provider',
 		'account',
 		'amount',
-		'status' => array('default' => 'pending'),
+		'status' => array('default' => 'paid'),
 		'created_at',
 		'updated_at',
 	);
