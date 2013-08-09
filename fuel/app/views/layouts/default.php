@@ -16,6 +16,9 @@ $app_name = Config::get('app_name');
 				<?php echo $app_name ?> -
 			<?php endif; ?>
 			<?php echo $title ?>
+			<?php if (!empty($subtitle)): ?>
+				- <?php echo $subtitle ?>
+			<?php endif ?>
 		<?php else: ?>
 			<?php echo $app_name ?>
 		<?php endif; ?>
