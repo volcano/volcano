@@ -38,7 +38,7 @@ class Service_Customer_Paymentmethod extends Service
 			$payment_methods->where('primary', $options['primary']);
 		}
 		
-		if (!empty($options['status'])) {
+		if (!empty($options['status']) && $options['status'] != 'all') {
 			$payment_methods->where('status', $options['status']);
 		}
 		
