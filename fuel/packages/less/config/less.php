@@ -1,9 +1,11 @@
 <?php
 /**
- * FuelPHP LessCSS package implementation.
+ * FuelPHP LessCSS package implementation. This namespace controls all Google
+ * package functionality, including multiple sub-namespaces for the various
+ * tools.
  *
  * @author     Kriansa
- * @version    2.0
+ * @version    1.0
  * @package    Fuel
  * @subpackage Less
  */
@@ -26,7 +28,7 @@ return array(
 	 *
 	 * Default: APPPATH.'vendor/less/'
 	 */
-	'less_source_dir' => APPPATH.'vendor/less/',
+	'source_dir' => APPPATH.'vendor/less/',
 	
 	/**
 	 * As the asset config is a array with multiple paths, you must tell
@@ -35,13 +37,22 @@ return array(
 	 * 
 	 * This MUST include the trailing slash ('/')
 	 *
-	 * Default: DOCROOT.Config::get('asset.paths.0').Config::get('asset.css_dir'),
+	 * Default: Config::get('asset.paths.0').Config::get('asset.css_dir'),
 	 */
-	'less_output_dir' => DOCROOT.Config::get('asset.paths.0').Config::get('asset.css_dir'),
+	'output_dir' => Config::get('asset.paths.0').Config::get('asset.css_dir'),
 
 	/**
-	 * Class to compile less files
-	 * You can create your own driver if you want
+	 * Whether or not to keep the directory that the file is in or just
+	 * store in the main output_dir.
+	 *
+	 * Default: true
 	 */
-	'less_compiler' => 'Less\\Compiler_Node'
+	'keep_dir' => true,
+
+	/**
+	 * Whether or not to to hash the filename of the less compiled file.
+	 *
+	 * Default: false
+	 */
+	'hash_filename' => false,
 );
