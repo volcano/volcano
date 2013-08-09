@@ -12,6 +12,7 @@ Autoloader::add_classes(array(
 	// Add classes you want to override here.
 	'Controller'                    => APPPATH . 'classes/controller.php',
 	'Model'                         => APPPATH . 'classes/model.php',
+	'Casset'                        => APPPATH . 'classes/casset.php',
 	'Validation'                    => APPPATH . 'classes/validation.php',
 	'Api\\HttpErrorException'       => APPPATH . '../modules/api/classes/httpexceptions.php',
 	'Api\\HttpBadRequestException'  => APPPATH . '../modules/api/classes/httpexceptions.php',
