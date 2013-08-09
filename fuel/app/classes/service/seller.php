@@ -65,7 +65,7 @@ class Service_Seller extends Service
 			$contact_data
 		);
 		
-		if (!$contact || !Service_Contact::link($contact, $seller)) {
+		if (!$contact || !Service_Contact::link($contact, $seller, true)) {
 			return false;
 		}
 		

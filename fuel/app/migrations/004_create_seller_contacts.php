@@ -15,6 +15,7 @@ class Create_Seller_Contacts
 			'id'         => array('type' => 'int', 'constraint' => 11, 'auto_increment' => true),
 			'seller_id'  => array('type' => 'int', 'constraint' => 11),
 			'contact_id' => array('type' => 'int', 'constraint' => 11),
+			'primary'    => array('type' => 'bool', 'null' => true),
 		), array('id'));
 		
 		\DBUtil::create_index('seller_contacts', 'seller_id', 'seller_id');
