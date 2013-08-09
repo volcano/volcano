@@ -9,6 +9,14 @@
 class Controller extends \Fuel\Core\Controller
 {
 	/**
+	 * Name of layout view template to use for the current controller/action.
+	 * Set to null|false if no layout is needed.
+	 *
+	 * @var string
+	 */
+	public $layout = 'default';
+	
+	/**
 	 * Whether to auto render the view or not.
 	 * 
 	 * @var bool
@@ -43,6 +51,19 @@ class Controller extends \Fuel\Core\Controller
 		}
 		
 		$this->view = View::forge();
+		
+		if (!empty($this->layout)) {
+			$this->layout = View::forge('layouts' . DS . $this->layout);
+			
+			$this->view->layout = $this->layout;
+			
+			$this->layout->module      = $this->request->module;
+			$this->layout->controller  = $this->request->controller;
+			$this->layout->action      = $this->request->action;
+			$this->layout->title       = null;
+			$this->layout->breadcrumbs = array();
+			$this->layout->content     = '';
+		}
 	}
 	
 	/**
@@ -69,7 +90,22 @@ class Controller extends \Fuel\Core\Controller
 			} catch (FuelException $e) {}
 		}
 		
-		$this->response->body($this->view);
+		// Inject view into the layout if the main request.
+		if ($this->layout instanceof View) {
+			if ($this->autorender) {
+				try {
+					// Throws exception if there is no view template found.
+					$this->layout->content = $this->view->render();
+				} catch (FuelException $e) {}
+			}
+			
+			$this->layout->content_data = $this->view->get();
+			
+			$this->response->body($this->layout);
+		}
+		else {
+			$this->response->body($this->view);
+		}
 		
 		return parent::after($this->response);
 	}
