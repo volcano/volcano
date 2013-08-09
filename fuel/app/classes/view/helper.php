@@ -93,6 +93,6 @@ class View_Helper
 			$date = Date::create_from_string($date, $from_format);
 		}
 		
-		return $date->format($to_format);
+		return '<abbr title="' . $date->format('us_full') . '">' . $date->format($to_format) . '</abbr>';
 	}
 }
