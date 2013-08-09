@@ -36,4 +36,42 @@ class Model_Contact extends Model
 			'mysql_timestamp' => true,
 		),
 	);
+	
+	/**
+	 * Name helper function.
+	 *
+	 * @return string
+	 */
+	public function name()
+	{
+		return $this->first_name . ' ' . $this->last_name;
+	}
+	
+	/**
+	 * Phone number helper function.
+	 *
+	 * @return string
+	 */
+	public function phone()
+	{
+		return Num::smart_format_phone($this->phone);
+	}
+	
+	/**
+	 * Country helper function.
+	 *
+	 * @return string
+	 */
+	public function country()
+	{
+		if (empty($this->country)) {
+			return false;
+		}
+		
+		Lang::load('countries', true);
+		
+		$countries = __('countries');
+		
+		return $countries[$this->country];
+	}
 }

@@ -58,4 +58,16 @@ class Model_Customer_Transaction extends Model
 			'updated_at'  => $this->updated_at,
 		);
 	}
+	
+	/**
+	 * Payment method details helper function.
+	 *
+	 * @return string
+	 */
+	public function paymentmethod()
+	{
+		$type = Inflector::humanize(Inflector::words_to_upper($this->type));
+		
+		return $type . ' ' . $this->provider . ' ' . $this->account;
+	}
 }

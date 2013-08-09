@@ -44,4 +44,69 @@ class Model_Customer extends Model
 			),
 		),
 	);
+	
+	/**
+	 * Returns the customer action link.
+	 *
+	 * @param string $action The action to link to.
+	 *
+	 * @return string
+	 */
+	public function link($action = '')
+	{
+		$uri = 'customers/' . $this->id;
+		if ($action) {
+			$uri .= '/' . $action;
+		}
+		
+		return \Uri::create($uri);
+	}
+	
+	/**
+	 * Primary contact helper function.
+	 *
+	 * @param string|array $properties One or more contact properties to return.
+	 *
+	 * @return string
+	 */
+	public function contact($properties = null)
+	{
+		$contact = Service_Contact::primary($this);
+		if (!$contact) {
+			return false;
+		}
+		
+		if ($properties) {
+			$data = array();
+			
+			$properties = (array) $properties;
+			foreach ($properties as $property) {
+				$data[] = $contact->$property;
+			}
+			
+			return implode(' ', $data);
+		}
+		
+		return $contact;
+	}
+	
+	/**
+	 * Name helper function.
+	 *
+	 * @return string
+	 */
+	public function name()
+	{
+		return $this->contact(array('first_name', 'last_name'));
+	}
+	
+	/**
+	 * Email address helper function.
+	 *
+	 * @return string
+	 */
+	public function email()
+	{
+		return $this->contact('email');
+	}
 }
