@@ -44,4 +44,13 @@ class Model_Customer extends Model
 			),
 		),
 	);
+	
+	protected static $_has_many = array(
+		'products' => array(
+			'model_to'   => 'Model_Customer_Product_Option',
+			'conditions' => array(
+				'where' => array('status' => 'active'),
+			),
+		),
+	);
 }
