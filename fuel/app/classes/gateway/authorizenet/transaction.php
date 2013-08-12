@@ -15,11 +15,11 @@ class Gateway_Authorizenet_Transaction extends Gateway_Core_Transaction
 	 * @var array
 	 */
 	public $statuses = array(
-		'capturedPendingSettlement' => 'pending',
-		'pendingSettlement'         => 'pending',
-		'refundPendingSettlement'   => 'pending',
+		'capturedPendingSettlement' => 'paid',
+		'pendingSettlement'         => 'paid',
 		'settledSuccessfully'       => 'paid',
 		'declined'                  => 'declined',
+		'refundPendingSettlement'   => 'refunded',
 		'refundSettledSuccessfully' => 'refunded',
 	);
 	
@@ -49,7 +49,7 @@ class Gateway_Authorizenet_Transaction extends Gateway_Core_Transaction
 		return array(
 			'id'     => $transaction_id,
 			'amount' => $transaction->authAmount,
-			'status' => Arr::get($this->statuses, $transaction->transactionStatus, 'pending'),
+			'status' => Arr::get($this->statuses, $transaction->transactionStatus, 'error'),
 		);
 	}
 	
