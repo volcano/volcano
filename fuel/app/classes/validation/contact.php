@@ -18,6 +18,7 @@ class Validation_Contact extends Validation
 		
 		$validator->add('first_name', 'First Name')->add_rule('trim')->add_rule('required');
 		$validator->add('last_name', 'Last Name')->add_rule('trim')->add_rule('required');
+		$validator->add('email', 'Email')->add_rule('trim')->add_rule('valid_email')->add_rule('required');
 		$validator = self::add_optional_fields($validator);
 		
 		return $validator;
@@ -42,6 +43,10 @@ class Validation_Contact extends Validation
 			$validator->add('last_name', 'Last Name')->add_rule('trim')->add_rule('required');
 		}
 		
+		if (array_key_exists('email', $input)) {
+			$validator->add('email', 'Email')->add_rule('trim')->add_rule('valid_email')->add_rule('required');
+		}
+		
 		$validator = self::add_optional_fields($validator);
 		
 		return $validator;
@@ -64,7 +69,6 @@ class Validation_Contact extends Validation
 			'state',
 			'zip',
 			'country',
-			'phone',
 			'fax',
 		);
 		
@@ -76,8 +80,8 @@ class Validation_Contact extends Validation
 			}
 		}
 		
-		if (array_key_exists('email', $input)) {
-			$validator->add('email', 'Email')->add_rule('valid_email')->add_rule('trim');
+		if (array_key_exists('phone', $input)) {
+			$validator->add('phone', 'Phone')->add_rule('trim')->add_rule('valid_string', 'numeric');
 		}
 		
 		return $validator;
