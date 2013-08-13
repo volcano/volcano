@@ -51,6 +51,7 @@ class Controller_Products_Options_Fees extends Controller
 		$data = $validator->validated();
 		
 		$fee = \Service_Product_Option_Fee::create(
+			$data['name'],
 			$data['interval'],
 			$data['interval_unit'],
 			$data['interval_price'],

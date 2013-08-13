@@ -41,6 +41,7 @@ class Service_Product_Option_Fee extends Service
 	/**
 	 * Creates a new product option fee.
 	 *
+	 * @param string               $name           The name of the product option fee.
 	 * @param int                  $interval       Interval amount (1, 6, etc).
 	 * @param string               $interval_unit  Interval unit (day, month, year, etc).
 	 * @param float                $interval_price Interval price (5.00, 12.99, etc).
@@ -49,9 +50,10 @@ class Service_Product_Option_Fee extends Service
 	 *
 	 * @return Model_Product_Option_Fee
 	 */
-	public static function create($interval, $interval_unit, $interval_price, Model_Product_Option $option, array $data = array())
+	public static function create($name, $interval, $interval_unit, $interval_price, Model_Product_Option $option, array $data = array())
 	{
 		$fee = Model_Product_Option_Fee::forge();
+		$fee->name           = $name;
 		$fee->interval       = $interval;
 		$fee->interval_unit  = $interval_unit;
 		$fee->interval_price = $interval_price;

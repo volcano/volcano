@@ -6,5 +6,13 @@ return array(
 	// Error route.
 	'_404_'   => 'error/404',
 	
-	'(:segment)/(:num)/(:segment)' => '$1/$3/index/$2',
+	'(:segment)/(:num)/(edit)'                                     => '$1/$3/$2',
+	
+	'(:segment)/(:num)/(:segment)'                                 => '$1/$3/index/$2',
+	'(:segment)/(:num)/(:segment)/(:segment)'                      => '$1/$3/$4/$2',
+	'(:segment)/(:num)/(:segment)/(:num)/(edit)'                   => '$1/$3/$5/$2/$4',
+	
+	'(:segment)/(:num)/(:segment)/(:num)/(:segment)'               => '$1/$3/$5/index/$2/$4',
+	'(:segment)/(:num)/(:segment)/(:num)/(:segment)/(:segment)'    => '$1/$3/$5/$6/$4',
+	'(:segment)/(:num)/(:segment)/(:num)/(:segment)/(:num)/(edit)' => '$1/$3/$5/$7/$4/$6',
 );

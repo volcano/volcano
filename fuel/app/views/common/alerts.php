@@ -1,7 +1,7 @@
 <?php foreach ($alerts as $type => $message): ?>
 	<?php if (!empty($message)): ?>
-	<div class="alert alert-<?php echo $type ?>">
-		<a href="javascript:void(0);" class="close" data-dismiss="alert">&times;</a>
+	<div class="alert alert-<?php echo $type ?> fade in">
+		<a href="javascript:void(0)" class="close" data-dismiss="alert">&times;</a>
 		<?php if ($type == 'success'): ?>
 			<strong class="alert-heading">Success!</strong>
 		<?php elseif ($type == 'error'): ?>

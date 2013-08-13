@@ -14,6 +14,7 @@ class Create_Product_Option_Fees
 		\DBUtil::create_table('product_option_fees', array(
 			'id'                => array('type' => 'int', 'constraint' => 11, 'auto_increment' => true),
 			'product_option_id' => array('type' => 'int', 'constraint' => 11),
+			'name'              => array('type' => 'varchar', 'constraint' => 255),
 			'interval'          => array('type' => 'int', 'constraint' => 2),
 			'interval_unit'     => array('type' => 'varchar', 'constraint' => 25),
 			'interval_price'    => array('type' => 'decimal', 'constraint' => '10,2'),

@@ -41,4 +41,21 @@ class Model_Product_Option extends Model
 			),
 		),
 	);
+	
+	/**
+	 * Returns the product option action link.
+	 *
+	 * @param string $action The action to link to.
+	 *
+	 * @return string
+	 */
+	public function link($action = '')
+	{
+		$uri = 'products/' . $this->product_id . '/options/' . $this->id;
+		if ($action) {
+			$uri .= '/' . $action;
+		}
+		
+		return Uri::create($uri);
+	}
 }

@@ -28,8 +28,8 @@ $layout->breadcrumbs['Contacts'] = '';
 	<tbody>
 		<?php foreach ($contacts as $contact): ?>
 			<tr>
-				<td><?php echo $contact->id ?>
-				<td><?php echo ($contact == $primary) ? '<i class="icon-ok"></i>' : '' ?>
+				<td><?php echo $contact->id ?></td>
+				<td><?php echo ($contact == $primary) ? '<i class="icon-ok"></i>' : '' ?></td>
 				<td><?php echo $contact->name() ?></td>
 				<td><?php echo Html::mail_to($contact->email) ?></td>
 				<td><?php echo $contact->phone() ?></td>

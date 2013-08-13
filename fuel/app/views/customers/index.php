@@ -22,7 +22,7 @@ $layout->breadcrumbs['Customers'] = 'customers';
 	<tbody>
 		<?php foreach ($customers as $customer): ?>
 			<tr>
-				<td><?php echo $customer->id ?>
+				<td><?php echo $customer->id ?></td>
 				<td><?php echo $customer->name() ?></td>
 				<td><?php echo $customer->email() ?></td>
 				<td><?php echo View_Helper::date($customer->created_at) ?></td>

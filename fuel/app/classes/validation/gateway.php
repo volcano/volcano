@@ -8,22 +8,14 @@
 class Validation_Gateway
 {
 	/**
-	 * Allowed gateway types.
+	 * Initializer executed when class is loaded.
 	 *
-	 * @var array
+	 * @return void
 	 */
-	protected static $types = array(
-		'credit_card',
-	);
-	
-	/**
-	 * Allowed gateway processors.
-	 *
-	 * @var array
-	 */
-	protected static $processors = array(
-		'authorizenet',
-	);
+	public static function _init()
+	{
+		Config::load('gateway', true);
+	}
 	
 	/**
 	 * Creates a new validation instance for gateway create.
@@ -34,8 +26,8 @@ class Validation_Gateway
 	{
 		$validator = Validation::forge('gateway');
 		
-		$validator->add('type', 'Type')->add_rule('trim')->add_rule('valid_value', self::$types);
-		$validator->add('processor', 'Processor')->add_rule('trim')->add_rule('valid_value', self::$processors);
+		$validator->add('type', 'Type')->add_rule('trim')->add_rule('valid_value', Config::get('gateway.types'))->add_rule('required');
+		$validator->add('processor', 'Processor')->add_rule('trim')->add_rule('valid_value', Config::get('gateway.processors'))->add_rule('required');
 		$validator->add('meta', 'Meta Data')->add_rule('required');
 		
 		return $validator;
@@ -53,11 +45,11 @@ class Validation_Gateway
 		$input = Input::param();
 		
 		if (array_key_exists('type', $input)) {
-			$validator->add('type', 'Type')->add_rule('trim')->add_rule('valid_value', self::$types);
+			$validator->add('type', 'Type')->add_rule('trim')->add_rule('valid_value', Config::get('gateway.types'))->add_rule('required');
 		}
 		
 		if (array_key_exists('processor', $input)) {
-			$validator->add('processor', 'Processor')->add_rule('trim')->add_rule('valid_value', self::$processors);
+			$validator->add('processor', 'Processor')->add_rule('trim')->add_rule('valid_value', Config::get('gateway.processors'))->add_rule('required');
 		}
 		
 		if (array_key_exists('meta', $input)) {

@@ -10,6 +10,7 @@ class Model_Product_Option_Fee extends Model
 	protected static $_properties = array(
 		'id',
 		'product_option_id',
+		'name',
 		'interval',
 		'interval_unit',
 		'interval_price',
@@ -34,4 +35,31 @@ class Model_Product_Option_Fee extends Model
 			'model_to' => 'Model_Product_Option',
 		),
 	);
+	
+	/**
+	 * Returns the product option fee action link.
+	 *
+	 * @param string $action The action to link to.
+	 *
+	 * @return string
+	 */
+	public function link($action = '')
+	{
+		$uri = 'products/' . $this->option->product->id . '/options/' . $this->option->id . '/fees/' . $this->id;
+		if ($action) {
+			$uri .= '/' . $action;
+		}
+		
+		return Uri::create($uri);
+	}
+	
+	/**
+	 * Returns whether this fee is recurring.
+	 *
+	 * @return bool
+	 */
+	public function recurring()
+	{
+		return $this->interval_unit != 'nonrecurring';
+	}
 }
