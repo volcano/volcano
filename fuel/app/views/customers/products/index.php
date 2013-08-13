@@ -23,6 +23,7 @@ $layout->breadcrumbs['Products'] = '';
 		<th>Date Created</th>
 		<th>Date Updated</th>
 		<th>Status</th>
+		<th>Actions</th>
 	</thead>
 	<tbody>
 		<?php foreach ($products as $product): ?>
@@ -48,6 +49,23 @@ $layout->breadcrumbs['Products'] = '';
 					<span class="label <?php echo $status_label ?>">
 						<?php echo Str::ucfirst($product->status) ?>
 					</span>
+				</td>
+				<td>
+					<?php
+					if ($product->active()) {
+						echo Html::anchor(
+							$product->link('cancel'),
+							'<i class="icon icon-remove"></i> Cancel',
+							array('class' => 'action-link confirm', 'data-msg' => "Are you sure you want to cancel this customer's product?")
+						);
+					} elseif ($product->canceled()) {
+						echo Html::anchor(
+							$product->link('activate'),
+							'<i class="icon icon-repeat"></i> Activate',
+							array('class' => 'action-link confirm', 'data-msg' => "Are you sure you want to activate this customer's product?")
+						);
+					}
+					?>
 				</td>
 			</tr>
 		<?php endforeach ?>

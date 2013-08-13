@@ -6,6 +6,10 @@ return array(
 	// Error route.
 	'_404_'   => 'error/404',
 	
+	// Customer routes.
+	'(customers)/(:num)/(products)/(:num)/(cancel|activate)'       => '$1/$3/$5/$2/$4',
+	
+	// General routes.
 	'(:segment)/(:num)/(edit)'                                     => '$1/$3/$2',
 	
 	'(:segment)/(:num)/(:segment)'                                 => '$1/$3/index/$2',
