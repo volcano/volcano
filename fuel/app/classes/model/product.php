@@ -39,4 +39,21 @@ class Model_Product extends Model
 			),
 		),
 	);
+	
+	/**
+	 * Returns the product action link.
+	 *
+	 * @param string $action The action to link to.
+	 *
+	 * @return string
+	 */
+	public function link($action = '')
+	{
+		$uri = 'products/' . $this->id;
+		if ($action) {
+			$uri .= '/' . $action;
+		}
+		
+		return Uri::create($uri);
+	}
 }

@@ -68,7 +68,7 @@ class Model_Customer extends Model
 			$uri .= '/' . $action;
 		}
 		
-		return \Uri::create($uri);
+		return Uri::create($uri);
 	}
 	
 	/**
