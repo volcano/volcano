@@ -25,7 +25,7 @@ $layout->breadcrumbs['Transactions'] = '';
 	<tbody>
 		<?php foreach ($transactions as $transaction): ?>
 			<tr>
-				<td><?php echo $transaction->id ?>
+				<td><?php echo $transaction->id ?></td>
 				<td>$<?php echo $transaction->amount ?></td>
 				<td><?php echo $transaction->paymentmethod() ?></td>
 				<td><?php echo View_Helper::date($transaction->created_at) ?></td>

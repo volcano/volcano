@@ -27,8 +27,8 @@ $layout->breadcrumbs['Payment Methods'] = '';
 	<tbody>
 		<?php foreach ($paymentmethods as $paymentmethod): ?>
 			<tr>
-				<td><?php echo $paymentmethod->id ?>
-				<td><?php echo $paymentmethod->primary ? '<i class="icon-ok"></i>' : '' ?>
+				<td><?php echo $paymentmethod->id ?></td>
+				<td><?php echo $paymentmethod->primary ? '<i class="icon-ok"></i>' : '' ?></td>
 				<td><?php echo $paymentmethod->type() ?></td>
 				<td><?php echo $paymentmethod->account() ?></td>
 				<td><?php echo View_Helper::date($paymentmethod->created_at) ?></td>
