@@ -13,6 +13,12 @@ $topnav = array(
 		'icon'    => 'icon-user',
 		'aliases' => array('customers/*'),
 	),
+	array(
+		'href'    => 'products',
+		'value'   => 'Products',
+		'icon'    => 'icon-barcode',
+		'aliases' => array('products/*'),
+	),
 );
 
 echo View_Helper::nav($topnav);
