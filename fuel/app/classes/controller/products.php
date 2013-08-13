@@ -8,7 +8,7 @@
 class Controller_Products extends Controller
 {
 	/**
-	 * List action.
+	 * Display's a seller's products.
 	 *
 	 * @return void
 	 */
@@ -22,7 +22,7 @@ class Controller_Products extends Controller
 	}
 	
 	/**
-	 * GET Create action
+	 * GET Create action.
 	 *
 	 * @return void
 	 */

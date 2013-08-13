@@ -30,7 +30,7 @@ class Service_Customer_Product_Option extends Service
 			$options->where('customer_id', $args['customer']->id);
 		}
 		
-		if (!empty($args['status'])) {
+		if (!empty($args['status']) && $args['status'] != 'all') {
 			$options->where('status', $args['status']);
 		}
 		

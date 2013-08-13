@@ -10,6 +10,10 @@ $nav = array(
 		'value' => 'Contacts',
 	),
 	array(
+		'href'  => $customer->link('products'),
+		'value' => 'Products',
+	),
+	array(
 		'href'  => $customer->link('paymentmethods'),
 		'value' => 'Payment Methods',
 	),
