@@ -10,6 +10,7 @@ class Model_Product_Option_Fee extends Model
 	protected static $_properties = array(
 		'id',
 		'product_option_id',
+		'name',
 		'interval',
 		'interval_unit',
 		'interval_price',
