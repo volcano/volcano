@@ -42,7 +42,7 @@ $app_name = Config::get('app_name');
 	<div class="page-wrapper">
 		<div class="navbar navbar-inverse navbar-top">
 			<div class="navbar-inner">
-				<?php echo Html::anchor('', $app_name, array('class' => 'pull-left brand')) ?>
+				<?php echo Html::anchor('/', Html::img('assets/img/logo-mini.png'), array('class' => 'pull-left brand')) ?>
 			</div>
 		</div>
 		
