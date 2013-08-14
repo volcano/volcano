@@ -20,11 +20,11 @@ class Validation_Customer_Paymentmethod
 		
 		if ($gateway->processes_credit_cards()) {
 			$validator->add('account.number', 'Credit Card Number')->add_rule('creditcard')->add_rule('required');
-			$validator->add('account.expiration_month', 'Credit Card Expiration Month')->add_rule('valid_string', 'numeric')->add_rule('required');
-			$validator->add('account.expiration_year', 'Credit Card Expiration Year')->add_rule('valid_string', 'numeric')->add_rule('required');
+			$validator->add('account.expiration_month', 'Credit Card Expiration Month')->add_rule('number')->add_rule('required');
+			$validator->add('account.expiration_year', 'Credit Card Expiration Year')->add_rule('number')->add_rule('required');
 		}
 		
-		$validator->add('contact', 'Payment Method Contact')->add_rule('contact');
+		$validator->add('contact', 'Payment Method Contact')->add_rule('contact', 'paymentmethod');
 		$validator->add('primary', 'Primary Payment Method');
 		
 		return $validator;

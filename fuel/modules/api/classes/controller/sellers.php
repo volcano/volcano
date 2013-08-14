@@ -44,11 +44,6 @@ class Controller_Sellers extends Controller
 		
 		$data = $validator->validated();
 		
-		$validator = \Validation_Contact::create();
-		if (!$validator->run($data['contact'])) {
-			throw new HttpBadRequestException($validator->errors());
-		}
-		
 		$seller = \Service_Seller::create($data['name'], $data);
 		if (!$seller) {
 			throw new HttpServerErrorException;

@@ -48,11 +48,6 @@ class Controller_Customers extends Controller
 		
 		$data = $validator->validated();
 		
-		$validator = \Validation_Contact::create();
-		if (!$validator->run($data['contact'])) {
-			throw new HttpBadRequestException($validator->errors());
-		}
-		
 		$customer = \Service_Customer::create(\Seller::active(), $data);
 		if (!$customer) {
 			throw new HttpServerErrorException;
