@@ -22,7 +22,7 @@ class Validation_Contact extends Validation
 		if ($type == 'seller' || $type == 'customer') {
 			$validator->add('email', 'Email')->add_rule('trim')->add_rule('valid_email')->add_rule('required');
 		} elseif ($type == 'paymentmethod') {
-			$validator = self::add_address_fields($validator);
+			$validator = self::add_required_address_fields($validator);
 		}
 		
 		$validator = self::add_optional_fields($validator);
@@ -51,8 +51,9 @@ class Validation_Contact extends Validation
 		
 		if ($type == 'seller' || $type == 'customer') {
 			$validator->add('email', 'Email')->add_rule('trim')->add_rule('valid_email')->add_rule('required');
+			$validator = self::add_optional_address_fields($validator);
 		} elseif ($type == 'paymentmethod') {
-			$validator = self::add_address_fields($validator);
+			$validator = self::add_required_address_fields($validator);
 		}
 		
 		$validator = self::add_optional_fields($validator);
@@ -61,13 +62,13 @@ class Validation_Contact extends Validation
 	}
 	
 	/**
-	 * Adds address fields to a Validation object.
+	 * Adds required address fields to a Validation object.
 	 *
 	 * @param Validation $validator Validation object.
 	 * 
 	 * @return Validation
 	 */
-	protected static function add_address_fields(Validation $validator)
+	protected static function add_required_address_fields(Validation $validator)
 	{
 		Lang::load('countries', true);
 		$country_codes = array_keys($countries = __('countries'));
@@ -78,6 +79,46 @@ class Validation_Contact extends Validation
 		$validator->add('state', 'State')->add_rule('trim')->add_rule('required');
 		$validator->add('zip', 'Zip')->add_rule('trim')->add_rule('required');
 		$validator->add('country', 'Country')->add_rule('valid_value', $country_codes)->add_rule('required');
+		
+		return $validator;
+	}
+	
+	/**
+	 * Adds optional address fields to a Validation object.
+	 *
+	 * @param Validation $validator Validation object.
+	 * 
+	 * @return Validation
+	 */
+	protected static function add_optional_address_fields(Validation $validator)
+	{
+		$input = Input::param();
+		
+		if (array_key_exists('address', $input)) {
+			$validator->add('address', 'Address')->add_rule('trim');
+		}
+		
+		if (array_key_exists('address2', $input)) {
+			$validator->add('address2', 'Address2')->add_rule('trim');
+		}
+		
+		if (array_key_exists('city', $input)) {
+			$validator->add('city', 'City')->add_rule('trim');
+		}
+		
+		if (array_key_exists('state', $input)) {
+			$validator->add('state', 'State')->add_rule('trim');
+		}
+		
+		if (array_key_exists('zip', $input)) {
+			$validator->add('zip', 'Zip')->add_rule('trim');
+		}
+		
+		if (array_key_exists('country', $input)) {
+			Lang::load('countries', true);
+			$country_codes = array_keys($countries = __('countries'));
+			$validator->add('country', 'Country')->add_rule('valid_value', $country_codes);
+		}
 		
 		return $validator;
 	}

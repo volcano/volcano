@@ -38,6 +38,24 @@ class Model_Contact extends Model
 	);
 	
 	/**
+	 * Returns the contact action link.
+	 *
+	 * @param string $action The base to link to.
+	 * @param string $action The action to link to.
+	 *
+	 * @return string
+	 */
+	public function link($base = '', $action = '')
+	{
+		$uri = $base . '/contacts/' . $this->id;
+		if ($action) {
+			$uri .= '/' . $action;
+		}
+		
+		return Uri::create($uri);
+	}
+	
+	/**
 	 * Name helper function.
 	 *
 	 * @return string

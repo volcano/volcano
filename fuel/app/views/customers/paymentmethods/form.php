@@ -7,12 +7,10 @@ if (empty($customer) || empty($gateway)) {
 Lang::load('countries', true);
 $countries = __('countries');
 
-$submit_button_label = 'Create';
 $first_name = $last_name = $address = $address2 = $city = $state = $zip = $primary = null;
 $country = 'US';
 
 if (!empty($paymentmethod)) {
-	$submit_button_label = 'Save';
 	$primary             = $paymentmethod->primary();
 	$contact             = $paymentmethod->contact;
 	$first_name          = $contact->first_name;

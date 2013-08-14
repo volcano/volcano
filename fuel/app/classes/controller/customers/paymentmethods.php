@@ -74,7 +74,8 @@ class Controller_Customers_Paymentmethods extends Controller_Customers
 	/**
 	 * GET Edit action.
 	 *
-	 * @param int $id Payment method ID.
+	 * @param int $customer_id Customer ID.
+	 * @param int $id          Payment method ID.
 	 *
 	 * @return void
 	 */
@@ -87,7 +88,8 @@ class Controller_Customers_Paymentmethods extends Controller_Customers
 	/**
 	 * POST Edit action.
 	 *
-	 * @param int $id Payment method ID.
+	 * @param int $customer_id Customer ID.
+	 * @param int $id          Payment method ID.
 	 *
 	 * @return void
 	 */
