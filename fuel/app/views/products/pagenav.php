@@ -3,7 +3,7 @@
 $nav = array(
 	array(
 		'href'       => 'products/create',
-		'value'      => 'Create Product',
+		'value'      => 'Add Product',
 		'attributes' => array('class' => 'btn'),
 		'icon'       => 'icon-plus',
 	),

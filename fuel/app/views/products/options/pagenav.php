@@ -7,7 +7,7 @@ if (empty($product)) {
 $nav = array(
 	array(
 		'href'       => $product->link('options/create'),
-		'value'      => 'Create Option',
+		'value'      => 'Add Option',
 		'attributes' => array('class' => 'btn'),
 		'icon'       => 'icon-plus',
 	),

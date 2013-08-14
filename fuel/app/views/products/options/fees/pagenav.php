@@ -7,7 +7,7 @@ if (empty($option)) {
 $nav = array(
 	array(
 		'href'       => $option->link('fees/create'),
-		'value'      => 'Create Fee',
+		'value'      => 'Add Fee',
 		'attributes' => array('class' => 'btn'),
 		'icon'       => 'icon-plus',
 	),

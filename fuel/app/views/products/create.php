@@ -1,7 +1,7 @@
 <?php
-$layout->title = 'Create Product';
+$layout->title = 'Add Product';
 $layout->breadcrumbs['Products'] = 'products';
-$layout->breadcrumbs['Create Product'] = '';
+$layout->breadcrumbs['Add Product'] = '';
 
 echo render('products/form', array(
 	'errors' => !empty($errors) ? $errors : array(),
