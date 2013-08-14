@@ -53,16 +53,6 @@ class Model_Customer_Product_Option extends Model
 	}
 	
 	/**
-	 * Returns whether this customer product option is active.
-	 *
-	 * @return bool
-	 */
-	public function active()
-	{
-		return $this->status == 'active';
-	}
-	
-	/**
 	 * Returns whether this customer product option is canceled.
 	 *
 	 * @return bool
