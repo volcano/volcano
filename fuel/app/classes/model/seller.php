@@ -50,4 +50,26 @@ class Model_Seller extends Model
 			),
 		),
 	);
+	
+	/**
+	 * Returns the seller action link.
+	 *
+	 * @param string $action The action to link to.
+	 *
+	 * @return string
+	 */
+	public function link($action = '')
+	{
+		$uri = 'settings/';
+		if ($action) {
+			if ($action == 'switch') {
+				$uri .= $this->id . '/' . $action;
+			} else {
+				$uri .= $action;
+			}
+			
+		}
+		
+		return Uri::create($uri);
+	}
 }

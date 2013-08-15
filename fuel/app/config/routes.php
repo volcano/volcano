@@ -10,6 +10,9 @@ return array(
 	'(customers)/(:num)/(products)/(:num)/(cancel|activate)'       => '$1/$3/$5/$2/$4',
 	'(customers)/(:num)/(paymentmethods)/(:num)/(delete)'          => '$1/$3/$5/$2/$4',
 	
+	// Settings routes.
+	'(settings)/(:num)/(switch)'                                   => '$1/$3/$2',
+	
 	// General routes.
 	'(:segment)/(:num)/(edit)'                                     => '$1/$3/$2',
 	
