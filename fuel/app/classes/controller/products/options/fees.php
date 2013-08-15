@@ -64,11 +64,11 @@ class Controller_Products_Options_Fees extends Controller_Products_Options
 		$data   = $validator->validated();
 		
 		if (!Service_Product_Option_Fee::create($data['name'], $data['interval'], $data['interval_unit'], $data['interval_price'], $option, $data)) {
-			Session::set_alert('error', 'There was an error creating your product option fee.');
+			Session::set_alert('error', 'There was an error adding the product option fee.');
 			return;
 		}
 		
-		Session::set_alert('success', 'Your product option fee has been created.');
+		Session::set_alert('success', 'The product option fee has been added.');
 		Response::redirect($option->link('fees'));
 	}
 	
@@ -113,11 +113,11 @@ class Controller_Products_Options_Fees extends Controller_Products_Options
 		$data   = $validator->validated();
 		
 		if (!Service_Product_Option_Fee::update($fee, $data)) {
-			Session::set_alert('error', 'There was an error updating your product option fee.');
+			Session::set_alert('error', 'There was an error updating the product option fee.');
 			return;
 		}
 		
-		Session::set_alert('success', 'Your product option fee has been updated.');
+		Session::set_alert('success', 'The product option fee has been updated.');
 		Response::redirect($option->link('fees'));
 	}
 	

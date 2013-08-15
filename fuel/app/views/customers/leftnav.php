@@ -6,8 +6,17 @@ if (empty($customer)) {
 
 $nav = array(
 	array(
+		'href'  => '/customers',
+		'value' => 'Manage Customers',
+		'class' => 'return-link',
+	),
+	array(
 		'href'  => $customer->link('contacts'),
 		'value' => 'Contacts',
+	),
+	array(
+		'href'  => $customer->link('products'),
+		'value' => 'Products',
 	),
 	array(
 		'href'  => $customer->link('paymentmethods'),
@@ -19,4 +28,4 @@ $nav = array(
 	),
 );
 
-echo View_Helper::nav($nav, array('class' => 'nav-pills pull-right'));
+echo View_Helper::nav($nav);

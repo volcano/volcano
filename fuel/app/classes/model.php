@@ -45,4 +45,19 @@ class Model extends \Orm\Model
 		
 		return $data;
 	}
+	
+	/**
+	 * Returns whether the model's status is active.
+	 *
+	 * @return bool
+	 */
+	public function active()
+	{
+		if (!Arr::key_exists($this::properties(), 'status')) {
+			return false;
+		}
+		
+		return $this->status == 'active';
+	}
+
 }

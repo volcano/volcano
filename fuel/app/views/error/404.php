@@ -1,5 +1,5 @@
 <div class="padded">
-	<h4>The page you requested was not found.</h4>
+	<h4>Page Not Found</h4>
 	
 	<p>You may have clicked an expired link or mistyped the address. Some web addresses are case sensitive.</p>
 	

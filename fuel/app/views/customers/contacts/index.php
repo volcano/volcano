@@ -1,7 +1,7 @@
 <?php
 $layout->title = 'Contacts';
 $layout->subtitle = $customer->name();
-$layout->pagenav = render('customers/pagenav', array('customer' => $customer));
+$layout->leftnav = render('customers/leftnav', array('customer' => $customer));
 $layout->breadcrumbs['Customers'] = 'customers';
 $layout->breadcrumbs[$customer->name()] = $customer->link('contacts');
 $layout->breadcrumbs['Contacts'] = '';
@@ -24,6 +24,7 @@ $layout->breadcrumbs['Contacts'] = '';
 		<th>Address</th>
 		<th>Date Created</th>
 		<th>Date Updated</th>
+		<th>Actions</th>
 	</thead>
 	<tbody>
 		<?php foreach ($contacts as $contact): ?>
@@ -42,6 +43,7 @@ $layout->breadcrumbs['Contacts'] = '';
 				</td>
 				<td><?php echo View_Helper::date($contact->created_at) ?></td>
 				<td><?php echo ($contact->updated_at != $contact->created_at) ? View_Helper::date($contact->updated_at) : '' ?></td>
+				<td><?php echo Html::anchor($contact->link($customer->link(), 'edit'), '<i class="icon icon-pencil"></i> Edit', array('class' => 'action-link')) ?></td>
 			</tr>
 		<?php endforeach ?>
 	</tbody>

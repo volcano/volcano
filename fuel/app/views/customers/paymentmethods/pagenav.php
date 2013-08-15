@@ -1,9 +1,13 @@
 <?php
 
+if (empty($customer)) {
+	return;
+}
+
 $nav = array(
 	array(
-		'href'       => 'products/create',
-		'value'      => 'Add Product',
+		'href'       => $customer->link('paymentmethods/create'),
+		'value'      => 'Add Payment Method',
 		'attributes' => array('class' => 'btn'),
 		'icon'       => 'icon-plus',
 	),

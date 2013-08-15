@@ -34,4 +34,31 @@ class Model_Customer_Product_Option extends Model
 			'model_to' => 'Model_Product_Option',
 		),
 	);
+	
+	/**
+	 * Returns the customer product option action link.
+	 *
+	 * @param string $action The action to link to.
+	 *
+	 * @return string
+	 */
+	public function link($action = '')
+	{
+		$uri = 'customers/' . $this->customer->id . '/products/' . $this->id;
+		if ($action) {
+			$uri .= '/' . $action;
+		}
+		
+		return Uri::create($uri);
+	}
+	
+	/**
+	 * Returns whether this customer product option is canceled.
+	 *
+	 * @return bool
+	 */
+	public function canceled()
+	{
+		return $this->status == 'canceled';
+	}
 }

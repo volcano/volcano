@@ -18,11 +18,9 @@ foreach ($config['interval_units'] as $unit) {
 	$interval_units[$unit] = Str::ucfirst($unit);
 }
 
-$submit_button_label = 'Create';
 $name = $interval = $interval_unit = $interval_price = null;
 
 if (!empty($fee)) {
-	$submit_button_label = 'Save';
 	$name                = $fee->name;
 	$interval            = $fee->interval;
 	$interval_unit       = $fee->interval_unit;
@@ -67,7 +65,7 @@ if (!empty($fee)) {
 	</div>
 	
 	<div class="form-actions">
-		<?php echo Html::anchor($option->link('fees'), 'Cancel', array('class' => 'btn')) ?>
-		<?php echo Form::button('submit', $submit_button_label, array('class' => 'btn btn-primary')) ?>
+		<?php echo Html::anchor($option->link('fees'), __('form.cancel.label'), array('class' => 'btn')) ?>
+		<?php echo Form::button('submit', __('form.submit.label'), array('class' => 'btn btn-primary')) ?>
 	</div>
 <?php echo Form::close() ?>

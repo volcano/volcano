@@ -1,7 +1,7 @@
 <?php
 $layout->title = 'Transactions';
 $layout->subtitle = $customer->name();
-$layout->pagenav = render('customers/pagenav', array('customer' => $customer));
+$layout->leftnav = render('customers/leftnav', array('customer' => $customer));
 $layout->breadcrumbs['Customers'] = 'customers';
 $layout->breadcrumbs[$customer->name()] = $customer->link('contacts');
 $layout->breadcrumbs['Transactions'] = '';

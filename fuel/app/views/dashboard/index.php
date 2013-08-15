@@ -1,1 +1,3 @@
-<p align="center"><strong>eRecievables 2.0</strong></p>
+<p align="center" style="margin-top:25%">
+	<?php echo Html::img('assets/img/logo-large.png') ?>
+</p>

@@ -60,11 +60,11 @@ class Controller_Products_Options extends Controller_Products
 		$data    = $validator->validated();
 		
 		if (!Service_Product_Option::create($data['name'], $product, $data)) {
-			Session::set_alert('error', 'There was an error creating your product option.');
+			Session::set_alert('error', 'There was an error adding the product option.');
 			return;
 		}
 		
-		Session::set_alert('success', 'Your product option has been created.');
+		Session::set_alert('success', 'The product option has been added.');
 		Response::redirect($product->link('options'));
 	}
 	
@@ -106,11 +106,11 @@ class Controller_Products_Options extends Controller_Products
 		$data    = $validator->validated();
 		
 		if (!Service_Product_Option::update($option, $data)) {
-			Session::set_alert('error', 'There was an error updating your product option.');
+			Session::set_alert('error', 'There was an error updating the product option.');
 			return;
 		}
 		
-		Session::set_alert('success', 'Your product option has been updated.');
+		Session::set_alert('success', 'The product option has been updated.');
 		Response::redirect($product->link('options'));
 	}
 	

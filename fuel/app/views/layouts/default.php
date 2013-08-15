@@ -3,9 +3,12 @@ Casset::less('less/layouts/default/config.less', true, 'base');
 Casset::less('less/layouts/default/layout.less', true, 'base');
 Casset::less('less/layouts/default/config.less', true, 'page');
 Casset::js('libs/jquery/jquery.min.js', false, 'base');
-Casset::js('libs/bootstrap/js/bootstrap-transition.js', true, 'base');
 Casset::js('libs/bootstrap/js/bootstrap-alert.js', true, 'base');
+Casset::js('libs/bootstrap/js/bootstrap-modal.js', true, 'base');
+Casset::js('libs/bootstrap/js/bootstrap-transition.js', true, 'base');
+Casset::js('libs/bootstrap/plugins/bootbox/bootbox.js', true, 'base');
 Casset::js('libs/jquery/plugins/jquery.validate.js', true, 'page');
+Casset::js('js/common.js', true, 'base');
 Casset::js('js/common/common.validate.js', true, 'page');
 
 $app_name = Config::get('app_name');
@@ -39,7 +42,7 @@ $app_name = Config::get('app_name');
 	<div class="page-wrapper">
 		<div class="navbar navbar-inverse navbar-top">
 			<div class="navbar-inner">
-				<?php echo Html::anchor('', $app_name, array('class' => 'pull-left brand')) ?>
+				<?php echo Html::anchor('/', Html::img('assets/img/logo-mini.png'), array('class' => 'pull-left brand')) ?>
 			</div>
 		</div>
 		

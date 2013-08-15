@@ -17,7 +17,7 @@ class Validation_Seller
 		$validator = Validation::forge('seller');
 		
 		$validator->add('name', 'Name')->add_rule('trim')->add_rule('required');
-		$validator->add('contact', 'Contact')->add_rule('required');
+		$validator->add('contact', 'Contact')->add_rule('contact', 'seller');
 		
 		return $validator;
 	}

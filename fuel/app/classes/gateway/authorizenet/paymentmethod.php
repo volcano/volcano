@@ -151,7 +151,6 @@ class Gateway_Authorizenet_Paymentmethod extends Gateway_Core_Paymentmethod
 		$response = $request->updateCustomerPaymentProfile($customer_gateway_id, $id, $payment_profile);
 		
 		if (!$response->isOk()) {
-			dar($response);die;
 			Log::error('Unable to update Authorize.net payment method.');
 			return false;
 		}

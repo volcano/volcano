@@ -1,6 +1,6 @@
 <?php
-$layout->title = 'Products';
-$layout->breadcrumbs['Products'] = 'products';
+$layout->title = 'Product Lines';
+$layout->breadcrumbs['Product Lines'] = 'products';
 $layout->pagenav = render('products/pagenav');
 ?>
 

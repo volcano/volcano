@@ -30,6 +30,18 @@ class Validation extends \Fuel\Core\Validation
 	}
 	
 	/**
+	 * Validates that the provided value is numeric.
+	 *
+	 * @param string $val Value to validate.
+	 *
+	 * @return bool
+	 */
+	public function _validation_number($val)
+	{
+		return $this->_empty($val) || $this->_validation_valid_string($val, array('numeric'));
+	}
+	
+	/**
 	 * Validates that the provided value is allowed.
 	 *
 	 * @param string $value  Value to validate.
@@ -49,20 +61,21 @@ class Validation extends \Fuel\Core\Validation
 	/**
 	 * Validates contact data.
 	 *
-	 * @param array  $data Contact data to validate.
-	 * @param string $type Type of contact validation (create or update).
+	 * @param array  $data   Contact data to validate.
+	 * @param string $type   Contact type.
+	 * @param string $action Type of contact validation (create or update).
 	 *
 	 * @return bool
 	 */
-	public function _validation_contact($data, $type = 'create')
+	public function _validation_contact($data, $type = 'customer', $action = 'create')
 	{
 		$data = !is_array($data) ? (array) $data : $data;
 		
-		if (!in_array($type, array('create', 'update'))) {
+		if (!in_array($action, array('create', 'update'))) {
 			return false;
 		}
 		
-		$validator = \Validation_Contact::$type();
+		$validator = Validation_Contact::$action($type);
 		if (!$validator->run($data)) {
 			$this->set_message('contact', array_keys($validator->errors));
 			return false;

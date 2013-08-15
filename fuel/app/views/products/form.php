@@ -1,10 +1,8 @@
 <?php
 
-$submit_button_label = 'Create';
 $name = null;
 
 if (!empty($product)) {
-	$submit_button_label = 'Save';
 	$name = $product->name;
 }
 ?>
@@ -19,7 +17,7 @@ if (!empty($product)) {
 	</div>
 	
 	<div class="form-actions">
-		<?php echo Html::anchor('products', 'Cancel', array('class' => 'btn')) ?>
-		<?php echo Form::button('submit', $submit_button_label, array('class' => 'btn btn-primary')) ?>
+		<?php echo Html::anchor('products', __('form.cancel.label'), array('class' => 'btn')) ?>
+		<?php echo Form::button('submit', __('form.submit.label'), array('class' => 'btn btn-primary')) ?>
 	</div>
 <?php echo Form::close() ?>

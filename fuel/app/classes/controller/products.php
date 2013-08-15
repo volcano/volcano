@@ -8,7 +8,7 @@
 class Controller_Products extends Controller
 {
 	/**
-	 * List action.
+	 * Display's a seller's products.
 	 *
 	 * @return void
 	 */
@@ -22,7 +22,7 @@ class Controller_Products extends Controller
 	}
 	
 	/**
-	 * GET Create action
+	 * GET Create action.
 	 *
 	 * @return void
 	 */
@@ -47,11 +47,11 @@ class Controller_Products extends Controller
 		$data = $validator->validated();
 		
 		if (!Service_Product::create($data['name'], Seller::active(), $data)) {
-			Session::set_alert('error', 'There was an error creating your product.');
+			Session::set_alert('error', 'There was an error adding the product.');
 			return;
 		}
 		
-		Session::set_alert('success', 'Your product has been created.');
+		Session::set_alert('success', 'The product has been added.');
 		Response::redirect('products');
 	}
 	
@@ -89,11 +89,11 @@ class Controller_Products extends Controller
 		$data    = $validator->validated();
 		
 		if (!Service_Product::update($product, $data)) {
-			Session::set_alert('error', 'There was an error updating your product.');
+			Session::set_alert('error', 'There was an error updating the product.');
 			return;
 		}
 		
-		Session::set_alert('success', 'Your product has been updated.');
+		Session::set_alert('success', 'The product has been updated.');
 		Response::redirect('products');
 	}
 	

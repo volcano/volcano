@@ -75,7 +75,7 @@ class Service_Customer_Paymentmethod extends Service
 			}
 		}
 		
-		$gateway_instance = \Gateway::instance($gateway, $customer);
+		$gateway_instance = Gateway::instance($gateway, $customer);
 		
 		$gateway_payment_method_id = $gateway_instance->paymentmethod()->create(array(
 			'account' => $account,
@@ -122,30 +122,41 @@ class Service_Customer_Paymentmethod extends Service
 	 */
 	public static function update(Model_Customer_Paymentmethod $payment_method, array $data = array())
 	{
-		if (Arr::get($data, 'account') || Arr::get($data, 'contact')) {
-			$gateway  = $payment_method->gateway;
-			$customer = $payment_method->customer;
-			
-			$gateway_payment_method = \Gateway::instance($gateway, $customer)->paymentmethod($payment_method->external_id);
-			if (!$gateway_payment_method) {
-				return false;
-			}
-			
-			$updated = $gateway_payment_method->update($data);
-			if (!$updated) {
-				return false;
-			}
+		if (!$account = Arr::get($data, 'account')) {
+			return false;
 		}
 		
-		if ($contact = Arr::get($data, 'contact')) {
-			$payment_method->contact->populate($contact);
-			
-			try {
-				$payment_method->contact->save();
-			} catch (FuelException $e) {
-				Log::error($e);
-				return false;
-			}
+		if (!$contact = Arr::get($data, 'contact')) {
+			return false;
+		}
+		
+		$gateway  = $payment_method->gateway;
+		$customer = $payment_method->customer;
+		
+		$gateway_instance = Gateway::instance($gateway, $customer);
+		
+		$gateway_payment_method = $gateway_instance->paymentmethod($payment_method->external_id);
+		if (!$gateway_payment_method) {
+			return false;
+		}
+		
+		$updated = $gateway_payment_method->update($data);
+		if (!$updated) {
+			return false;
+		}
+		
+		$gateway_payment_method = $gateway_instance->paymentmethod($payment_method->external_id);
+		
+		// Update the model.
+		$payment_method->provider = Arr::get($account, 'provider');
+		$payment_method->account  = $gateway_payment_method->data('account');
+		$payment_method->contact->populate($contact);
+		
+		try {
+			$payment_method->save();
+		} catch (FuelException $e) {
+			Log::error($e);
+			return false;
 		}
 		
 		if (Arr::get($data, 'primary')) {
@@ -164,10 +175,15 @@ class Service_Customer_Paymentmethod extends Service
 	 */
 	public static function delete(Model_Customer_Paymentmethod $payment_method)
 	{
+		// A primary payment method cannot be deleted.
+		if ($payment_method->primary()) {
+			return false;
+		}
+		
 		$gateway  = $payment_method->gateway;
 		$customer = $payment_method->customer;
 		
-		$gateway_payment_method = \Gateway::instance($gateway, $customer)->paymentmethod($payment_method->external_id);
+		$gateway_payment_method = Gateway::instance($gateway, $customer)->paymentmethod($payment_method->external_id);
 		if (!$gateway_payment_method) {
 			return false;
 		}

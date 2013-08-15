@@ -62,6 +62,37 @@ class Model_Customer_Paymentmethod extends Model
 	}
 	
 	/**
+	 * Returns the payment method action link.
+	 *
+	 * @param string $action The action to link to.
+	 *
+	 * @return string
+	 */
+	public function link($action = '')
+	{
+		$uri = 'customers/' . $this->customer->id . '/paymentmethods/' . $this->id;
+		if ($action) {
+			$uri .= '/' . $action;
+		}
+		
+		return Uri::create($uri);
+	}
+	
+	/**
+	 * Returns whether this is a primary payment method.
+	 *
+	 * @return bool
+	 */
+	public function primary()
+	{
+		if (!$this->active()) {
+			return false;
+		}
+		
+		return (bool) $this->primary;
+	}
+	
+	/**
 	 * Type helper function.
 	 *
 	 * @return string

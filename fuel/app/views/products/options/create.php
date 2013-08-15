@@ -1,8 +1,8 @@
 <?php
-$layout->title = 'Create Option';
+$layout->title = 'Add Option';
 $layout->breadcrumbs['Products'] = 'products';
 $layout->breadcrumbs[$product->name] = $product->link('options');
-$layout->breadcrumbs['Create Option'] = '';
+$layout->breadcrumbs['Add Option'] = '';
 
 echo render('products/options/form', array(
 	'product' => $product,
