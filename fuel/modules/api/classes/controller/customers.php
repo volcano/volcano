@@ -25,10 +25,7 @@ class Controller_Customers extends Controller
 				'seller' => $seller,
 			));
 		} else {
-			$customers = \Service_Customer::find_one($id);
-			if (!$customers || $customers->seller != $seller) {
-				throw new HttpNotFoundException;
-			}
+			$customers = $this->get_customer($id);
 		}
 		
 		$this->response($customers);
@@ -65,14 +62,7 @@ class Controller_Customers extends Controller
 	 */
 	public function put_index($id = null)
 	{
-		if (!$id) {
-			throw new HttpNotFoundException;
-		}
-		
-		$customer = \Service_Customer::find_one($id);
-		if (!$customer || $customer->seller != \Seller::active()) {
-			throw new HttpNotFoundException;
-		}
+		$customer = $this->get_customer($id);
 		
 		$validator = \Validation_Customer::update();
 		if (!$validator->run(\Input::put())) {
@@ -98,18 +88,32 @@ class Controller_Customers extends Controller
 	 */
 	public function delete_index($id = null)
 	{
-		if (!$id) {
-			throw new HttpNotFoundException;
-		}
-		
-		$customer = \Service_Customer::find_one($id, \Seller::active());
-		if (!$customer || $customer->seller != \Seller::active()) {
-			throw new HttpNotFoundException;
-		}
+		$customer = $this->get_customer($id);
 		
 		$deleted = \Service_Customer::delete($customer);
 		if (!$deleted) {
 			throw new HttpServerErrorException;
 		}
+	}
+	
+	/**
+	 * Attempts to get a customer from a given ID.
+	 *
+	 * @param int $id Customer ID.
+	 *
+	 * @return \Model_Customer
+	 */
+	protected function get_customer($id)
+	{
+		if (!$id) {
+			throw new HttpNotFoundException;
+		}
+		
+		$customer = \Service_Customer::find_one($id);
+		if (!$customer || $customer->seller != \Seller::active()) {
+			throw new HttpNotFoundException;
+		}
+		
+		return $customer;
 	}
 }
