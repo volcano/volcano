@@ -52,7 +52,7 @@ $sellers = Seller::all();
 					<ul class="pull-right nav nav-seller">
 						<li class="dropdown">
 							<a href="javascript:void(0)" data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle">
-								Sellers (<?php echo $seller->name ?>)
+								Seller (<?php echo $seller->name ?>)
 								<b class="caret"></b>
 							</a>
 							
