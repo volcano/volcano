@@ -40,7 +40,7 @@ if (!empty($contact)) {
 	<div class="control-group<?php if (!empty($errors['address'])) echo ' error' ?>">
 		<?php echo Form::label('Address', 'address', array('class' => 'control-label')) ?>
 		<div class="controls">
-			<?php echo Form::input('address', Input::post('address', $address), array('class' => 'required')) ?>
+			<?php echo Form::input('address', Input::post('address', $address)) ?>
 			<?php if (!empty($errors['address'])) echo $errors['address'] ?>
 		</div>
 	</div>
@@ -56,7 +56,7 @@ if (!empty($contact)) {
 	<div class="control-group<?php if (!empty($errors['city'])) echo ' error' ?>">
 		<?php echo Form::label('City', 'city', array('class' => 'control-label')) ?>
 		<div class="controls">
-			<?php echo Form::input('city', Input::post('city', $city), array('class' => 'required')) ?>
+			<?php echo Form::input('city', Input::post('city', $city)) ?>
 			<?php if (!empty($errors['city'])) echo $errors['city'] ?>
 		</div>
 	</div>
@@ -64,7 +64,7 @@ if (!empty($contact)) {
 	<div class="control-group<?php if (!empty($errors['state'])) echo ' error' ?>">
 		<?php echo Form::label('State', 'state', array('class' => 'control-label')) ?>
 		<div class="controls">
-			<?php echo Form::input('state', Input::post('state', $state), array('class' => 'required')) ?>
+			<?php echo Form::input('state', Input::post('state', $state)) ?>
 			<?php if (!empty($errors['state'])) echo $errors['state'] ?>
 		</div>
 	</div>
@@ -72,7 +72,7 @@ if (!empty($contact)) {
 	<div class="control-group<?php if (!empty($errors['zip'])) echo ' error' ?>">
 		<?php echo Form::label('Zip', 'zip', array('class' => 'control-label')) ?>
 		<div class="controls">
-			<?php echo Form::input('zip', Input::post('zip', $zip), array('class' => 'required')) ?>
+			<?php echo Form::input('zip', Input::post('zip', $zip)) ?>
 			<?php if (!empty($errors['zip'])) echo $errors['zip'] ?>
 		</div>
 	</div>
@@ -80,7 +80,7 @@ if (!empty($contact)) {
 	<div class="control-group<?php if (!empty($errors['country'])) echo ' error' ?>">
 		<?php echo Form::label('Country', 'country', array('class' => 'control-label')) ?>
 		<div class="controls">
-			<?php echo Form::select('country', Input::post('country', $country), $countries, array('class' => 'required')) ?>
+			<?php echo Form::select('country', Input::post('country', $country), $countries) ?>
 			<?php if (!empty($errors['country'])) echo $errors['country'] ?>
 		</div>
 	</div>
@@ -96,7 +96,7 @@ if (!empty($contact)) {
 	<div class="control-group<?php if (!empty($errors['phone'])) echo ' error' ?>">
 		<?php echo Form::label('Phone', 'phone', array('class' => 'control-label')) ?>
 		<div class="controls">
-			<?php echo Form::input('phone', Input::post('phone', $phone), array('class' => 'required')) ?>
+			<?php echo Form::input('phone', Input::post('phone', $phone)) ?>
 			<?php if (!empty($errors['phone'])) echo $errors['phone'] ?>
 		</div>
 	</div>

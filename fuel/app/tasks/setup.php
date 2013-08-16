@@ -25,6 +25,9 @@ class Setup
 		// Create all the table structure.
 		\Oil\Refine::run('migrate', array());
 		
+		// Create the session table.
+		\Oil\Refine::run('session:create', array());
+		
 		\Cli::write('Migration Complete', 'green');
 	}
 	

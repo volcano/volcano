@@ -52,7 +52,6 @@ class Controller_Customers_Contacts extends Controller_Customers
 		$validator = Validation_Contact::update();
 		if (!$validator->run()) {
 			Session::set_alert('error', __('form.error'));
-			dar($validator->error());die;
 			$this->view->errors = $validator->error();
 			return;
 		}

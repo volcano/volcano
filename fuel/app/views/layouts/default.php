@@ -7,11 +7,15 @@ Casset::js('libs/bootstrap/js/bootstrap-alert.js', true, 'base');
 Casset::js('libs/bootstrap/js/bootstrap-modal.js', true, 'base');
 Casset::js('libs/bootstrap/js/bootstrap-transition.js', true, 'base');
 Casset::js('libs/bootstrap/plugins/bootbox/bootbox.js', true, 'base');
+Casset::js('libs/bootstrap/plugins/bootstrap-hover-dropdown.js', true, 'base');
 Casset::js('libs/jquery/plugins/jquery.validate.js', true, 'page');
 Casset::js('js/common.js', true, 'base');
 Casset::js('js/common/common.validate.js', true, 'page');
 
 $app_name = Config::get('app_name');
+
+$seller  = Seller::active();
+$sellers = Seller::all();
 ?>
 
 <!DOCTYPE html>
@@ -43,6 +47,28 @@ $app_name = Config::get('app_name');
 		<div class="navbar navbar-inverse navbar-top">
 			<div class="navbar-inner">
 				<?php echo Html::anchor('/', Html::img('assets/img/logo-mini.png'), array('class' => 'pull-left brand')) ?>
+				
+				<?php if (count($sellers) > 1): ?>
+					<ul class="pull-right nav nav-seller">
+						<li class="dropdown">
+							<a href="javascript:void(0)" data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle">
+								Seller (<?php echo $seller->name ?>)
+								<b class="caret"></b>
+							</a>
+							
+							<ul class="dropdown-menu">
+								<?php foreach ($sellers as $item): ?>
+									<?php if ($item == $seller) continue ?>
+									<li><?php echo Html::anchor($item->link('switch'), $item->name) ?></li>
+								<?php endforeach ?>
+							</ul>
+						</li>
+					</ul>
+				<?php else: ?>
+					<ul class="pull-right nav nav-seller-single">
+						<li><?php echo $seller->name ?></li>
+					</ul>
+				<?php endif ?>
 			</div>
 		</div>
 		
