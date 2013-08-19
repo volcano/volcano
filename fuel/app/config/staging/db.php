@@ -1,7 +1,7 @@
 <?php
 
 $db_config = array();
-$db_config_file = '/var/www/volcano.static.com/config/db.php';
+$db_config_file = '/var/www/volcano.catalog.com/config/db.php';
 if (file_exists($db_config_file)) {
 	$tmp_db_config = include $db_config_file;
 	if ($tmp_db_config && is_array($tmp_db_config)) {
