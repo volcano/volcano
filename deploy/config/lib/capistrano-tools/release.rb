@@ -65,7 +65,7 @@ namespace :release do
 
   desc "Fuel oil script calls"
   task :fuel_oil_scripts do
-  fuel_env = ("#{stage}".eql?('staging')) ? "stage" : "#{stage}"
+    fuel_env = "#{stage}"
 
     logger.important "Running db migration on #{fuel_env}"
     run "cd #{latest_release} && FUEL_ENV='#{fuel_env}' /usr/bin/php oil refine migrate", :once => true
