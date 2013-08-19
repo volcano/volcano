@@ -44,9 +44,9 @@ module Capistrano
             logger.important "Starting git revision: '#{git_initial_sha}'"
           end
 
-          # Finalize application setup needed by fuel 
-          release.fuel_tasks
+          # Finalize application setup needed by fuel
           release.fuel_composer
+          release.fuel_tasks
 
           # fix release dir permissions
           run "#{try_sudo} chown -R #{www_user}:#{www_group} #{latest_release}"
