@@ -64,7 +64,7 @@ namespace :release do
   end
 
   desc "Fuel tasks"
-  task :fuel_oil_scripts do
+  task :fuel_tasks do
     fuel_env = "#{stage}"
 
     logger.important "Running setup task on #{fuel_env}"
