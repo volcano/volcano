@@ -63,15 +63,23 @@ namespace :release do
     end
   end
 
-  desc "Fuel oil script calls"
+  desc "Fuel tasks"
   task :fuel_oil_scripts do
     fuel_env = "#{stage}"
 
-    logger.important "Running db migration on #{fuel_env}"
-    run "cd #{latest_release} && FUEL_ENV='#{fuel_env}' /usr/bin/php oil refine migrate", :once => true
+    logger.important "Running setup task on #{fuel_env}"
+    run "cd #{latest_release} && FUEL_ENV='#{fuel_env}' /usr/bin/php oil refine setup", :once => true
+  end
+
+  desc "Fuel composer updates"
+  task :fuel_composer do
+    fuel_env = "#{stage}"
+
+    logger.important "Updating composer on #{fuel_env}"
+    run "cd #{latest_release} && /usr/bin/php composer.phar self-update", :once => true
     
-    logger.important "Running session create on #{fuel_env}"
-    run "cd #{latest_release} && FUEL_ENV='#{fuel_env}' /usr/bin/php oil refine session:create", :once => true
+    logger.important "Updating fuel composer packages on #{fuel_env}"
+    run "cd #{latest_release} && /usr/bin/php composer.phar update", :once => true
   end
 
   desc "Generate application config"

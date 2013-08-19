@@ -45,7 +45,8 @@ module Capistrano
           end
 
           # Finalize application setup needed by fuel 
-          release.fuel_oil_scripts
+          release.fuel_tasks
+          release.fuel_composer
 
           # fix release dir permissions
           run "#{try_sudo} chown -R #{www_user}:#{www_group} #{latest_release}"
