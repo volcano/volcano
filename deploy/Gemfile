@@ -1,0 +1,10 @@
+source "http://rubygems.org"
+
+gem "rake"
+gem "capistrano"
+gem "capistrano-ext"
+gem "capistrano-deploytags"
+gem "capistrano_colors"
+gem "railsless-deploy"
+gem "pony"
+

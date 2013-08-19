@@ -1,17 +1,17 @@
-# eReceivables 2.0
+# Volcano
 
 ## Introduction
 
-This should help you get started with the eReceivables 2.0 project.
+This should help you get started with Volcano CRM.
 
 ## Installation
 Clone the repo:
 
-	$ git clone -b dev ssh://git@code.onesite.com/er/ereceivables.git
+	$ git clone -b dev ssh://git@code.onesite.com/volcano/crm.git volcano
 
 Initialize all submodules:
 
-	$ cd ereceivables && git submodule update --init --recursive
+	$ cd volcano && git submodule update --init --recursive
 
 Update Composer dependencies:
 
@@ -27,6 +27,13 @@ Set file permissions and run migrations:
 
 	$ php oil r setup
 
-Insert a new record into the api_keys table.
+For API development and testing, insert a new record into the api_keys table.
 
 Copy the key you inserted and add it to `fuel/app/config/development/api.php` so that you don't have to specify the api_key param when testing locally.
+
+## Usage
+
+#### Deployment
+Deploy code to an environment using Capistrano. Environment (env) can be staging or production.
+
+	$ cap env deploy
