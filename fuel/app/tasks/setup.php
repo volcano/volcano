@@ -20,13 +20,13 @@ class Setup
 		\Oil\Refine::run('install');
 		
 		// Attempt to create and chmod directories.
-		\Oil\Refine::run('setup:directories', array());
+		\Oil\Refine::run('setup:directories');
 		
 		// Create all the table structure.
-		\Oil\Refine::run('migrate', array());
+		\Oil\Refine::run('migrate');
 		
 		// Create the session table.
-		\Oil\Refine::run('session:create', array());
+		\Oil\Refine::run('session:create');
 		
 		\Cli::write('Migration Complete', 'green');
 	}
@@ -99,5 +99,8 @@ class Setup
 		\Migrate::latest();
 		
 		\Cli::write('Migration Complete', 'green');
+		
+		// Truncate sessions table.
+		\Oil\Refine::run('session:clear');
 	}
 }
