@@ -2,8 +2,8 @@
 
 $nav = array(
 	array(
-		'href'       => 'products/create',
-		'value'      => 'Add Product Line',
+		'href'       => 'settings/api/create',
+		'value'      => 'Add API Key',
 		'attributes' => array('class' => 'btn'),
 		'icon'       => 'icon-plus',
 	),

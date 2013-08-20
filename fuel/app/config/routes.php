@@ -12,6 +12,7 @@ return array(
 	
 	// Settings routes.
 	'(settings)/(:num)/(switch)'                                   => '$1/$3/$2',
+	'(settings)/(:segment)/(:num)/(:segment)'                      => '$1/$2/$4/$3',
 	
 	// General routes.
 	'(:segment)/(:num)/(edit)'                                     => '$1/$3/$2',

@@ -1,7 +1,7 @@
 <?php
 $layout->title = 'Edit Fee';
 $layout->subtitle = $fee->name;
-$layout->breadcrumbs['Products'] = 'products';
+$layout->breadcrumbs['Product Lines'] = 'products';
 $layout->breadcrumbs[$product->name] = $product->link('options');
 $layout->breadcrumbs[$option->name] = $option->link('fees');
 $layout->breadcrumbs['Edit Fee: ' . $fee->name] = '';

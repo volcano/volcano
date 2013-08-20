@@ -1,7 +1,7 @@
 <?php
 
 return array(
-	'app_name' => 'Volcano',
+	'app_name' => 'Volcano CRM',
 	
 	'profiling' => Input::get('profile', false),
 	

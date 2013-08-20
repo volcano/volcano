@@ -76,6 +76,16 @@ class Model_Contact extends Model
 	}
 	
 	/**
+	 * Fax number helper function.
+	 *
+	 * @return string
+	 */
+	public function fax()
+	{
+		return Num::smart_format_phone($this->fax);
+	}
+	
+	/**
 	 * Country helper function.
 	 *
 	 * @return string

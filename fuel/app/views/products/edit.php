@@ -1,7 +1,7 @@
 <?php
 $layout->title = 'Edit';
 $layout->subtitle = $product->name;
-$layout->breadcrumbs['Products'] = 'products';
+$layout->breadcrumbs['Product Lines'] = 'products';
 $layout->breadcrumbs['Edit: ' . $product->name] = '';
 
 echo render('products/form', array(

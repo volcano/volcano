@@ -16,12 +16,23 @@ class Validation_Contact extends Validation
 	{
 		$validator = Validation::forge('contact');
 		
-		$validator->add('first_name', 'First Name')->add_rule('trim')->add_rule('required');
-		$validator->add('last_name', 'Last Name')->add_rule('trim')->add_rule('required');
-		
-		if ($type == 'seller' || $type == 'customer') {
+		if ($type == 'seller') {
+			$validator->add('company_name', 'Company Name')->add_rule('trim')->add_rule('required');
 			$validator->add('email', 'Email')->add_rule('trim')->add_rule('valid_email')->add_rule('required');
-		} elseif ($type == 'paymentmethod') {
+			
+			$validator = self::add_optional_address_fields($validator);
+		}
+		elseif ($type == 'customer') {
+			$validator->add('first_name', 'First Name')->add_rule('trim')->add_rule('required');
+			$validator->add('last_name', 'Last Name')->add_rule('trim')->add_rule('required');
+			$validator->add('email', 'Email')->add_rule('trim')->add_rule('valid_email')->add_rule('required');
+			
+			$validator = self::add_optional_address_fields($validator);
+		}
+		elseif ($type == 'paymentmethod') {
+			$validator->add('first_name', 'First Name')->add_rule('trim')->add_rule('required');
+			$validator->add('last_name', 'Last Name')->add_rule('trim')->add_rule('required');
+			
 			$validator = self::add_required_address_fields($validator);
 		}
 		
@@ -41,18 +52,33 @@ class Validation_Contact extends Validation
 		
 		$input = Input::param();
 		
-		if (array_key_exists('first_name', $input)) {
-			$validator->add('first_name', 'First Name')->add_rule('trim')->add_rule('required');
-		}
-		
-		if (array_key_exists('last_name', $input)) {
-			$validator->add('last_name', 'Last Name')->add_rule('trim')->add_rule('required');
-		}
-		
-		if ($type == 'seller' || $type == 'customer') {
-			$validator->add('email', 'Email')->add_rule('trim')->add_rule('valid_email')->add_rule('required');
+		if ($type == 'seller') {
+			if (array_key_exists('company_name', $input)) {
+				$validator->add('company_name', 'Company Name')->add_rule('trim')->add_rule('required');
+			}
+			
+			if (array_key_exists('email', $input)) {
+				$validator->add('email', 'Email')->add_rule('trim')->add_rule('valid_email')->add_rule('required');
+			}
+			
 			$validator = self::add_optional_address_fields($validator);
-		} elseif ($type == 'paymentmethod') {
+		}
+		elseif ($type == 'customer') {
+			if (array_key_exists('first_name', $input)) {
+				$validator->add('first_name', 'First Name')->add_rule('trim')->add_rule('required');
+			}
+			
+			if (array_key_exists('last_name', $input)) {
+				$validator->add('last_name', 'Last Name')->add_rule('trim')->add_rule('required');
+			}
+			
+			if (array_key_exists('email', $input)) {
+				$validator->add('email', 'Email')->add_rule('trim')->add_rule('valid_email')->add_rule('required');
+			}
+			
+			$validator = self::add_optional_address_fields($validator);
+		}
+		elseif ($type == 'paymentmethod') {
 			$validator = self::add_required_address_fields($validator);
 		}
 		
@@ -133,10 +159,6 @@ class Validation_Contact extends Validation
 	protected static function add_optional_fields(Validation $validator)
 	{
 		$input = Input::param();
-		
-		if (array_key_exists('company_name', $input)) {
-			$validator->add('company_name', 'Company Name')->add_rule('trim');
-		}
 		
 		if (array_key_exists('phone', $input)) {
 			$validator->add('phone', 'Phone')->add_rule('trim')->add_rule('number');
