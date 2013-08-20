@@ -9,7 +9,6 @@ Casset::js('libs/bootstrap/js/bootstrap-modal.js', true, 'base');
 Casset::js('libs/bootstrap/js/bootstrap-transition.js', true, 'base');
 Casset::js('libs/bootstrap/plugins/bootbox/bootbox.js', true, 'base');
 Casset::js('libs/bootstrap/plugins/bootstrap-hover-dropdown.js', true, 'base');
-Casset::js('libs/highcharts/highcharts.js', true, 'base');
 Casset::js('js/common.js', true, 'base');
 Casset::js('js/common/common.validate.js', true, 'page');
 
