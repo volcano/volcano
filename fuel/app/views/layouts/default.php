@@ -3,12 +3,13 @@ Casset::less('less/layouts/default/config.less', true, 'base');
 Casset::less('less/layouts/default/layout.less', true, 'base');
 Casset::less('less/layouts/default/config.less', true, 'page');
 Casset::js('libs/jquery/jquery.min.js', false, 'base');
+Casset::js('libs/jquery/plugins/jquery.validate.js', true, 'page');
 Casset::js('libs/bootstrap/js/bootstrap-alert.js', true, 'base');
 Casset::js('libs/bootstrap/js/bootstrap-modal.js', true, 'base');
 Casset::js('libs/bootstrap/js/bootstrap-transition.js', true, 'base');
 Casset::js('libs/bootstrap/plugins/bootbox/bootbox.js', true, 'base');
 Casset::js('libs/bootstrap/plugins/bootstrap-hover-dropdown.js', true, 'base');
-Casset::js('libs/jquery/plugins/jquery.validate.js', true, 'page');
+Casset::js('libs/highcharts/highcharts.js', true, 'base');
 Casset::js('js/common.js', true, 'base');
 Casset::js('js/common/common.validate.js', true, 'page');
 
@@ -26,14 +27,14 @@ $sellers = Seller::all();
 		<?php if (isset($title)): ?>
 			<?php if (!isset($title_prefix) || $title_prefix): ?>
 				<?php echo $app_name ?> -
-			<?php endif; ?>
+			<?php endif ?>
 			<?php echo $title ?>
 			<?php if (!empty($subtitle)): ?>
 				- <?php echo $subtitle ?>
 			<?php endif ?>
 		<?php else: ?>
 			<?php echo $app_name ?>
-		<?php endif; ?>
+		<?php endif ?>
 	</title>
 	
 	<?php
