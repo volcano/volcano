@@ -7,7 +7,6 @@ class_alias('Fuel\\Core\\Autoloader', 'Autoloader');
 // Bootstrap the framework DO NOT edit this
 require COREPATH.'bootstrap.php';
 
-
 Autoloader::add_classes(array(
 	// Add classes you want to override here.
 	'Controller'                    => APPPATH . 'classes/controller.php',
@@ -40,3 +39,11 @@ Fuel::init('config.php');
 
 // Load the app helper functions.
 require APPPATH . 'app.php';
+
+// Redirect to setup if no sellers exist.
+if (Input::server('REQUEST_URI') != '/setup') {
+	$sellers = Service_Seller::find();
+	if (empty($sellers)) {
+		Response::redirect('setup');
+	}
+}
