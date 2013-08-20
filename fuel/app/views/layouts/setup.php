@@ -16,8 +16,11 @@ $app_name = Config::get('app_name');
 	<meta charset="utf-8">
 	<title>
 		<?php echo $app_name ?>
-		<?php if (isset($title)): ?>
+		<?php echo $app_name ?>
+		<?php if (!empty($title) && empty($breadcrumbs)): ?>
 			- <?php echo $title ?>
+		<?php elseif (!empty($breadcrumbs)): ?>
+			- <?php echo implode(' - ', array_keys($breadcrumbs)) ?>
 		<?php endif ?>
 	</title>
 	

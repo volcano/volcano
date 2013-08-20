@@ -24,16 +24,11 @@ $sellers = Seller::all();
 <head>
 	<meta charset="utf-8">
 	<title>
-		<?php if (isset($title)): ?>
-			<?php if (!isset($title_prefix) || $title_prefix): ?>
-				<?php echo $app_name ?> -
-			<?php endif ?>
-			<?php echo $title ?>
-			<?php if (!empty($subtitle)): ?>
-				- <?php echo $subtitle ?>
-			<?php endif ?>
-		<?php else: ?>
-			<?php echo $app_name ?>
+		<?php echo $app_name ?>
+		<?php if (!empty($title) && empty($breadcrumbs)): ?>
+			- <?php echo $title ?>
+		<?php elseif (!empty($breadcrumbs)): ?>
+			- <?php echo implode(' - ', array_keys($breadcrumbs)) ?>
 		<?php endif ?>
 	</title>
 	
