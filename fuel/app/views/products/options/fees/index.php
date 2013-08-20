@@ -1,7 +1,7 @@
 <?php
 $layout->title = 'Fees';
 $layout->subtitle = $option->name;
-$layout->breadcrumbs['Products'] = 'products';
+$layout->breadcrumbs['Product Lines'] = 'products';
 $layout->breadcrumbs[$product->name] = $product->link('options');
 $layout->breadcrumbs['Fees: ' . $option->name] = '';
 $layout->pagenav = render('products/options/fees/pagenav', array('option' => $option));

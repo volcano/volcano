@@ -1,6 +1,6 @@
 <?php
 $layout->title = 'Add Option';
-$layout->breadcrumbs['Products'] = 'products';
+$layout->breadcrumbs['Product Lines'] = 'products';
 $layout->breadcrumbs[$product->name] = $product->link('options');
 $layout->breadcrumbs['Add Option'] = '';
 
