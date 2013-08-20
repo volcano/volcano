@@ -60,8 +60,8 @@ class Service_Seller extends Service
 		}
 		
 		$contact = \Service_Contact::create(
-			Arr::get($contact_data, 'first_name'),
-			Arr::get($contact_data, 'last_name'),
+			Arr::get($contact_data, 'first_name', ''),
+			Arr::get($contact_data, 'last_name', ''),
 			$contact_data
 		);
 		

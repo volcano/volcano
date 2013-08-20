@@ -11,7 +11,7 @@ class Model_Api_Key extends Model
 		'id',
 		'seller_id',
 		'key',
-		'status',
+		'status' => array('default' => 'active'),
 		'created_at',
 		'updated_at',
 	);
@@ -30,4 +30,21 @@ class Model_Api_Key extends Model
 	protected static $_belongs_to = array(
 		'seller',
 	);
+	
+	/**
+	 * Returns the api key action link.
+	 *
+	 * @param string $action The action to link to.
+	 *
+	 * @return string
+	 */
+	public function link($action = '')
+	{
+		$uri = 'settings/api/' . $this->id;
+		if ($action) {
+			$uri .= '/' . $action;
+		}
+		
+		return Uri::create($uri);
+	}
 }

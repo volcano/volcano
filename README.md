@@ -1,4 +1,4 @@
-# Volcano
+# Volcano CRM
 
 ## Introduction
 
@@ -13,7 +13,7 @@ Initialize all submodules:
 
 	$ cd volcano && git submodule update --init --recursive
 
-Update Composer dependencies:
+Update Composer and dependencies:
 
 	$ php composer.phar self-update
 	$ php composer.phar update

@@ -1,5 +1,6 @@
 <?php
 $layout->title = 'General';
+$layout->leftnav = render('settings/leftnav');
 $layout->breadcrumbs['Settings'] = 'settings';
 $layout->breadcrumbs['General'] = '';
 ?>

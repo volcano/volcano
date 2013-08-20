@@ -6,7 +6,7 @@ if (empty($customer)) {
 
 $nav = array(
 	array(
-		'href'  => '/customers',
+		'href'  => 'customers',
 		'value' => 'Manage Customers',
 		'class' => 'return-link',
 	),

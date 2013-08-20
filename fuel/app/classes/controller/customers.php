@@ -31,7 +31,11 @@ class Controller_Customers extends Controller
 	 */
 	protected function get_customer($id)
 	{
-		$customer = Service_Customer::find_one($id);
+		if (!$id) {
+			throw new HttpNotFoundException;
+		}
+		
+		$customer = Service_Customer::find_one(array('id' => $id, 'status' => 'all'));
 		if (!$customer || $customer->seller != Seller::active()) {
 			throw new HttpNotFoundException;
 		}
