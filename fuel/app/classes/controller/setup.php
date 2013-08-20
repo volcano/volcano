@@ -44,7 +44,6 @@ class Controller_Setup extends Controller
 			return;
 		}
 		
-		Session::set_alert('success', "The seller has been added. You are now viewing as seller \"{$seller->name}\".");
-		Response::redirect('/');
+		Response::redirect($seller->link('switch'));
 	}
 }
