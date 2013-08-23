@@ -26,7 +26,7 @@ class Service_Seller extends Service
 			$sellers->where('id', $options['id']);
 		}
 		
-		if (!empty($options['status'])) {
+		if (!empty($options['status']) && $options['status'] != 'all') {
 			$sellers->where('status', $options['status']);
 		}
 		

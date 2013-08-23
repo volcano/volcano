@@ -40,10 +40,12 @@ Fuel::init('config.php');
 // Load the app helper functions.
 require APPPATH . 'app.php';
 
-// Redirect to setup if no sellers exist.
-if (Input::server('REQUEST_URI') != '/setup') {
-	$sellers = Service_Seller::find();
-	if (empty($sellers)) {
-		Response::redirect('setup');
+if (!Fuel::$is_cli) {
+	// Redirect to setup if no sellers exist.
+	if (Input::server('REQUEST_URI') != '/setup') {
+		$sellers = Service_Seller::find();
+		if (empty($sellers)) {
+			Response::redirect('setup');
+		}
 	}
 }

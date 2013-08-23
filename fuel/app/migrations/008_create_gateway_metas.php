@@ -3,7 +3,7 @@
 namespace Fuel\Migrations;
 
 /**
- * Gateway_Metas migration.
+ * Gateway Metas migration.
  *
  * @author Keithia Stegmann <kstegmann@static.com>
  */
@@ -13,7 +13,7 @@ class Create_Gateway_Metas
 	{
 		\DBUtil::create_table('gateway_metas', array(
 			'id'         => array('type' => 'int', 'constraint' => 11, 'auto_increment' => true),
-			'gateway_id' => array('type' => 'int', 'constraint' => 11,),
+			'gateway_id' => array('type' => 'int', 'constraint' => 11),
 			'name'       => array('type' => 'varchar', 'constraint' => 255),
 			'value'      => array('type' => 'text'),
 			'created_at' => array('type' => 'datetime'),

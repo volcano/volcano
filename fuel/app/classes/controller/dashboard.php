@@ -8,7 +8,7 @@
 class Controller_Dashboard extends Controller
 {
 	/**
-	 * The 404 action for the application.
+	 * The root/index action for the application.
 	 *
 	 * @return void
 	 */
