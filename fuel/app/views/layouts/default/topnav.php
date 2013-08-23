@@ -20,6 +20,12 @@ $topnav = array(
 		'aliases' => array('products/*'),
 	),
 	array(
+		'href'    => 'statistics',
+		'value'   => 'Statistics',
+		'icon'    => 'icon-bar-chart',
+		'aliases' => array('statistics/*'),
+	),
+	array(
 		'href'    => 'settings',
 		'value'   => 'Settings',
 		'icon'    => 'icon-gear',

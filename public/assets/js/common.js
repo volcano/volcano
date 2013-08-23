@@ -18,4 +18,16 @@ $(function() {
 			}
 		});
 	});
+	
+	/* Functions */
+	titleize = function(string)
+	{
+		var parts = string.split(/[_ -]/);
+		
+		$.each(parts, function (key, value) {
+			parts[key] = value.charAt(0).toUpperCase() + value.slice(1)
+		});
+		
+		return parts.join(' ');
+	}
 });
