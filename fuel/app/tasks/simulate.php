@@ -9,7 +9,20 @@ namespace Fuel\Tasks;
  */
 class Simulate
 {
-	const TOTAL_CUSTOMERS = 500;
+	/**
+	 * May 1st, 2013
+	 */
+	const BEGIN_DATETIME = 1367384400;
+	
+	/**
+	 * August 31st, 2013
+	 */
+	const END_DATETIME = 1377925200;
+	
+	/**
+	 * Total number of customers to create.
+	 */
+	const TOTAL_CUSTOMERS = 2000;
 	
 	/**
 	 * Array of generated sellers.
@@ -43,10 +56,15 @@ class Simulate
 		\Cli::write('All Simulations Complete', 'green');
 	}
 	
+	/**
+	 * Generates sellers.
+	 *
+	 * @return void
+	 */
 	protected static function sellers()
 	{
 		// July 1st, 2013.
-		$date = date("Y-m-d H:i:s", 1372636800);
+		$date = date("Y-m-d H:i:s", self::BEGIN_DATETIME);
 		
 		$companies = array('Catalog', 'Static');
 		foreach ($companies as $company) {
@@ -74,6 +92,11 @@ class Simulate
 		\Cli::write('Seller Simulation Complete', 'green');
 	}
 	
+	/**
+	 * Generates products.
+	 *
+	 * @return void
+	 */
 	protected static function products()
 	{
 		foreach (self::$sellers as $seller) {
@@ -92,6 +115,11 @@ class Simulate
 		\Cli::write('Product Simulation Complete', 'green');
 	}
 	
+	/**
+	 * Generates customers.
+	 *
+	 * @return void
+	 */
 	protected static function customers()
 	{
 		$balances = array(0, 5, 10, 12.50, 24.30);
@@ -111,7 +139,7 @@ class Simulate
 			$last_name  = $last_names[array_rand($last_names)];
 			
 			// Random created_at between July 1st, 2013 and August 31st, 2013.
-			$date = date("Y-m-d H:i:s", mt_rand(1372636800, 1377907200));
+			$date = date("Y-m-d H:i:s", mt_rand(self::BEGIN_DATETIME, self::END_DATETIME));
 			
 			$customers[] = array(
 				'balance'    => $balances[array_rand($balances)],
