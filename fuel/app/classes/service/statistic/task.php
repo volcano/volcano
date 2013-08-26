@@ -17,7 +17,7 @@ class Service_Statistic_Task extends Service
 	protected static function query(array $options = array())
 	{
 		$options = array_merge(array(
-			'order_by' => array('created_at' => 'desc'),
+			'order_by' => array('id' => 'desc'),
 		), $options);
 		
 		$tasks = Model_Statistic_Task::query();
