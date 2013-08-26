@@ -104,6 +104,11 @@ class Controller extends \Fuel\Core\Controller_Rest
 	 */
 	protected function _prepare_key_auth()
 	{
+		// Skip auth for front-end interface.
+		if (\Seller::active()) {
+			return true;
+		}
+		
 		\Config::load('api', true);
 		
 		$api_key = \Input::param('api_key', \Config::get('api.key'));

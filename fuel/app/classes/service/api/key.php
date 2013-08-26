@@ -22,6 +22,10 @@ class Service_Api_Key extends Service
 		
 		$api_keys = Model_Api_Key::query();
 		
+		if (!empty($options['seller'])) {
+			$api_keys->where('seller_id', $options['seller']->id);
+		}
+		
 		if (!empty($options['key'])) {
 			$api_keys->where('key', $options['key']);
 		}

@@ -49,21 +49,21 @@ class Service_Customer_Product_Option extends Service
 	 */
 	public static function create($name, Model_Customer $customer, Model_Product_Option $option, array $data = array())
 	{
-		$option = Model_Customer_Product_Option::forge();
-		$option->name = $name;
-		$option->customer = $customer;
-		$option->product = $product;
+		$customer_option = Model_Customer_Product_Option::forge();
+		$customer_option->name = $name;
+		$customer_option->customer = $customer;
+		$customer_option->option = $option;
 		
-		$option->populate($data);
+		$customer_option->populate($data);
 		
 		try {
-			$option->save();
+			$customer_option->save();
 		} catch (FuelException $e) {
 			Log::error($e);
 			return false;
 		}
 		
-		return $option;
+		return $customer_option;
 	}
 	
 	/**
