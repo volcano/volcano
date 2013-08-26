@@ -26,7 +26,7 @@ $layout->pagenav = render('products/pagenav');
 				<td><?php echo $product->id ?></td>
 				<td><?php echo $product->name ?></td>
 				<td><?php echo View_Helper::date($product->created_at) ?></td>
-				<td><?php echo View_Helper::date($product->updated_at) ?></td>
+				<td><?php echo ($product->updated_at != $product->created_at) ? View_Helper::date($product->updated_at) : '' ?></td>
 				<td>
 					<?php
 					switch ($product->status) {

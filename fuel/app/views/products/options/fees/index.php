@@ -42,7 +42,7 @@ $layout->pagenav = render('products/options/fees/pagenav', array('option' => $op
 					<?php endif ?>
 				</td>
 				<td><?php echo View_Helper::date($fee->created_at) ?></td>
-				<td><?php echo View_Helper::date($fee->updated_at) ?></td>
+				<td><?php echo ($fee->updated_at != $fee->created_at) ? View_Helper::date($fee->updated_at) : '' ?></td>
 				<td>
 					<?php
 					switch ($fee->status) {
