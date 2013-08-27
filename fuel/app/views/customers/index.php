@@ -54,3 +54,5 @@ $layout->breadcrumbs['Customers'] = 'customers';
 		<?php endforeach ?>
 	</tbody>
 </table>
+
+<?php echo $pagination->render() ?>

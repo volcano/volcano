@@ -14,12 +14,22 @@ class Controller_Customers extends Controller
 	 */
 	public function action_index()
 	{
-		$customers = Service_Customer::find(array(
+		$args = array(
 			'seller' => Seller::active(),
 			'status' => 'all',
+		);
+		
+		$pagination = Pagination::forge('customer_pagination', array(
+			'total_items' => Service_Customer::count($args),
 		));
 		
+		$customers = Service_Customer::find(array_merge($args, array(
+			'offset' => $pagination->offset,
+			'limit'  => $pagination->per_page,
+		)));
+		
 		$this->view->customers = $customers;
+		$this->view->pagination = $pagination;
 	}
 	
 	/**
