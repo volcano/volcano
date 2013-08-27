@@ -12,6 +12,7 @@ Autoloader::add_classes(array(
 	'Controller'                    => APPPATH . 'classes/controller.php',
 	'Casset'                        => APPPATH . 'classes/casset.php',
 	'Model'                         => APPPATH . 'classes/model.php',
+	'Pagination'                    => APPPATH . 'classes/pagination.php',
 	'Session'                       => APPPATH . 'classes/session.php',
 	'Validation'                    => APPPATH . 'classes/validation.php',
 	'Validation_Error'              => APPPATH . 'classes/validation/error.php',

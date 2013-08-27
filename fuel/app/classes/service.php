@@ -27,6 +27,10 @@ class Service
 	{
 		$query = static::query($options);
 		
+		if (!empty($options['offset'])) {
+			$query->rows_offset($options['offset']);
+		}
+		
 		if (!empty($options['limit'])) {
 			$query->rows_limit($options['limit']);
 		}
