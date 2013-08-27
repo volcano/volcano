@@ -15,6 +15,7 @@ $layout->breadcrumbs['Customers'] = 'customers';
 		<th>ID</th>
 		<th>Name</th>
 		<th>Email</th>
+		<th>Balance</th>
 		<th>Date Created</th>
 		<th>Date Updated</th>
 		<th>Status</th>
@@ -26,6 +27,7 @@ $layout->breadcrumbs['Customers'] = 'customers';
 				<td><?php echo $customer->id ?></td>
 				<td><?php echo $customer->name() ?></td>
 				<td><?php echo $customer->email() ?></td>
+				<td><?php echo $customer->balance() ?></td>
 				<td><?php echo View_Helper::date($customer->created_at) ?></td>
 				<td><?php echo ($customer->updated_at != $customer->created_at) ? View_Helper::date($customer->updated_at) : '' ?></td>
 				<td>

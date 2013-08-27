@@ -72,6 +72,16 @@ class Model_Customer extends Model
 	}
 	
 	/**
+	 * Balance helper function.
+	 *
+	 * @return string
+	 */
+	public function balance()
+	{
+		return '$' . number_format($this->balance, 2);
+	}
+	
+	/**
 	 * Primary contact helper function.
 	 *
 	 * @param string|array $properties One or more contact properties to return.
