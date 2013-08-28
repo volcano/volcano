@@ -11,16 +11,19 @@ $first_name = $last_name = $address = $address2 = $city = $state = $zip = $prima
 $country = 'US';
 
 if (!empty($paymentmethod)) {
-	$primary             = $paymentmethod->primary();
-	$contact             = $paymentmethod->contact;
-	$first_name          = $contact->first_name;
-	$last_name           = $contact->last_name;
-	$address             = $contact->address;
-	$address2            = $contact->address2;
-	$city                = $contact->city;
-	$state               = $contact->state;
-	$zip                 = $contact->zip;
-	$country             = $contact->country;
+	$primary = $paymentmethod->primary();
+	$contact = $paymentmethod->contact;
+}
+
+if (!empty($contact)) {
+	$first_name = $contact->first_name;
+	$last_name  = $contact->last_name;
+	$address    = $contact->address;
+	$address2   = $contact->address2;
+	$city       = $contact->city;
+	$state      = $contact->state;
+	$zip        = $contact->zip;
+	$country    = $contact->country;
 }
 ?>
 
