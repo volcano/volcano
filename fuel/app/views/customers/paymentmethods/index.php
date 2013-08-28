@@ -43,9 +43,6 @@ $layout->breadcrumbs['Payment Methods'] = '';
 							break;
 							
 						case 'deleted':
-							$status_label = ' label-important';
-							break;
-							
 						default:
 							$status_label = '';
 					}

@@ -15,12 +15,16 @@ $nav = array(
 		'value' => 'Contacts',
 	),
 	array(
-		'href'  => $customer->link('products'),
-		'value' => 'Products',
-	),
-	array(
 		'href'  => $customer->link('paymentmethods'),
 		'value' => 'Payment Methods',
+	),
+	array(
+		'href'  => $customer->link('orders'),
+		'value' => 'Orders',
+	),
+	array(
+		'href'  => $customer->link('products'),
+		'value' => 'Products',
 	),
 	array(
 		'href'  => $customer->link('transactions'),

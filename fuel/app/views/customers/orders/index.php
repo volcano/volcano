@@ -1,15 +1,15 @@
 <?php
-$layout->title = 'Transactions';
+$layout->title = 'Orders';
 $layout->subtitle = $customer->name();
 $layout->leftnav = render('customers/leftnav', array('customer' => $customer));
 $layout->breadcrumbs['Customers'] = 'customers';
 $layout->breadcrumbs[$customer->name()] = $customer->link('contacts');
-$layout->breadcrumbs['Transactions'] = '';
+$layout->breadcrumbs['Orders'] = '';
 ?>
 
-<?php if (empty($transactions)): ?>
+<?php if (empty($orders)): ?>
 	<div class="alert alert-error">
-		<p>This customer has no transactions.</p>
+		<p>This customer has no orders.</p>
 	</div>
 	<?php return ?>
 <?php endif ?>
@@ -17,39 +17,36 @@ $layout->breadcrumbs['Transactions'] = '';
 <table class="table table-striped">
 	<thead>
 		<th>ID</th>
-		<th>Amount</th>
-		<th>Payment Method</th>
-		<th>Date</th>
+		<th>Transaction ID</th>
+		<th>Date Created</th>
+		<th>Date Updated</th>
 		<th>Status</th>
 	</thead>
 	<tbody>
-		<?php foreach ($transactions as $transaction): ?>
+		<?php foreach ($orders as $order): ?>
 			<tr>
-				<td><?php echo $transaction->id ?></td>
-				<td>$<?php echo $transaction->amount ?></td>
-				<td><?php echo $transaction->paymentmethod() ?></td>
-				<td><?php echo View_Helper::date($transaction->created_at) ?></td>
+				<td><?php echo $order->id ?></td>
+				<td><?php echo $order->transaction_id ?></td>
+				<td><?php echo View_Helper::date($order->created_at) ?></td>
+				<td><?php echo ($order->updated_at != $order->created_at) ? View_Helper::date($order->updated_at) : '' ?></td>
 				<td>
 					<?php
-					switch ($transaction->status) {
-						case 'paid':
+					switch ($order->status) {
+						case 'completed':
 							$status_label = 'label-success';
 							break;
 							
-						case 'declined':
-							$status_label = 'label-important';
-							break;
-							
-						case 'refunded':
+						case 'pending':
 							$status_label = 'label-info';
 							break;
 							
+						case 'canceled':
 						default:
 							$status_label = '';
 					}
 					?>
 					<span class="label <?php echo $status_label ?>">
-						<?php echo Str::ucfirst($transaction->status) ?>
+						<?php echo Str::ucfirst($order->status) ?>
 					</span>
 				</td>
 			</tr>
