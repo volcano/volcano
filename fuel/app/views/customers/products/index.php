@@ -18,8 +18,9 @@ $layout->breadcrumbs['Products'] = '';
 	<thead>
 		<th>ID</th>
 		<th>Name</th>
-		<th>Product</th>
+		<th>Product Line</th>
 		<th>Product Option</th>
+		<th>Order ID</th>
 		<th>Date Created</th>
 		<th>Date Updated</th>
 		<th>Status</th>
@@ -32,6 +33,7 @@ $layout->breadcrumbs['Products'] = '';
 				<td><?php echo $product->name ?></td>
 				<td><?php echo Html::anchor($product->option->product->link('options'), $product->option->product->name) ?></td>
 				<td><?php echo Html::anchor($product->option->link('fees'), $product->option->name) ?></td>
+				<td><?php echo $product->order_id ?></td>
 				<td><?php echo View_Helper::date($product->created_at) ?></td>
 				<td><?php echo ($product->updated_at != $product->created_at) ? View_Helper::date($product->updated_at) : '' ?></td>
 				<td>
