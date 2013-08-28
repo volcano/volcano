@@ -104,7 +104,7 @@ class Service_Customer_Paymentmethod extends Service
 		}
 		
 		// Set as primary if customer has none.
-		$primary = self::primary($customer, $gateway);
+		$primary = self::primary($customer);
 		if (Arr::get($data, 'primary') || empty($primary)) {
 			self::set_primary($payment_method);
 		}
@@ -205,24 +205,22 @@ class Service_Customer_Paymentmethod extends Service
 	}
 	
 	/**
-	 * Gets a customer's primary payment method for a gateway.
+	 * Gets a customer's primary payment method.
 	 *
 	 * @param Model_Customer $customer The customer.
-	 * @param Model_Gateway  $gateway  The gateway.
 	 *
 	 * @return Model_Customer_Paymentmethod
 	 */
-	public static function primary(Model_Customer $customer, Model_Gateway $gateway)
+	public static function primary(Model_Customer $customer)
 	{
 		return self::find_one(array(
 			'customer' => $customer,
-			'gateway'  => $gateway,
 			'primary'  => true,
 		));
 	}
 	
 	/**
-	 * Sets a customer's primary payment method for a gateway.
+	 * Sets a customer's primary payment method.
 	 *
 	 * @param Model_Customer_Paymentmethod $new Primary payment method.
 	 * 
@@ -230,7 +228,7 @@ class Service_Customer_Paymentmethod extends Service
 	 */
 	protected static function set_primary(Model_Customer_Paymentmethod $new)
 	{
-		$existing = self::primary($new->customer, $new->gateway);
+		$existing = self::primary($new->customer);
 		if ($existing) {
 			$existing->primary = null;
 			
