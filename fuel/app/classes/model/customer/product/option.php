@@ -10,9 +10,10 @@ class Model_Customer_Product_Option extends Model
 	protected static $_properties = array(
 		'id',
 		'customer_id',
+		'order_id',
 		'product_option_id',
 		'name',
-		'status' => array('default' => 'pending'),
+		'status' => array('default' => 'active'),
 		'created_at',
 		'updated_at',
 	);
@@ -30,6 +31,10 @@ class Model_Customer_Product_Option extends Model
 	
 	protected static $_belongs_to = array(
 		'customer',
+		'order' => array(
+			'key_from' => 'order_id',
+			'model_to' => 'Model_Customer_Order',
+		),
 		'option' => array(
 			'model_to' => 'Model_Product_Option',
 		),
