@@ -4,8 +4,10 @@ $(function() {
 	$.ajax({
 		url  : element.data('url'),
 		type : 'get'
-	}).done(function (response) {
-		renderChart(element, response);
+	}).done(function (data, msg, status) {
+		if (status['status'] == 200) {
+			renderChart(element, data);
+		}
 	});
 	
 	var renderChart = function (element, data) {
@@ -37,7 +39,7 @@ $(function() {
 		
 		element.highcharts('StockChart', {
 			chart: {
-				type: 'area',
+				type: 'column',
 				zoomType: 'x'
 			},
 			title: {
@@ -69,8 +71,8 @@ $(function() {
 				}
 			},
 			plotOptions: {
-				area: {
-					//stacking: 'normal',
+				column: {
+					stacking: 'normal',
 					pointInterval: 24 * 3600000, // 1 Day
 					pointStart: begin_date
 				}

@@ -4,8 +4,10 @@ $(function() {
 	$.ajax({
 		url  : element.data('url'),
 		type : 'get'
-	}).done(function (response) {
-		renderChart(element, response);
+	}).done(function (data, msg, status) {
+		if (status['status'] == 200) {
+			renderChart(element, data);
+		}
 	});
 	
 	var renderChart = function (element, data) {

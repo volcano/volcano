@@ -98,7 +98,9 @@ class Controller_Customers_Statistics extends Controller
 			$data[$date][$stat->name] = (int) $stat->value;
 		}
 		
-		ksort($data[$date]);
+		if (!empty($data)) {
+			ksort($data[$date]);
+		}
 		
 		$this->response($data);
 	}
