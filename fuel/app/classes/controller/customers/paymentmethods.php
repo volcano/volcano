@@ -34,7 +34,10 @@ class Controller_Customers_Paymentmethods extends Controller_Customers
 	 */
 	public function get_create($customer_id = null)
 	{
-		$this->view->customer = $this->get_customer($customer_id);
+		$customer = $this->get_customer($customer_id);
+		
+		$this->view->customer = $customer;
+		$this->view->contact  = Service_Contact::primary($customer);
 		$this->view->gateway  = $this->get_gateway();
 	}
 	

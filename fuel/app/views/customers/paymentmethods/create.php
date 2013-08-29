@@ -6,8 +6,9 @@ $layout->breadcrumbs['Payment Methods'] = $customer->link('paymentmethods');
 $layout->breadcrumbs['Add Payment Method'] = '';
 
 echo render('customers/paymentmethods/form', array(
-	'customer'      => $customer,
-	'gateway'       => $gateway,
-	'errors'        => !empty($errors) ? $errors : array(),
+	'customer' => $customer,
+	'contact'  => $contact,
+	'gateway'  => $gateway,
+	'errors'   => !empty($errors) ? $errors : array(),
 ));
 ?>

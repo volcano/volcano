@@ -58,4 +58,21 @@ class Model_Product_Option extends Model
 		
 		return Uri::create($uri);
 	}
+	
+	/**
+	 * Adds up all of the product option's fee prices.
+	 *
+	 * @return float
+	 */
+	public function sum_fees()
+	{
+		$total = 0;
+		
+		$fees = $this->fees;
+		foreach ($fees as $fee) {
+			$total += $fee->interval_price;
+		}
+		
+		return $total;
+	}
 }

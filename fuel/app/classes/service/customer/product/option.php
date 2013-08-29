@@ -41,17 +41,18 @@ class Service_Customer_Product_Option extends Service
 	 * Creates a new customer product option.
 	 *
 	 * @param string               $name     The name of the customer product option.
-	 * @param Model_Customer       $customer The customer the customer product option belongs to.
+	 * @param Model_Customer_Order $order    The order the customer product option belongs to.
 	 * @param Model_Product_Option $option   The option the customer product option belongs to.
 	 * @param array                $data     Optional data.
 	 *
 	 * @return Model_Customer_Product_Option
 	 */
-	public static function create($name, Model_Customer $customer, Model_Product_Option $option, array $data = array())
+	public static function create($name, Model_Customer_Order $order, Model_Product_Option $option, array $data = array())
 	{
 		$customer_option = Model_Customer_Product_Option::forge();
 		$customer_option->name = $name;
-		$customer_option->customer = $customer;
+		$customer_option->customer = $order->customer;
+		$customer_option->order = $order;
 		$customer_option->option = $option;
 		
 		$customer_option->populate($data);

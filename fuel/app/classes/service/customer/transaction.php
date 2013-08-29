@@ -71,35 +71,4 @@ class Service_Customer_Transaction extends Service
 		
 		return $transaction;
 	}
-	
-	/**
-	 * Updates a customer transaction.
-	 *
-	 * @param Model_Customer_Transaction $transaction The transaction to update.
-	 * @param array                      $data        The data to use to update the transaction.
-	 *
-	 * @return Model_Customer_Transaction
-	 */
-	public static function update(Model_Customer_Transaction $transaction, array $data = array())
-	{
-		if ($transaction->status == 'pending') {
-			$gateway_transaction = Gateway::instance($transaction->gateway)->transaction($transaction->external_id);
-			if (!$gateway_transaction) {
-				return false;
-			}
-			
-			$transaction->status = $gateway_transaction->data('status');
-		}
-		
-		$transaction->populate($data);
-		
-		try {
-			$transaction->save();
-		} catch (FuelException $e) {
-			Log::error($e);
-			return false;
-		}
-		
-		return $transaction;
-	}
 }

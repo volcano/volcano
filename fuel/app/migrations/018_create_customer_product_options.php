@@ -15,6 +15,7 @@ class Create_Customer_Product_Options
 			'id'                => array('type' => 'int', 'constraint' => 11, 'auto_increment' => true),
 			'customer_id'       => array('type' => 'int', 'constraint' => 11),
 			'product_option_id' => array('type' => 'int', 'constraint' => 11),
+			'order_id'          => array('type' => 'int', 'constraint' => 11),
 			'name'              => array('type' => 'varchar', 'constraint' => 255, 'null' => true),
 			'status'            => array('type' => 'varchar', 'constraint' => 50),
 			'created_at'        => array('type' => 'datetime'),
