@@ -54,14 +54,19 @@ class Model_Gateway extends Model
 	*
 	* @return array|mixed
 	*/
-	public function meta($name)
+	public function meta($name = null)
 	{
-		if (is_array($name)) {
+		if (!$name) {
+			return Model_Gateway_Meta::query()
+				->where('gateway_id', $this->id)
+				->get();
+		} elseif (is_array($name)) {
 			$meta_array = array();
+			
 			$metas = Model_Gateway_Meta::query()
-			->where('gateway_id', $this->id)
-			->where('name', 'in', $name)
-			->get();
+				->where('gateway_id', $this->id)
+				->where('name', 'in', $name)
+				->get();
 			
 			foreach ($metas as $meta) {
 				$meta_array[$meta->name] = $meta;
@@ -71,6 +76,23 @@ class Model_Gateway extends Model
 		}
 		
 		return Model_Gateway_Meta::find_by_gateway_id_and_name($this->id, $name);
+	}
+	
+	/**
+	 * Returns the gateway action link.
+	 *
+	 * @param string $action The action to link to.
+	 *
+	 * @return string
+	 */
+	public function link($action = '')
+	{
+		$uri = 'settings/gateways/' . $this->id;
+		if ($action) {
+			$uri .= '/' . $action;
+		}
+		
+		return Uri::create($uri);
 	}
 	
 	/**
