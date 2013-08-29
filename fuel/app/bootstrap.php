@@ -14,6 +14,7 @@ Autoloader::add_classes(array(
 	'Model'                         => APPPATH . 'classes/model.php',
 	'Pagination'                    => APPPATH . 'classes/pagination.php',
 	'Session'                       => APPPATH . 'classes/session.php',
+	'Inflector'                     => APPPATH . 'classes/inflector.php',
 	'Validation'                    => APPPATH . 'classes/validation.php',
 	'Validation_Error'              => APPPATH . 'classes/validation/error.php',
 	'Api\\HttpErrorException'       => APPPATH . '../modules/api/classes/httpexceptions.php',
