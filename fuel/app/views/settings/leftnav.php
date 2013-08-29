@@ -10,6 +10,10 @@ $nav = array(
 		'value' => 'Contacts',
 	),
 	array(
+		'href'  => 'settings/gateways',
+		'value' => 'Gateways',
+	),
+	array(
 		'href'  => 'settings/api',
 		'value' => 'API Keys',
 	),

@@ -94,16 +94,16 @@ class Service_Gateway extends Service
 	 */
 	public static function update(Model_Gateway $gateway, array $data = array())
 	{
-		if (!empty($data['status'])) {
-			$gateway->status = $data['status'];
-		}
+		$gateway->populate($data);
 		
 		if (!empty($data['meta'])) {
 			$meta_names = array_keys($data['meta']);
 			$gateway_metas = $gateway->meta($meta_names);
 			
+			$enc_key = Config::get('security.db_enc_key');
+			
 			foreach ($meta_names as $name) {
-				$value = $data['meta'][$name];
+				$value = Crypt::encode($data['meta'][$name], $enc_key);
 				
 				if (!isset($gateway_metas[$name])) {
 					$name_meta = Model_Gateway_Meta::name($name, $value);
@@ -122,8 +122,6 @@ class Service_Gateway extends Service
 				}
 			}
 		}
-		
-		$gateway->populate($data);
 		
 		try {
 			$gateway->save();

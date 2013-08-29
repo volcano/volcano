@@ -54,11 +54,11 @@ class Controller_Settings_Contacts extends Controller
 		$data    = $validator->validated();
 		
 		if (!Service_Contact::update($contact, $data)) {
-			Session::set_alert('error', 'There was an error updating the seller contact.');
+			Session::set_alert('error', 'There was an error updating the contact.');
 			return;
 		}
 		
-		Session::set_alert('success', 'The seller contact has been updated.');
+		Session::set_alert('success', 'The contact has been updated.');
 		Response::redirect('settings/contacts');
 	}
 	
