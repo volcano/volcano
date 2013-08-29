@@ -99,7 +99,7 @@ class Model_Customer_Paymentmethod extends Model
 	 */
 	public function type()
 	{
-		return Inflector::humanize(Inflector::words_to_upper($this->gateway->type));
+		return Inflector::titleize($this->gateway->type);
 	}
 	
 	/**

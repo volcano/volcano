@@ -26,8 +26,8 @@ $layout->breadcrumbs['Gateways'] = '';
 		<?php foreach ($gateways as $gateway): ?>
 			<tr>
 				<td><?php echo $gateway->id ?></td>
-				<td><?php echo Str::ucwords(Inflector::humanize($gateway->type)) ?></td>
-				<td><?php echo Str::ucwords($gateway->processor) ?></td>
+				<td><?php echo Inflector::titleize($gateway->type) ?></td>
+				<td><?php echo Inflector::titleize($gateway->processor) ?></td>
 				<td><?php echo View_Helper::date($gateway->created_at) ?></td>
 				<td><?php echo ($gateway->updated_at != $gateway->created_at) ? View_Helper::date($gateway->updated_at) : '' ?></td>
 				<td><?php echo Html::anchor($gateway->link('edit'), '<i class="icon icon-pencil"></i> Edit', array('class' => 'action-link')) ?></td>

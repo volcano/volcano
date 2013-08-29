@@ -66,8 +66,6 @@ class Model_Customer_Transaction extends Model
 	 */
 	public function paymentmethod()
 	{
-		$type = Inflector::humanize(Inflector::words_to_upper($this->type));
-		
-		return $type . ' ' . $this->provider . ' ' . $this->account;
+		return Inflector::titleize($this->type) . ' ' . $this->provider . ' ' . $this->account;
 	}
 }
