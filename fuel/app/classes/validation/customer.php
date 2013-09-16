@@ -17,7 +17,12 @@ class Validation_Customer
 		$validator = Validation::forge('customer');
 		
 		$validator->add('contact', 'Contact')->add_rule('contact');
-		$validator->add('balance', 'Balance')->add_rule('trim');
+		
+		$input = Input::param();
+		
+		if (array_key_exists('balance', $input)) {
+			$validator->add('balance', 'Balance')->add_rule('trim');
+		}
 		
 		return $validator;
 	}
