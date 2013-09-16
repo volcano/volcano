@@ -10,7 +10,7 @@ class Model_Customer extends Model
 	protected static $_properties = array(
 		'id',
 		'seller_id',
-		'balance' => array('default' => '0.00'),
+		'balance',
 		'status' => array('default' => 'active'),
 		'created_at',
 		'updated_at',

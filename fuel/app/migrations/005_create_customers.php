@@ -14,7 +14,7 @@ class Create_Customers
 		\DBUtil::create_table('customers', array(
 			'id'         => array('type' => 'int', 'constraint' => 11, 'auto_increment' => true),
 			'seller_id'  => array('type' => 'int', 'constraint' => 11),
-			'balance'    => array('type' => 'decimal', 'constraint' => '10,2'),
+			'balance'    => array('type' => 'decimal', 'constraint' => '10,2', 'default' => '0.00'),
 			'status'     => array('type' => 'varchar', 'constraint' => 50),
 			'created_at' => array('type' => 'datetime'),
 			'updated_at' => array('type' => 'datetime'),
