@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -107,8 +107,10 @@ abstract class Email_Driver
 	/**
 	 * Get a driver config setting.
 	 *
-	 * @param	string		$key		the config key
-	 * @return	mixed					the config setting value
+	 * @param  string $key     Config key
+	 * @param  string $default Default value
+	 *
+	 * @return mixed  the config setting value
 	 */
 	public function get_config($key, $default = null)
 	{
@@ -132,8 +134,9 @@ abstract class Email_Driver
 	/**
 	 * Enables or disables driver pipelining.
 	 *
-	 * @param	bool	$pipelining		whether or not to enable pipelining
-	 * @return	object					$this
+	 * @param  bool $pipelining Whether or not to enable pipelining
+	 *
+	 * @return  $this
 	 */
 	public function pipelining($pipelining = true)
 	{
@@ -141,11 +144,23 @@ abstract class Email_Driver
 
 		return $this;
 	}
+
+	/**
+	 * Gets the body
+	 *
+	 * @return string	the message body
+	 */
+	public function get_body()
+	{
+		return $this->body;
+	}
+
 	/**
 	 * Sets the body
 	 *
-	 * @param	string		$body			the message body
-	 * @return	object		$this
+	 * @param  string  $body  The message body
+	 *
+	 * @return  $this
 	 */
 	public function body($body)
 	{
@@ -157,8 +172,9 @@ abstract class Email_Driver
 	/**
 	 * Sets the alt body
 	 *
-	 * @param	string		$alt_body			the message alt body
-	 * @return	object		$this
+	 * @param   string  $alt_body  The message alt body
+	 *
+	 * @return  $this
 	 */
 	public function alt_body($alt_body)
 	{
@@ -170,8 +186,9 @@ abstract class Email_Driver
 	/**
 	 * Sets the mail priority
 	 *
-	 * @param	string		$priority			the message priority
-	 * @return	object		$this
+	 * @param   string  $priority  The message priority
+	 *
+	 * @return  $this
 	 */
 	public function priority($priority)
 	{
@@ -183,10 +200,11 @@ abstract class Email_Driver
 	/**
 	 * Sets the html body and optionally a generated alt body.
 	 *
-	 * @param	string	$html 			the body html
-	 * @param	bool	$generate_alt	whether to generate the alt body, will set is html to true
-	 * @param	bool	$auto_attach	whether to auto attach inline files
-	 * @return	object	$this
+	 * @param    string $html           The body html
+	 * @param    bool   $generate_alt   Whether to generate the alt body, will set is html to true
+	 * @param    bool   $auto_attach    Whether to auto attach inline files
+	 *
+	 * @return  $this
 	 */
 	public function html_body($html, $generate_alt = null, $auto_attach = null)
 	{
@@ -208,7 +226,7 @@ abstract class Email_Driver
 				foreach ($images[2] as $i => $image_url)
 				{
 					// Don't attach absolute urls
-					if ( ! preg_match('/(^http\:\/\/|^https\:\/\/|^cid\:)/Ui', $image_url))
+					if ( ! preg_match('/(^http\:\/\/|^https\:\/\/|^cid\:|^data\:|^#)/Ui', $image_url))
 					{
 						$cid = 'cid:'.md5(pathinfo($image_url, PATHINFO_BASENAME));
 						if ( ! isset($this->attachments['inline'][$cid]))
@@ -229,10 +247,21 @@ abstract class Email_Driver
 	}
 
 	/**
+	 * Gets the message subject
+	 *
+	 * @return string	the message subject
+	 */
+	public function get_subject()
+	{
+		return $this->subject;
+	}
+
+	/**
 	 * Sets the message subject
 	 *
-	 * @param	string		$subject	the message subject
-	 * @return	object		$this
+	 * @param   string  $subject     The message subject
+	 *
+	 * @return  $this
 	 */
 	public function subject($subject)
 	{
@@ -246,16 +275,27 @@ abstract class Email_Driver
 	}
 
 	/**
+	 * Gets from address and name
+	 *
+	 * @return array	from address and name
+	 */
+	public function get_from()
+	{
+		return $this->config['from'];
+	}
+
+	/**
 	 * Sets the from address and name
 	 *
-	 * @param	string		$email	the from email address
-	 * @param	string		$name	the optional from name
-	 * @return	object		$this
+	 * @param   string      $email  The from email address
+	 * @param   bool|string $name   The optional from name
+	 *
+	 * @return  $this
 	 */
 	public function from($email, $name = false)
 	{
 		$this->config['from']['email'] = (string) $email;
-		$this->config['from']['name'] = (is_string($name)) ? $name : false;
+		$this->config['from']['name']  = (is_string($name)) ? $name : false;
 
 		if ($this->config['encode_headers'] and $this->config['from']['name'])
 		{
@@ -266,11 +306,22 @@ abstract class Email_Driver
 	}
 
 	/**
+	 * Gets to recipients list.
+	 *
+	 * @return array	to recipients list
+	 */
+	public function get_to()
+	{
+		return $this->to;
+	}
+
+	/**
 	 * Add to the to recipients list.
 	 *
-	 * @param	string|array	$email	email address or list of email addresses, array(email => name, email)
-	 * @param	string|bool		$name	recipient name, false, null or empty for no name
-	 * @return	object			$this
+	 * @param   string|array    $email  Email address or list of email addresses, array(email => name, email)
+	 * @param   string|bool     $name   Recipient name, false, null or empty for no name
+	 *
+	 * @return  $this
 	 */
 	public function to($email, $name = false)
 	{
@@ -280,11 +331,22 @@ abstract class Email_Driver
 	}
 
 	/**
+	 * Gets to cc recipients list.
+	 *
+	 * @return array	to cc recipients list
+	 */
+	public function get_cc()
+	{
+		return $this->cc;
+	}
+
+	/**
 	 * Add to the cc recipients list.
 	 *
-	 * @param	string|array	$email	email address or list of email addresses, array(email => name, email)
-	 * @param	string|bool		$name	recipient name, false, null or empty for no name
-	 * @return	object			$this
+	 * @param   string|array    $email  Email address or list of email addresses, array(email => name, email)
+	 * @param   string|bool     $name   Recipient name, false, null or empty for no name
+	 *
+	 * @return  $this
 	 */
 	public function cc($email, $name = false)
 	{
@@ -293,13 +355,23 @@ abstract class Email_Driver
 		return $this;
 	}
 
+	/**
+	 * Gets to bcc recipients list.
+	 *
+	 * @return array	to bcc recipients list
+	 */
+	public function get_bcc()
+	{
+		return $this->bcc;
+	}
 
 	/**
 	 * Add to the bcc recipients list.
 	 *
-	 * @param	string|array	$email	email address or list of email addresses, array(email => name, email)
-	 * @param	string|bool		$name	recipient name, false, null or empty for no name
-	 * @return	object			$this
+	 * @param   string|array    $email  Email address or list of email addresses, array(email => name, email)
+	 * @param   string|bool     $name   Recipient name, false, null or empty for no name
+	 *
+	 * @return  $this
 	 */
 	public function bcc($email, $name = false)
 	{
@@ -309,11 +381,22 @@ abstract class Email_Driver
 	}
 
 	/**
+	 * Gets to 'reply to' recipients list.
+	 *
+	 * @return array	to 'reply to' recipients list
+	 */
+	public function get_reply_to()
+	{
+		return $this->reply_to;
+	}
+
+	/**
 	 * Add to the 'reply to' list.
 	 *
-	 * @param	string|array	$email	email address or list of email addresses, array(email => name, email)
-	 * @param	string|bool		$name	the name, false, null or empty for no name
-	 * @return	object			$this
+	 * @param   string|array    $email  Email address or list of email addresses, array(email => name, email)
+	 * @param   string|bool     $name   The name, false, null or empty for no name
+	 *
+	 * @return  $this
 	 */
 	public function reply_to($email, $name = false)
 	{
@@ -325,8 +408,9 @@ abstract class Email_Driver
 	/**
 	 * Sets the return-path address
 	 *
-	 * @param	string		$email	the return-path email address
-	 * @return	object		$this
+	 * @param   string  $email  The return-path email address
+	 *
+	 * @return  $this
 	 */
 	public function return_path($email)
 	{
@@ -338,10 +422,11 @@ abstract class Email_Driver
 	/**
 	 * Add to a recipients list.
 	 *
-	 * @param	string			$list	list to add to (to, cc, bcc)
-	 * @param	string|array	$email	email address or list of email addresses, array(email => name, email)
-	 * @param	string|bool		$name	recipient name, false, null or empty for no name
-	 * @return	void
+	 * @param   string          $list   List to add to (to, cc, bcc)
+	 * @param   string|array    $email  Email address or list of email addresses, array(email => name, email)
+	 * @param   string|bool     $name   Recipient name, false, null or empty for no name
+	 *
+	 * @return  void
 	 */
 	protected function add_to_list($list, $email, $name = false)
 	{
@@ -373,8 +458,9 @@ abstract class Email_Driver
 	/**
 	 * Clear the a recipient list.
 	 *
-	 * @param	string|array	$list	list or array of lists
-	 * @return	void
+	 * @param   string|array    $list   List or array of lists
+	 *
+	 * @return  void
 	 */
 	protected function clear_list($list)
 	{
@@ -389,7 +475,7 @@ abstract class Email_Driver
 	/**
 	 * Clear all recipient lists.
 	 *
-	 * @return	object	$this
+	 * @return  $this
 	 */
 	public function clear_recipients()
 	{
@@ -401,7 +487,7 @@ abstract class Email_Driver
 	/**
 	 * Clear all address lists.
 	 *
-	 * @return	object	$this
+	 * @return  $this
 	 */
 	public function clear_addresses()
 	{
@@ -413,7 +499,7 @@ abstract class Email_Driver
 	/**
 	 * Clear the 'to' recipient list.
 	 *
-	 * @return	object	$this
+	 * @return  $this
 	 */
 	public function clear_to()
 	{
@@ -425,7 +511,7 @@ abstract class Email_Driver
 	/**
 	 * Clear the 'cc' recipient list.
 	 *
-	 * @return	object	$this
+	 * @return  $this
 	 */
 	public function clear_cc()
 	{
@@ -437,7 +523,7 @@ abstract class Email_Driver
 	/**
 	 * Clear the 'bcc' recipient list.
 	 *
-	 * @return	object	$this
+	 * @return  $this
 	 */
 	public function clear_bcc()
 	{
@@ -449,7 +535,7 @@ abstract class Email_Driver
 	/**
 	 * Clear the 'reply to' recipient list.
 	 *
-	 * @return	object	$this
+	 * @return  $this
 	 */
 	public function clear_reply_to()
 	{
@@ -461,9 +547,9 @@ abstract class Email_Driver
 	/**
 	 * Sets custom headers.
 	 *
-	 * @param   mixed   $header  header type or array of headers
-	 * @param   string  $value   header value
-	 * @return  object  current instance
+	 * @param   string|array    $header  Header type or array of headers
+	 * @param   string          $value   Header value
+	 * @return  $this
 	 */
 	public function header($header, $value = null)
 	{
@@ -483,13 +569,17 @@ abstract class Email_Driver
 	}
 
 	/**
-	 * Attaches a file to the email.
+	 * Attaches a file to the email. This method will search for the file in the attachment paths set (config/email.php) in the attach_paths array
 	 *
-	 * @param	string	$file		the file to attach
-	 * @param	bool	$inline		whether to include the file inline
-	 * @param	string	$mime		the file's mime-type
-	 * @param	string	$name		the attachment's name
-	 * @return  object              $this
+	 * @param   string  $file   The file to attach
+	 * @param   bool    $inline Whether to include the file inline
+	 * @param   string  $cid    The content identifier. Used when attaching inline images
+	 * @param   string  $mime   The file's mime-type
+	 * @param   string  $name   The attachment's name
+	 *
+	 * @throws \InvalidAttachmentsException Could not read attachment or attachment is empty
+	 *
+	 * @return  $this
 	 */
 	public function attach($file, $inline = false, $cid = null, $mime = null, $name = null)
 	{
@@ -532,9 +622,11 @@ abstract class Email_Driver
 	/**
 	 * Finds an attachment.
 	 *
-	 * @param    string    $path    path to the attachment
-	 * @return   string             path of the first found attachment
-	 * @throws   AttachmentNotFoundException     when no file is found.
+	 * @param $file
+	 *
+	 * @throws \AttachmentNotFoundException Email attachment not found
+	 *
+	 * @return string   path of the first found attachment
 	 */
 	protected function find_attachment($file)
 	{
@@ -553,11 +645,13 @@ abstract class Email_Driver
 	/**
 	 * Attach a file using string input
 	 *
-	 * @param	string	$contents	file contents
-	 * @param	string	$filename	the files name
-	 * @param	bool	$inline		whether it's an inline attachment
-	 * @param	string	$mime		the file's mime-type
-	 * @return	object	$this
+	 * @param   string  $contents   File contents
+	 * @param   string  $filename   The files name
+	 * @param   string  $cid        The content identifier. Used when attaching inline images
+	 * @param   bool    $inline     Whether it's an inline attachment
+	 * @param   string  $mime       The file's mime-type
+	 *
+	 * @return  $this
 	 */
 	public function string_attach($contents, $filename, $cid = null, $inline = false, $mime = null)
 	{
@@ -580,7 +674,7 @@ abstract class Email_Driver
 	/**
 	 * Clear the attachments list.
 	 *
-	 * @return	object	$this
+	 * @return  $this
 	 */
 	public function clear_attachments()
 	{
@@ -595,8 +689,9 @@ abstract class Email_Driver
 	/**
 	 * Get the mimetype for an attachment
 	 *
-	 * @param	string	$file	the path to the attachment
-	 * @return	string			the attachment's mimetype
+	 * @param   string  $file   The path to the attachment
+	 *
+	 * @return  $this
 	 */
 	protected static function attachment_mime($file)
 	{
@@ -618,7 +713,7 @@ abstract class Email_Driver
 	/**
 	 * Validates all the email addresses.
 	 *
-	 * @return	bool|array	true if all are valid or an array of recipients which failed validation.
+	 * @return  bool|array  True if all are valid or an array of recipients which failed validation.
 	 */
 	protected function validate_addresses()
 	{
@@ -662,8 +757,12 @@ abstract class Email_Driver
 	/**
 	 * Initiates the sending process.
 	 *
-	 * @param	mixed	whether to validate the addresses, falls back to config setting
-	 * @return	bool	success boolean
+	 * @param   bool    Whether to validate the addresses, falls back to config setting
+	 *
+	 * @throws \EmailValidationFailedException  One or more email addresses did not pass validation
+	 * @throws \FuelException                   Cannot send without from address/Cannot send without recipients
+	 *
+	 * @return  bool
 	 */
 	public function send($validate = null)
 	{
@@ -713,7 +812,7 @@ abstract class Email_Driver
 			$this->set_header('Return-Path', $this->config['from']['email']);
 		}
 
-		if (($this instanceof \Email_Driver_Mail) !== true)
+		if (($this instanceof Email_Driver_Mail) !== true)
 		{
 			if ( ! empty($this->to))
 			{
@@ -790,7 +889,7 @@ abstract class Email_Driver
 	/**
 	 * Get the invalid addresses
 	 *
-	 * @return	array	an array of invalid email addresses
+	 * @return  array   An array of invalid email addresses
 	 */
 	public function get_invalid_addresses()
 	{
@@ -800,8 +899,8 @@ abstract class Email_Driver
 	/**
 	 * Sets the message headers
 	 *
-	 * @param	string	$header	the header type
-	 * @param	string	$value	the header value
+	 * @param   string  $header The header type
+	 * @param   string  $value  The header value
 	 */
 	protected function set_header($header, $value)
 	{
@@ -811,8 +910,10 @@ abstract class Email_Driver
 	/**
 	 * Gets the header
 	 *
-	 * @param	string	$header		the header time
-	 * @return	string|array		mail header or array of headers
+	 * @param   string  $header     The header name. Will return all headers, if not specified
+	 * @param   bool    $formatted  Adds newline as suffix and colon as prefix, if true
+	 *
+	 * @return  string|array        Mail header or array of headers
 	 */
 	protected function get_header($header = null, $formatted = true)
 	{
@@ -834,8 +935,9 @@ abstract class Email_Driver
 	/**
 	 * Encodes a mimeheader.
 	 *
-	 * @param   string  $header  header to encode
-	 * @return  string  mimeheader encoded string
+	 * @param   string  $header     Header to encode
+	 *
+	 * @return  string  Mimeheader encoded string
 	 */
 	protected function encode_mimeheader($header)
 	{
@@ -869,7 +971,7 @@ abstract class Email_Driver
 	/**
 	 * Get a unique message id
 	 *
-	 * @return	string	the message id
+	 * @return  string  The message id
 	 */
 	protected function get_message_id()
 	{
@@ -880,7 +982,7 @@ abstract class Email_Driver
 	/**
 	 * Returns the mail's type
 	 *
-	 * @return	string		mail type
+	 * @return  string  Mail type
 	 */
 	protected function get_mail_type()
 	{
@@ -895,8 +997,12 @@ abstract class Email_Driver
 	/**
 	 * Returns the content type
 	 *
-	 * @param	string		mail type
-	 * @return	string		mail content type
+	 * @param   string  $mail_type  Type of email (plain, html, html_inline, etc…)
+	 * @param   $boundary
+	 *
+	 * @throws \FuelException   Invalid content-type
+	 *
+	 * @return    string        Mail content type
 	 */
 	protected function get_content_type($mail_type, $boundary)
 	{
@@ -926,8 +1032,9 @@ abstract class Email_Driver
 	/**
 	 * Builds the headers and body
 	 *
-	 * @param   bool    $no_bcc  wether to exclude Bcc headers.
-	 * @return	array	an array containing the headers and the body
+	 * @param   bool    $no_bcc Whether to exclude Bcc headers.
+	 *
+	 * @return  array           An array containing the headers and the body
 	 */
 	protected function build_message($no_bcc = false)
 	{
@@ -950,6 +1057,7 @@ abstract class Email_Driver
 		}
 
 		$headers .= $newline;
+
 		$body = '';
 
 		if ($this->type === 'plain' or $this->type === 'html')
@@ -1055,11 +1163,15 @@ abstract class Email_Driver
 	/**
 	 * Wraps the body or alt text
 	 *
-	 * @param	string	$message	the text to wrap
-	 * @param	int		$length		the max line length
-	 * @param	string	$charset	the text charset
-	 * @param	string	$newline	the newline delimiter
-	 * @param	bool	$qp_mode	whether the text is quoted printable encoded
+	 * @param   string  $message    The text to wrap
+	 * @param   int     $length     The max line length
+	 * @param   string  $newline    The newline delimiter
+	 * @param   bool    $is_html
+	 *
+	 * @internal param string $charset the text charset
+	 * @internal param bool $qp_mode whether the text is quoted printable encoded
+	 *
+	 * @return string
 	 */
 	protected static function wrap_text($message, $length, $newline, $is_html = true)
 	{
@@ -1073,9 +1185,10 @@ abstract class Email_Driver
 	/**
 	 * Standardize newlines.
 	 *
-	 * @param	string	$string		string to prep
-	 * @param	string	$newline	the newline delimiter
-	 * @return	string	string with standardized newlines
+	 * @param   string  $string     String to prep
+	 * @param   string  $newline    The newline delimiter
+	 *
+	 * @return  string              String with standardized newlines
 	 */
 	protected static function prep_newlines($string, $newline = null)
 	{
@@ -1099,9 +1212,13 @@ abstract class Email_Driver
 	/**
 	 * Encodes a string in the given encoding.
 	 *
-	 * @param	string	$string		string to encode
-	 * @param	string	$encoding	the charset
-	 * @return	string	encoded string
+	 * @param   string  $string     String to encode
+	 * @param   string  $encoding   The charset
+	 * @param   string  $newline    Newline delimeter
+	 *
+	 * @throws  \InvalidEmailStringEncoding Encoding is not a supported by encoding method
+	 *
+	 * @return  string              Encoded string
 	 */
 	protected static function encode_string($string, $encoding, $newline = null)
 	{
@@ -1124,8 +1241,9 @@ abstract class Email_Driver
 	/**
 	 * Returns a formatted string of email addresses.
 	 *
-	 * @param	array	$addresses	array of adresses array(array(name=>name, email=>email));
-	 * @return	string	correctly formatted email addresses
+	 * @param   array   $addresses  Array of adresses array(array(name=>name, email=>email));
+	 *
+	 * @return  string              Correctly formatted email addresses
 	 */
 	protected static function format_addresses($addresses)
 	{
@@ -1143,10 +1261,11 @@ abstract class Email_Driver
 	/**
 	 * Generates an alt body
 	 *
-	 * @param	string	$html		html body to al body generate from
-	 * @param	int		$wordwrap	wordwrap length
-	 * @param	string	$newline	line separator to use
-	 * @return	string	the generated alt body
+	 * @param   string  $html html  Body to al body generate from
+	 * @param   int     $wordwrap   Wordwrap length
+	 * @param   string  $newline    Line separator to use
+	 *
+	 * @return  string              The generated alt body
 	 */
 	protected static function generate_alt($html, $wordwrap, $newline)
 	{
@@ -1170,13 +1289,19 @@ abstract class Email_Driver
 		}
 
 		$html = join($newline, $result);
+
+		if ( ! $wordwrap)
+		{
+			return $html;
+		}
+
 		return wordwrap($html, $wordwrap, $newline, true);
 	}
 
 	/**
 	 * Initiates the sending process.
 	 *
-	 * @return	bool	success boolean
+	 * @return  bool    success boolean
 	 */
 	abstract protected function _send();
 

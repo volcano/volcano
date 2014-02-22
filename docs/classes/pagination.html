@@ -50,8 +50,8 @@
 			<p>The pagination class allows you to easily setup pagination for records you display.</p>
 
 			<section>
-				<h3 id="how_to">How To</h3>
-				<p>A simple example on how to use the Pagination class. You can put this inside your action methods in your controller.</p>
+				<p>Simple examples on how to use the Pagination class . You can put this inside your action methods in your controller.</p>
+				<h3 id="how_to_query_builder">How To Paginate with the Query Builder</h3>
 
 				<pre class="php"><code>$config = array(
 	'pagination_url' => 'http://localhost/fuel/welcome/index/',
@@ -65,14 +65,42 @@
 // Create a pagination instance named 'mypagination'
 $pagination = Pagination::forge('mypagination', $config);
 
-$data['example_data'] = DB::select('id', 'value')->from('pagination')
-												->limit($pagination->per_page)
-												->offset($pagination->offset)
-												->execute()
-												->as_array();
+$data['example_data'] = DB::select('id', 'value')
+							->from('pagination')
+							->limit($pagination->per_page)
+							->offset($pagination->offset)
+							->execute()
+							->as_array();
 
-$data['pagination'] = $pagination->render();
-$this->render('welcome/index', $data);</code></pre>
+// we pass the object, it will be rendered when echo'd in the view
+$data['pagination'] = $pagination;
+
+// return the view
+return \View::forge('welcome/index', $data);</code></pre>
+
+				<h3 id="how_to_orm">How To Paginate with ORM</h3>
+
+				<pre class="php"><code>$config = array(
+	'pagination_url' => 'http://localhost/fuel/posts/index/',
+	'total_items'    => Model_Post::count(),
+	'per_page'       => 10,
+	'uri_segment'    => 3,
+	// or if you prefer pagination by query string
+	//'uri_segment'    => 'page',
+);
+
+$pagination = Pagination::forge('mypagination', $config);
+
+$data['example_data'] = Model_Post::query()
+							->rows_offset($pagination->per_page)
+							->rows_limit($pagination->offset)
+							->get();
+
+// we pass the object, it will be rendered when echo'd in the view
+$data['pagination'] = $pagination;
+
+// return the view
+return \View::forge('posts/index', $data);</code></pre>
 			</section>
 
 			<section>
@@ -428,7 +456,7 @@ $this->render('welcome/index', $data);</code></pre>
 							<td>
 								<pre class="php"><code>// create a new pagination instance
 $pagination = Pagination::forge('mypagination', array(
-    'pagination_url' => 'http://docs.fuelphp.com/',
+	'pagination_url' => 'http://docs.fuelphp.com/',
 	'uri_segment' => 2,
 	'total_items' => 10,
 	'per_page' => 20,
@@ -481,7 +509,7 @@ $pagination = Pagination::instance('mypagination');</code></pre>
 				</article>
 
 				<article>
-					<h4 class="method" id="method_render">render()</h4>
+					<h4 class="method" id="method_render">render($raw = false)</h4>
 					<p>The <strong>render</strong> method generates the markup to display the pagination links in the view.</p>
 					<table class="method">
 						<tbody>
@@ -491,7 +519,20 @@ $pagination = Pagination::instance('mypagination');</code></pre>
 						</tr>
 						<tr>
 							<th>Parameters</th>
-							<td>None</td>
+							<td>
+								<table class="parameters">
+									<tr>
+										<th>Param</th>
+										<th>Default</th>
+										<th class="description">Description</th>
+									</tr>
+									<tr>
+										<th><kbd>$raw</kbd></th>
+										<td><pre class="php"><code>false</code></pre></td>
+										<td>If true, an array with raw pagination data is returned instead of the rendered pagination markup.</td>
+									</tr>
+								</table>
+							</td>
 						</tr>
 						<tr>
 							<th>Returns</th>
@@ -506,11 +547,19 @@ echo Pagination::instance('mypagination')->render();</code></pre>
 						</tr>
 						</tbody>
 					</table>
+
+					<p class="note">
+						The pagination object contains an __toString() method, that will cause the render() method to be called
+						when you echo the object, or cast it to string.
+					</p>
 				</article>
 
 				<article>
-					<h4 class="method" id="method_first">first($marker = '&amp;laquo;&amp;laquo;')</h4>
-					<p>The <strong>first</strong> method generates the markup to display a "First page" link for pagination.</p>
+					<h4 class="method" id="method_first">first($marker = null)</h4>
+					<p>
+						The <strong>first</strong> method generates the markup to display a "First page" link for pagination.
+						If no string is given to be used as marker, the "first-marker" value from the template will be used.
+					</p>
 					<table class="method">
 						<tbody>
 						<tr>
@@ -528,8 +577,8 @@ echo Pagination::instance('mypagination')->render();</code></pre>
 									</tr>
 									<tr>
 										<th><kbd>$marker</kbd></th>
-										<td><pre class="php"><code>'&amp;laquo;&amp;laquo;'</code></pre></td>
-										<td>The text to be displayed in the link.</td>
+										<td><pre class="php"><code>null</code></pre></td>
+										<td>The text to be displayed in the link. Defaults to the 'first-marker' template value.</td>
 									</tr>
 								</table>
 							</td>
@@ -549,13 +598,16 @@ echo Pagination::instance('mypagination')->first();</code></pre>
 					</table>
 					<p class="note">
 						The "First page" link will only be shown if there is a first page, and you're not already on it.
-						There is no inactive link support for 'first'.
+						Note that by default there is no inactive link defined for 'first'.
 					</p>
 				</article>
 
 				<article>
-					<h4 class="method" id="method_previous">previous($marker = '&amp;laquo;')</h4>
-					<p>The <strong>previous</strong> method generates the markup to display a "Previous" link for pagination.</p>
+					<h4 class="method" id="method_previous">previous($marker = null)</h4>
+					<p>
+						The <strong>previous</strong> method generates the markup to display a "Previous" link for pagination.
+						If no string is given to be used as marker, the "previous-marker" value from the template will be used.
+					</p>
 					<table class="method">
 						<tbody>
 						<tr>
@@ -573,8 +625,8 @@ echo Pagination::instance('mypagination')->first();</code></pre>
 									</tr>
 									<tr>
 										<th><kbd>$marker</kbd></th>
-										<td><pre class="php"><code>'&amp;laquo;'</code></pre></td>
-										<td>The text to be displayed in the link.</td>
+										<td><pre class="php"><code>null</code></pre></td>
+										<td>The text to be displayed in the link. Defaults to the 'previous-marker' template value.</td>
 									</tr>
 								</table>
 							</td>
@@ -595,8 +647,11 @@ echo Pagination::instance('mypagination')->previous();</code></pre>
 				</article>
 
 				<article>
-					<h4 class="method" id="method_next">next($marker = '&amp;raquo;')</h4>
-					<p>The <strong>next</strong> method generates the markup to display a "Next" link for pagination.</p>
+					<h4 class="method" id="method_next">next($marker = null)</h4>
+					<p>
+						The <strong>next</strong> method generates the markup to display a "Next" link for pagination.
+						If no string is given to be used as marker, the "next-marker" value from the template will be used.
+					</p>
 					<table class="method">
 						<tbody>
 						<tr>
@@ -614,8 +669,8 @@ echo Pagination::instance('mypagination')->previous();</code></pre>
 									</tr>
 									<tr>
 										<th><kbd>$marker</kbd></th>
-										<td><pre class="php"><code>'&amp;raquo;'</code></pre></td>
-										<td>The text to be displayed in the link.</td>
+										<td><pre class="php"><code>null</code></pre></td>
+										<td>The text to be displayed in the link. Defaults to the 'next-marker' template value.</td>
 									</tr>
 								</table>
 							</td>
@@ -636,8 +691,11 @@ echo Pagination::instance('mypagination')->next();</code></pre>
 				</article>
 
 				<article>
-					<h4 class="method" id="method_last">last($marker = '&amp;raquo;&amp;raquo;')</h4>
-					<p>The <strong>last</strong> method generates the markup to display a "Last page" link for pagination.</p>
+					<h4 class="method" id="method_last">last($marker = null)</h4>
+					<p>
+						The <strong>last</strong> method generates the markup to display a "Last page" link for pagination.
+						If no string is given to be used as marker, the "last-marker" value from the template will be used.
+					</p>
 					<table class="method">
 						<tbody>
 						<tr>
@@ -655,8 +713,8 @@ echo Pagination::instance('mypagination')->next();</code></pre>
 									</tr>
 									<tr>
 										<th><kbd>$marker</kbd></th>
-										<td><pre class="php"><code>'&amp;raquo;&amp;raquo;'</code></pre></td>
-										<td>The text to be displayed in the link.</td>
+										<td><pre class="php"><code>null</code></pre></td>
+										<td>The text to be displayed in the link. Defaults to the 'last-marker' template value.</td>
 									</tr>
 								</table>
 							</td>
@@ -676,7 +734,7 @@ echo Pagination::instance('mypagination')->last();</code></pre>
 					</table>
 					<p class="note">
 						The "Last page" link will only be shown if there are any pages, and you're not already on the last one.
-						There is no inactive link support for 'last'.
+						Note that by default there is no inactive link defined for 'last'.
 					</p>
 				</article>
 
@@ -831,7 +889,7 @@ Model_Article::find()
 	->get();
 
 // new usage:
-Model_Article::find()
+Model_Article::query()
 	->order_by('date', 'ASC')
 	->rows_offset(\Pagination::get('offset'))
 	->rows_limit(\Pagination::get('per_page'))

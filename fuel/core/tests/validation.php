@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -806,5 +806,35 @@ class Test_Validation extends TestCase
 		$expected = true;
 
 		$this->assertEquals($expected, $test);
+	}
+
+	/**
+	 * Test for $validation->error_message()
+	 *
+	 * @test
+	 */
+	public function test_error_message() {
+		$post = array(
+			'title' => '',
+			'number' => 'ABC',
+		);
+
+		$val = Validation::forge(__FUNCTION__);
+		$val->add_field('title', 'Title', 'required');
+		$val->add_field('number', 'Number', 'required|valid_string[numeric]');
+
+		$val->run($post);
+
+		$expected = 'The field Title is required and must contain a value.';
+		$this->assertEquals($expected, $val->error_message('title'));
+
+		$expected = 'The valid string rule valid_string(numeric) failed for field Number';
+		$this->assertEquals($expected, $val->error_message('number'));
+
+		$expected = 'The field Title is required and must contain a value.';
+		$this->assertEquals($expected, current($val->error_message()));
+
+		$expected = 'No error';
+		$this->assertEquals($expected, $val->error_message('content', 'No error'));
 	}
 }

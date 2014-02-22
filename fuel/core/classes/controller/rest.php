@@ -125,7 +125,7 @@ abstract class Controller_Rest extends \Controller
 		}
 		elseif (method_exists($this, $this->auth))
 		{
-			if ($valid_login = $this->{$this->auth}() instanceOf \Response)
+			if (($valid_login = $this->{$this->auth}()) instanceOf \Response)
 			{
 				return $valid_login;
 			}
@@ -150,7 +150,7 @@ abstract class Controller_Rest extends \Controller
 			// If method is not available, set status code to 404
 			if (method_exists($this, $controller_method))
 			{
-				return call_user_func_array(array($this, $controller_method), $arguments);
+				return call_fuel_func_array(array($this, $controller_method), $arguments);
 			}
 			else
 			{
@@ -208,6 +208,22 @@ abstract class Controller_Rest extends \Controller
 			{
 				// Set the formatted response
 				$this->response->body(\Format::forge($data)->{'to_'.$this->format}());
+			}
+		}
+
+		// Format not supported, but the output is an array
+		elseif (is_array($data))
+		{
+			if (\Fuel::$env == \Fuel::PRODUCTION)
+			{
+				// not acceptable in production
+				$http_status = 406;
+				$this->response->body('The requested REST method returned array, which is not compatible with the output format "'.$this->format.'"');
+			}
+			else
+			{
+				// convert it to json so we can at least read it while we're developing
+				$this->response->body('The requested REST method returned an array:<br /><br />'.\Format::forge($data)->to_json(null, true));
 			}
 		}
 

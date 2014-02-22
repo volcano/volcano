@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -345,7 +345,7 @@ class Image_Gd extends \Image_Driver
 			$vars[] = floor(($this->config['quality'] / 100) * 9);
 		}
 
-		call_user_func_array('image'.$filetype, $vars);
+		call_fuel_func_array('image'.$filetype, $vars);
 		if ($this->config['persistence'] === false)
 		{
 			$this->reload();
@@ -374,7 +374,7 @@ class Image_Gd extends \Image_Driver
 			$vars[] = floor(($this->config['quality'] / 100) * 9);
 		}
 
-		call_user_func_array('image'.$filetype, $vars);
+		call_fuel_func_array('image'.$filetype, $vars);
 
 		if ($this->config['persistence'] === false)
 		{
@@ -433,7 +433,7 @@ class Image_Gd extends \Image_Driver
 	 * @param  resource  $resource  Optionally add an image to the new transparent image.
 	 * @return resource  Returns the image in resource form.
 	 */
-	private function create_transparent_image($width, $height, $resource = null)
+	protected function create_transparent_image($width, $height, $resource = null)
 	{
 		$image = imagecreatetruecolor($width, $height);
 		$color = $this->create_color($image, null, 0);
@@ -469,7 +469,7 @@ class Image_Gd extends \Image_Driver
 	 * @param  boolean   $top
 	 * @param  boolean   $left
 	 */
-	private function round_corner(&$image, $radius, $antialias, $top, $left)
+	protected function round_corner(&$image, $radius, $antialias, $top, $left)
 	{
 		$this->debug("Rounding ".($top ? 'top' : 'bottom')." ".($left ? 'left' : 'right')." corner with a radius of ".$radius."px.");
 		$sX = $left ? -$radius : 0;
@@ -538,7 +538,7 @@ class Image_Gd extends \Image_Driver
 	 * @param  integer   $y          The position of the watermark on the Y-axis
 	 * @param  integer   $alpha      The transparency of the watermark, 0 (trans) to 100 (opaque)
 	 */
-	private function image_merge(&$image, $watermark, $x, $y, $alpha)
+	protected function image_merge(&$image, $watermark, $x, $y, $alpha)
 	{
 		$wsizes = $this->sizes($watermark);
 		$tmpimage = $this->create_transparent_image($wsizes->width, $wsizes->height);

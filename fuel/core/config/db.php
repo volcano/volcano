@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -39,8 +39,10 @@ return array(
 		'identifier'   => '`',
 		'table_prefix' => '',
 		'charset'      => 'utf8',
+		'collation'    => false,
 		'enable_cache' => true,
 		'profiling'    => false,
+		'readonly'     => false,
 	),
 
 	/**
@@ -59,8 +61,10 @@ return array(
 		'identifier'   => '`',
 		'table_prefix' => '',
 		'charset'      => 'utf8',
+		'collation'    => false,
 		'enable_cache' => true,
 		'profiling'    => false,
+		'readonly'     => false,
 	),
 	 */
 
@@ -72,6 +76,7 @@ return array(
 			'hostname'  => '127.0.0.1',
 			'port'      => 6379,
 			'timeout'	=> null,
+			'database'  => 0
 		)
 	),
 

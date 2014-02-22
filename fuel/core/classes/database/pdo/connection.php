@@ -15,25 +15,29 @@ namespace Fuel\Core;
 class Database_PDO_Connection extends \Database_Connection
 {
 	/**
-	 * @var  \PDO  Raw server connection
+	 * @var  \PDO  $_connection  raw server connection
 	 */
 	protected $_connection;
 
 	/**
-	 * @var  string  PDO uses no quoting by default for identifiers
+	 * @var  string  $_identifier  PDO uses no quoting by default for identifiers
 	 */
 	protected $_identifier = '';
 
 	/**
-	 * @var  bool  Allows transactions
+	 * @var  bool  $_in_transation  allows transactions
 	 */
 	protected $_in_transaction = false;
 
 	/**
-	 * @var  string  Which kind of DB is used
+	 * @var  string  $_db_type  which kind of DB is used
 	 */
 	public $_db_type = '';
 
+	/**
+	 * @param string $name
+	 * @param array  $config
+	 */
 	protected function __construct($name, array $config)
 	{
 		parent::__construct($name, $config);
@@ -45,6 +49,11 @@ class Database_PDO_Connection extends \Database_Connection
 		}
 	}
 
+	/**
+	 * Connects to the database
+	 *
+	 * @throws \Database_Exception
+	 */
 	public function connect()
 	{
 		if ($this->_connection)
@@ -60,9 +69,6 @@ class Database_PDO_Connection extends \Database_Connection
 			'persistent' => false,
 			'compress'   => false,
 		));
-
-		// Clear the connection parameters for security
-		$this->_config['connection'] = array();
 
 		// determine db type
 		$_dsn_find_collon = strpos($dsn, ':');
@@ -91,7 +97,7 @@ class Database_PDO_Connection extends \Database_Connection
 		catch (\PDOException $e)
 		{
 			$error_code = is_numeric($e->getCode()) ? $e->getCode() : 0;
-			throw new \Database_Exception($e->getMessage(), $error_code, $e);
+			throw new \Database_Exception(str_replace($password, str_repeat('*', 10), $e->getMessage()), $error_code, $e);
 		}
 
 		if ( ! empty($this->_config['charset']))
@@ -109,6 +115,9 @@ class Database_PDO_Connection extends \Database_Connection
 		}
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function disconnect()
 	{
 		// Destroy the PDO object
@@ -119,6 +128,7 @@ class Database_PDO_Connection extends \Database_Connection
 
 	/**
 	 * Get the current PDO Driver name
+	 *
 	 * @return string
 	 */
 	public function driver_name()
@@ -126,6 +136,11 @@ class Database_PDO_Connection extends \Database_Connection
 		return $this->_connection->getAttribute(\PDO::ATTR_DRIVER_NAME);
 	}
 
+	/**
+	 * Set the charset
+	 *
+	 * @param string $charset
+	 */
 	public function set_charset($charset)
 	{
 		// Make sure the database is connected
@@ -135,6 +150,17 @@ class Database_PDO_Connection extends \Database_Connection
 		$this->_connection->exec('SET NAMES '.$this->quote($charset));
 	}
 
+	/**
+	 * Query the database
+	 *
+	 * @param integer $type
+	 * @param string  $sql
+	 * @param mixed   $as_object
+	 *
+	 * @return mixed
+	 *
+	 * @throws \Database_Exception
+	 */
 	public function query($type, $sql, $as_object)
 	{
 		// Make sure the database is connected
@@ -173,7 +199,7 @@ class Database_PDO_Connection extends \Database_Connection
 				}
 			}
 
-			$benchmark = \Profiler::start("Database ({$this->_instance})", $sql, $stacktrace);
+			$benchmark = \Profiler::start($this->_instance, $sql, $stacktrace);
 		}
 
 		// run the query. if the connection is lost, try 3 times to reconnect
@@ -263,11 +289,26 @@ class Database_PDO_Connection extends \Database_Connection
 		}
 	}
 
+	/**
+	 * List tables
+	 *
+	 * @param string $like
+	 *
+	 * @throws \FuelException
+	 */
 	public function list_tables($like = null)
 	{
 		throw new \FuelException('Database method '.__METHOD__.' is not supported by '.__CLASS__);
 	}
 
+	/**
+	 * List table columns
+	 *
+	 * @param string $table
+	 * @param string $like
+	 *
+	 * @return array
+	 */
 	public function list_columns($table, $like = null)
 	{
 		$this->_connection or $this->connect();
@@ -343,6 +384,13 @@ class Database_PDO_Connection extends \Database_Connection
 		return $columns;
 	}
 
+	/**
+	 * Resolve a datatype
+	 *
+	 * @param integer $type
+	 *
+	 * @return array
+	 */
 	public function datatype($type)
 	{
 		// try to determine the datatype
@@ -352,6 +400,13 @@ class Database_PDO_Connection extends \Database_Connection
 		return empty($datatype) ? array('type' => 'string') : $datatype;
 	}
 
+	/**
+	 * Escape a value
+	 *
+	 * @param mixed $value
+	 *
+	 * @return string
+	 */
 	public function escape($value)
 	{
 		// Make sure the database is connected
@@ -366,16 +421,31 @@ class Database_PDO_Connection extends \Database_Connection
 		return $result;
 	}
 
+	/**
+	 * Retrieve error info
+	 *
+	 * @return array
+	 */
 	public function error_info()
 	{
 		return $this->_connection->errorInfo();
 	}
 
+	/**
+	 * Returns wether the connection is in transaction
+	 *
+	 * @return bool
+	 */
 	public function in_transaction()
 	{
 		return $this->_in_transaction;
 	}
 
+	/**
+	 * Start a transaction
+	 *
+	 * @return bool
+	 */
 	public function start_transaction()
 	{
 		$this->_connection or $this->connect();
@@ -383,16 +453,24 @@ class Database_PDO_Connection extends \Database_Connection
 		return $this->_connection->beginTransaction();
 	}
 
+	/**
+	 * Commit a transaction
+	 *
+	 * @return bool
+	 */
 	public function commit_transaction()
 	{
 		$this->_in_transaction = false;
 		return $this->_connection->commit();
 	}
 
+	/**
+	 * Rollback a transaction
+	 * @return bool
+	 */
 	public function rollback_transaction()
 	{
 		$this->_in_transaction = false;
 		return $this->_connection->rollBack();
 	}
-
 }

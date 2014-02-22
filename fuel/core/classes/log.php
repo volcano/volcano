@@ -3,7 +3,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -74,7 +74,7 @@ class Log
 		catch (\Exception $e)
 		{
 			\Config::set('log_threshold', \Fuel::L_NONE);
-			throw new \FuelException('Unable to create or write to the log file. Please check the permissions on '.\Config::get('log_path'));
+			throw new \FuelException('Unable to create or write to the log file. Please check the permissions on '.\Config::get('log_path').'. ('.$e->getMessage().')');
 		}
 
 		if ( ! filesize($filename))
@@ -99,6 +99,9 @@ class Log
 	 */
 	public static function instance()
 	{
+		// make sure we have an instance
+		static::$monolog or static::_init();
+
 		// return the created instance
 		return static::$monolog;
 	}
@@ -225,7 +228,7 @@ class Log
 		}
 
 		// log the message
-		static::$monolog->log($level, (empty($method) ? '' : $method.' - ').$msg);
+		static::instance()->log($level, (empty($method) ? '' : $method.' - ').$msg);
 
 		return true;
 	}

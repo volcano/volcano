@@ -3,7 +3,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -50,6 +50,8 @@ try
 }
 catch (HttpNotFoundException $e)
 {
+	\Request::reset_request(true);
+
 	$route = array_key_exists('_404_', Router::$routes) ? Router::$routes['_404_']->translation : Config::get('routes._404_');
 
 	if($route instanceof Closure)
@@ -71,15 +73,21 @@ catch (HttpNotFoundException $e)
 	}
 }
 
+// Render the output
+$response->body((string) $response);
+
 // This will add the execution time and memory usage to the output.
 // Comment this out if you don't use it.
-$bm = Profiler::app_total();
-$response->body(
-	str_replace(
-		array('{exec_time}', '{mem_usage}'),
-		array(round($bm[0], 4), round($bm[1] / pow(1024, 2), 3)),
-		$response->body()
-	)
-);
+if (strpos($response->body(), '{exec_time}') !== false or strpos($response->body(), '{mem_usage}') !== false)
+{
+	$bm = Profiler::app_total();
+	$response->body(
+		str_replace(
+			array('{exec_time}', '{mem_usage}'),
+			array(round($bm[0], 4), round($bm[1] / pow(1024, 2), 3)),
+			$response->body()
+		)
+	);
+}
 
 $response->send(true);

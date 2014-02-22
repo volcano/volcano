@@ -1,11 +1,11 @@
 /* set the page title, including the version of these docs */
-var DocVersion = "1.6";
+var DocVersion = "1.7.1";
 
 // set the google CSE key based on the docversion
-if (DocVersion.indexOf('-dev')) {
-	var GoogleCSE = "006268519150918941486:avkdxx7rmmc";
-} else {
+if (DocVersion.indexOf('-dev') == -1) {
 	var GoogleCSE = "006268519150918941486:vg1sweimb7m";
+} else {
+	var GoogleCSE = "006268519150918941486:avkdxx7rmmc";
 }
 
 /*! jQuery v1.9.1 | (c) 2005, 2012 jQuery Foundation, Inc. | jquery.org/license
@@ -465,12 +465,15 @@ panes.core = {
 		"Event":		"classes/event.html",
 		// "Error":		"todo.html",
 		// "Exception":	"todo.html",
-		"Fieldset":		"classes/fieldset.html",
+		"Fieldset": {
+			"Fieldset":			"classes/fieldset/fieldset.html",
+			"Fieldset Field":	"classes/fieldset/field.html",
+		},
 		"File": {
 			"Introduction":	"classes/file/intro.html",
 			"Usage":		"classes/file/usage.html",
 			"Advanced":		"classes/file/advanced.html",
-			"Handlers":		"classes/file/handlers.html",
+			"Handlers":		"classes/file/handlers.html"
 		},
 		"Finder":		"classes/finder.html",
 		"Form":			"classes/form.html",
@@ -499,7 +502,7 @@ panes.core = {
 		"Package":		"classes/package.html",
 		"Pagination":	"classes/pagination.html",
 		"Profiler":		"classes/profiler.html",
-		"Redis":		"classes/redis.html",
+		"Redis_Db":		"classes/redis.html",
 		"Request": {
 			"URI requests":		"classes/request/request.html",
 			"Curl":		"classes/request/curl.html",

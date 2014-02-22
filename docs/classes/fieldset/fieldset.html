@@ -3,14 +3,14 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="./../assets/css/combined.css">
-	<link rel="shortcut icon" href="./../favicon.ico" />
+	<link rel="stylesheet" href="./../../assets/css/combined.css">
+	<link rel="shortcut icon" href="./../../favicon.ico" />
 	<script src="http://www.google.com/jsapi" type="text/javascript"></script>
 	<script type="text/javascript">
-		var path = './../';
+		var path = './../../';
 		var class_prefix = "Fieldset::";
 	</script>
-	<script src="./../assets/js/combined.js"></script>
+	<script src="./../../assets/js/combined.js"></script>
 	<title>Fieldset - Classes - FuelPHP Documentation</title>
 </head>
 <body>
@@ -51,6 +51,10 @@
 				The Fieldset class is used to create a form and handle its validation in an object oriented way. It uses the Form
 				and Validation classes. This class itself is only meant to model the fieldset and its fields while the other
 				two classes do the real work.
+			</p>
+			<p>
+				Every field in a fieldset is defined by a <a href="field.html">Fieldset_Field</a> object, which you can access
+				and manipulate directly using the <kbd>field()</kbd> method of the Fieldset.
 			</p>
 			<p>
 				The resulting form markup is generated when passing the Fieldset instance to a View or by calling <kbd>build()</kbd>.
@@ -101,6 +105,43 @@
 					</tr>
 					</tbody>
 				</table>
+
+				<p>
+					When constructing a Fieldset object, you can pass a configuration array which allows you to setup
+					the object with a custom configuration. The following items are supported:
+				</p>
+				<table class="config">
+					<tbody>
+						<tr class="header">
+							<th>Param</th>
+							<th>Type</th>
+							<th>Default</th>
+							<th>Description</th>
+						</tr>
+						<tr>
+							<th>validation_instance</th>
+							<td>Validation object</td>
+							<td><pre class="php"><code>null</code></pre></td>
+							<td>
+								An existing Validation class object you want to use to validate the fieldset. If not given,
+								a new Validation object will be constructed for this fieldset.
+							</td>
+						</tr>
+						<tr>
+							<th>form_instance</th>
+							<td>Form object</td>
+							<td><pre class="php"><code>null</code></pre></td>
+							<td>
+								An existing Form class object you want to use to construct the fieldset form. If not given,
+								a new Form object will be constructed for this fieldset.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<p>
+					In addition to these fields, you can pass custom form configuration to modify the way the fieldset generates the form.
+					For valid configuration values, have a look at the <kbd>form.php</kbd> configuration file.
+				</p>
 			</article>
 
 			<article>
@@ -194,7 +235,7 @@
 
 			<article>
 				<h4 class="method" id="method_add">add($name, $label = '', array $attributes = array(), array $rules = array())</h4>
-				<p>Creates a Fieldset_Field instance and adds it to the current Fieldset.</p>
+				<p>Creates a <a href="field.html">Fieldset_Field</a> instance and adds it to the current Fieldset.</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -237,7 +278,7 @@
 					</tr>
 					<tr>
 						<th>Returns</th>
-						<td>\Fieldset_Field Object</td>
+						<td><a href="field.html">Fieldset_Field</a> instance</td>
 					</tr>
 					<tr>
 						<th>Example</th>
@@ -279,7 +320,7 @@ $form->add(
 
 			<article>
 				<h4 class="method" id="method_add_before">add_before($name, $label = '', array $attributes = array(), array $rules = array(), $fieldname = null)</h4>
-				<p>Creates a Fieldset_Field instance and adds it to the current Fieldset, just before an already defined field identified by <strong>$fieldname</strong>.</p>
+				<p>Creates a <a href="field.html">Fieldset_Field</a> instance and adds it to the current Fieldset, just before an already defined field identified by <strong>$fieldname</strong>.</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -327,7 +368,7 @@ $form->add(
 					</tr>
 					<tr>
 						<th>Returns</th>
-						<td>\Fieldset_Field Object</td>
+						<td><a href="field.html">Fieldset_Field</a> Object</td>
 					</tr>
 					<tr>
 						<th>Example</th>
@@ -343,7 +384,7 @@ $form->add_before('gender', '', array('options' => $ops, 'type' => 'radio', 'val
 
 			<article>
 				<h4 class="method" id="method_add_after">add_after($name, $label = '', array $attributes = array(), array $rules = array(), $fieldname = null)</h4>
-				<p>Creates a Fieldset_Field instance and adds it to the current Fieldset, just after an already defined field identified by <strong>$fieldname</strong>.</p>
+				<p>Creates a <a href="field.html">Fieldset_Field</a> instance and adds it to the current Fieldset, just after an already defined field identified by <strong>$fieldname</strong>.</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -391,7 +432,7 @@ $form->add_before('gender', '', array('options' => $ops, 'type' => 'radio', 'val
 					</tr>
 					<tr>
 						<th>Returns</th>
-						<td>\Fieldset_Field Object</td>
+						<td><a href="field.html">Fieldset_Field</a> Object</td>
 					</tr>
 					<tr>
 						<th>Example</th>
@@ -407,7 +448,7 @@ $form->add_after('gender', '', array('options' => $ops, 'type' => 'radio', 'valu
 
 			<article>
 				<h4 class="method" id="method_field">field($name = null)</h4>
-				<p>Gets one or all Fieldset_Field instances for the current Fieldset.</p>
+				<p>Gets one or all <a href="field.html">Fieldset_Field</a> instances for the current Fieldset.</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -435,8 +476,8 @@ $form->add_after('gender', '', array('options' => $ops, 'type' => 'radio', 'valu
 					</tr>
 					<tr>
 						<th>Returns</th>
-						<td>\Fieldset_Field Object<br />
-						or <kbd>array()</kbd> of Fieldset_Fields</td>
+						<td><a href="field.html">Fieldset_Field</a> instance<br />
+						or an <kbd>array()</kbd> of <a href="field.html">Fieldset_Field</a> instances</td>
 					</tr>
 					<tr>
 						<th>Example</th>
@@ -680,7 +721,7 @@ $name = $article_form->get_name();  // 'article'</code></pre>
 			<article>
 				<h4 class="method" id="method_repopulate">repopulate()</h4>
 				<p>Set all field values to the input send by a form submission (uses the form <kbd>method</kbd> attribute
-					to decide wether to check POST or GET).</p>
+					to decide whether to check POST or GET).</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -1148,11 +1189,11 @@ $form = Fieldset::forge('article')->add_model($article);
  * add the tabular form to it to create the one-to-many table.
  *
  * the data is provided by the relation 'comments' of the $article object, which
- * are objects of the class 'Model_Comments'.
+ * are objects of the class 'Model_Comment'.
  *
  * you can disable the fieldset tag to avoid embedded fieldsets in your form
  */
-$form->add(\Fieldset::forge('tabular')->set_tabular_form('Model_Comments', 'comments', $article)->set_fieldset_tag(false));
+$form->add(\Fieldset::forge('tabular')->set_tabular_form('Model_Comment', 'comments', $article)->set_fieldset_tag(false));
 				</code></pre>
 
 				<p class="note">This only works for related models that <strong>DO NOT</strong> have a compound key!</p>
@@ -1202,7 +1243,7 @@ if (\Input::post())
 			else
 			{
 				// create a new related record
-				$article->comments[] = Model_Comments::forge(array('article_id' => $article->id, 'fieldA' => $data['fieldA'], 'fieldB' => $data['fieldB']));
+				$article->comments[] = Model_Comment::forge(array('article_id' => $article->id, 'fieldA' => $data['fieldA'], 'fieldB' => $data['fieldB']));
 			}
 		}
 

@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -59,9 +59,6 @@ class Auth
 	{
 		\Config::load('auth', true);
 
-		// Whether to allow multiple drivers of any type, defaults to not allowed
-		static::$_verify_multiple = \Config::get('auth.verify_multiple_logins', false);
-
 		foreach((array) \Config::get('auth.driver', array()) as $driver => $config)
 		{
 			$config = is_int($driver)
@@ -69,7 +66,8 @@ class Auth
 				: array_merge($config, array('driver' => $driver));
 			static::forge($config);
 		}
-		// set the first (or only) as the default instance for static usage
+
+		// Set the first (or only) as the default instance for static usage
 		if ( ! empty(static::$_instances))
 		{
 			static::$_instance = reset(static::$_instances);
@@ -116,6 +114,13 @@ class Auth
 		{
 			// store this instance
 			static::$_instances[$id] = $driver;
+		}
+
+		// If we have more then one driver instance, check if we need concurrency
+		if (count(static::$_instances) > 1)
+		{
+			// Whether to allow multiple drivers of any type, defaults to not allowed
+			static::$_verify_multiple = \Config::get('auth.verify_multiple_logins', false);
 		}
 
 		return static::$_instances[$id];
@@ -306,7 +311,7 @@ class Auth
 	 */
 	public static function unregister_driver_type($type)
 	{
-		if (in_array('login', 'group', 'acl'))
+		if (in_array($type,array('login', 'group', 'acl')))
 		{
 			\Error::notice('Cannot remove driver type, included drivers login, group and acl cannot be removed.');
 			return false;
@@ -337,7 +342,7 @@ class Auth
 		}
 		if (static::$_verify_multiple !== true and method_exists(static::$_instance, $method))
 		{
-			return call_user_func_array(array(static::$_instance, $method), $args);
+			return call_fuel_func_array(array(static::$_instance, $method), $args);
 		}
 
 		throw new \BadMethodCallException('Invalid method: '.get_called_class().'::'.$method);

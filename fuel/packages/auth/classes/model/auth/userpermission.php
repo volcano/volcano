@@ -3,7 +3,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -27,12 +27,13 @@ class Auth_Userpermission extends \Orm\Model
 	/**
 	 * @var  array  name or names of the primary keys
 	 */
-	protected static $_primary_key = array('user_id', 'perms_id');
+	protected static $_primary_key = array('id');
 
 	/**
 	 * @var array	model properties
 	 */
 	protected static $_properties = array(
+		'id',
 		'user_id',
 		'perms_id',
 		'actions'         => array(

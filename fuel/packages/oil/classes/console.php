@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -44,6 +44,27 @@ class Console
 
 		// And, go!
 		self::main();
+	}
+
+	public static function help()
+	{
+		$output = <<<HELP
+
+Usage:
+  php oil [c|console]
+
+Description:
+  Opens a commandline console to your FuelPHP installation. This allows
+  you to run any FuelPHP command interactively.
+
+Examples:
+  php oil console
+
+Documentation:
+  http://fuelphp.com/docs/packages/oil/console.html
+HELP;
+		\Cli::write($output);
+
 	}
 
 	private function main()

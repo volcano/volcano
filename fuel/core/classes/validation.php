@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -187,15 +187,15 @@ class Validation
 				// deal with rules that have comma's in the rule parameter
 				if (in_array($rule, array('match_pattern')))
 				{
-					call_user_func_array(array($field, 'add_rule'), array_merge(array($rule), array($param[1])));
+					call_fuel_func_array(array($field, 'add_rule'), array_merge(array($rule), array($param[1])));
 				}
 				elseif (in_array($rule, array('valid_string')))
 				{
-					call_user_func_array(array($field, 'add_rule'), array_merge(array($rule), array(explode(',', $param[1]))));
+					call_fuel_func_array(array($field, 'add_rule'), array_merge(array($rule), array(explode(',', $param[1]))));
 				}
 				else
 				{
-					call_user_func_array(array($field, 'add_rule'), array_merge(array($rule), explode(',', $param[1])));
+					call_fuel_func_array(array($field, 'add_rule'), array_merge(array($rule), explode(',', $param[1])));
 				}
 			}
 			else
@@ -473,7 +473,7 @@ class Validation
 			return;
 		}
 
-		$output = call_user_func_array(reset($rule), array_merge(array($value), $params));
+		$output = call_fuel_func_array(reset($rule), array_merge(array($value), $params));
 
 		if ($output === false && $value !== false)
 		{
@@ -567,6 +567,30 @@ class Validation
 		}
 
 		return array_key_exists($field, $this->errors) ? $this->errors[$field] : $default;
+	}
+
+	/**
+	 * Return error message
+	 *
+	 * Return specific error message or all error messages thrown during validation
+	 *
+	 * @param   string  fieldname
+	 * @param   mixed   value to return when not validated
+	 * @return  string|array  the error message or full array of error messages
+	 */
+	public function error_message($field = null, $default = false)
+	{
+		if ($field === null)
+		{
+			$messages = array();
+			foreach ($this->error() as $field => $e)
+			{
+				$messages[$field] = $e->get_message();
+			}
+			return $messages;
+		}
+
+		return array_key_exists($field, $this->errors) ? $this->errors[$field]->get_message() : $default;
 	}
 
 	/**
@@ -881,7 +905,7 @@ class Validation
 			}
 			elseif ($flags == 'all')
 			{
-				$flags = array('alpha', 'utf8', 'numeric', 'spaces', 'newlines', 'tabs', 'punctuation', 'singlequotes', 'doublequotes', 'dashes');
+				$flags = array('alpha', 'utf8', 'numeric', 'spaces', 'newlines', 'tabs', 'punctuation', 'singlequotes', 'doublequotes', 'dashes', 'brackets', 'braces');
 			}
 			else
 			{
@@ -901,6 +925,8 @@ class Validation
 		$pattern .= in_array('dashes', $flags) ? '_\-' : '';
 		$pattern .= in_array('singlequotes', $flags) ? "'" : '';
 		$pattern .= in_array('doublequotes', $flags) ? "\"" : '';
+		$pattern .= in_array('brackets', $flags) ? "\(\)" : '';
+		$pattern .= in_array('braces', $flags) ? "\{\}" : '';
 		$pattern = empty($pattern) ? '/^(.*)$/' : ('/^(['.$pattern.'])+$/');
 		$pattern .= in_array('utf8', $flags) ? 'u' : '';
 
@@ -963,7 +989,8 @@ class Validation
 	}
 
 	/**
-	 * Checks whether string input is valid date format
+	 * Checks whether string input is valid date format. When a format is passed
+	 * it will make sure the date will be in that specific format if validated
 	 *
 	 * @param   string
 	 * @param   string  The format used at the time of a validation
@@ -976,6 +1003,7 @@ class Validation
 		{
 			return true;
 		}
+
 		if ($format)
 		{
 			$parsed = date_parse_from_format($format, $val);
@@ -984,6 +1012,21 @@ class Validation
 		{
 			$parsed = date_parse($val);
 		}
-		return \Arr::get($parsed, 'error_count', 1) + ($strict ? \Arr::get($parsed, 'warning_count', 1) : 0) === 0;
+
+		if (\Arr::get($parsed, 'error_count', 1) + ($strict ? \Arr::get($parsed, 'warning_count', 1) : 0) === 0)
+		{
+			if ($format)
+			{
+				return date($format, mktime($parsed['hour'], $parsed['minute'], $parsed['second'], $parsed['month'], $parsed['day'], $parsed['year']));
+			}
+			else
+			{
+				return true;
+			}
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

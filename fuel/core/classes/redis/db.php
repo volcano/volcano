@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -29,7 +29,7 @@ class RedisException extends \FuelException {}
 /**
  * Redisent, a Redis interface for the modest among us
  */
-class Redis
+class Redis_Db
 {
 	/**
 	 * Multiton pattern, keep track of all created instances
@@ -105,6 +105,9 @@ class Redis
 		{
 			// execute the auth command if a password is present in config
 			empty($config['password']) or $this->auth($config['password']);
+
+			// Select database using zero-based numeric index
+			empty($config['database']) or $this->select($config['database']);
 		}
 	}
 
@@ -170,6 +173,46 @@ class Redis
 			return $responses[0];
 		}
 	}
+
+	/**
+	 * Alias for the redis PSUBSCRIBE command. It allows you to listen, and
+	 * have the callback called for every response.
+	 *
+	 * @params  string    pattern to subscribe to
+	 * @params  callable  callback, to process the responses
+	 *
+	 * @throws  RedisException  if writing the command failed
+	 */
+    public function psubscribe($pattern, $callback)
+    {
+        $args = array('PSUBSCRIBE', $pattern);
+
+        $command = sprintf('*%d%s%s%s', 2, CRLF, implode(array_map(function($arg) {
+            return sprintf('$%d%s%s', strlen($arg), CRLF, $arg);
+        }, $args), CRLF), CRLF);
+
+        for ($written = 0; $written < strlen($command); $written += $fwrite)
+        {
+            $fwrite = fwrite($this->connection, substr($command, $written));
+            if ($fwrite === false)
+            {
+                throw new \RedisException('Failed to write entire command to stream');
+            }
+        }
+
+        while ( ! feof($this->connection))
+        {
+            try
+            {
+                $response = $this->readResponse();
+                $callback($response);
+            }
+            catch(\RedisException $e)
+            {
+                \Log::warning($e->getMessage(), 'Redis_Db::readResponse');
+            }
+        }
+    }
 
 	/**
 	 */

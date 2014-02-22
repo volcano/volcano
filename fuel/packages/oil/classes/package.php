@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -164,7 +164,7 @@ HELP;
 		$zip_file = $tmp_folder . '.zip';
 		@copy($zip_url, $zip_file);
 
-		if (file_exists($zip_file))
+		if (is_file($zip_file))
 		{
 			$unzip = new \Unzip;
 			$files = $unzip->extract($zip_file, $tmp_folder);

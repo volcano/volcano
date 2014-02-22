@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -166,7 +166,13 @@ class Model_Temporal extends Model
 		}
 
 		$query_result = $query->get_one();
-		$query_result->set_lazy_timestamp($timestamp);
+		
+		// If the query did not return a result but null, then we cannot call
+		//  set_lazy_timestamp on it without throwing errors
+		if ( $query_result !== null )
+		{
+			$query_result->set_lazy_timestamp($timestamp);
+		}
 		return $query_result;
 	}
 
@@ -182,7 +188,7 @@ class Model_Temporal extends Model
 	 * @param string $property
 	 * @return mixed
 	 */
-	public function & get($property)
+	public function & get($property, array $conditions = array())
 	{
 		// if a timestamp is set and that we have a temporal relation
 		$rel = static::relations($property);
@@ -194,13 +200,13 @@ class Model_Temporal extends Model
 			$class_name = $rel->model_to;
 
 			$class_name::make_query_temporal($lazy_timestamp);
-			$result =& parent::get($property);
+			$result =& parent::get($property, $conditions);
 			$class_name::make_query_temporal(null);
 
 			return $result;
 		}
 
-		return parent::get($property);
+		return parent::get($property, $conditions);
 	}
 
 	/**

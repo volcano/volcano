@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -155,6 +155,9 @@ class Session_File extends \Session_Driver
 			// rotate the session id if needed
 			$this->rotate(false);
 
+			// record the last update time of the session
+			$this->keys['updated'] = $this->time->get_timestamp();
+
 			// session payload
 			$payload = $this->_serialize(array($this->keys, $this->data, $this->flash));
 
@@ -211,7 +214,7 @@ class Session_File extends \Session_Driver
 		{
 			// delete the session file
 			$file = $this->config['path'].$this->config['cookie_name'].'_'.$this->keys['session_id'];
-			if (file_exists($file))
+			if (is_file($file))
 			{
 				unlink($file);
 			}
@@ -234,7 +237,7 @@ class Session_File extends \Session_Driver
 	{
 		// create the session file
 		$file = $this->config['path'].$this->config['cookie_name'].'_'.$session_id;
-		$exists = file_exists($file);
+		$exists = is_file($file);
 		$handle = fopen($file,'c');
 		if ($handle)
 		{
@@ -274,7 +277,7 @@ class Session_File extends \Session_Driver
 		$payload = false;
 
 		$file = $this->config['path'].$this->config['cookie_name'].'_'.$session_id;
-		if (file_exists($file))
+		if (is_file($file))
 		{
 			$handle = fopen($file,'r');
 			if ($handle)
@@ -283,7 +286,10 @@ class Session_File extends \Session_Driver
 				while(!flock($handle, LOCK_SH));
 
 				// read the session data
-				$payload = fread($handle, filesize($file));
+				if ($size = filesize($file))
+				{
+					$payload = fread($handle, $size);
+				}
 
 				//release the lock
 				flock($handle, LOCK_UN);

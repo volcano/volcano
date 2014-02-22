@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -319,6 +319,51 @@ class Test_Arr extends TestCase
 		);
 
 		$output = Arr::flatten_assoc($people);
+		$this->assertEquals($expected, $output);
+	}
+
+	/**
+	 * Tests Arr::merge_assoc()
+	 *
+	 * @test
+	 */
+	public function test_merge_assoc()
+	{
+		$arr1 = array(
+			'one' => 1,
+			2 => 2,
+			3 => 3,
+			4 => array(
+				56
+			),
+			5=> 87
+		);
+
+		$arr2 = array(
+			1 => 27,
+			2 => 90,
+			4 => array(
+				'give_me' => 'bandwidth',
+			),
+			6 => '90',
+			7 => 'php',
+		);
+
+		$expected = array(
+			'one' => 1,
+			2 => 90,
+			3 => 3,
+			4 => array(
+				56,
+				'give_me' => 'bandwidth',
+			),
+			5=> 87,
+			1 => 27,
+			6 => '90',
+			7 => 'php',
+		);
+
+		$output = Arr::merge_assoc($arr1, $arr2);
 		$this->assertEquals($expected, $output);
 	}
 
@@ -895,5 +940,69 @@ class Test_Arr extends TestCase
 		$expected = 4;
 		$test = \Arr::next_by_value($arr, 'A', false);
 		$this->assertTrue($expected === $test);
+	}
+
+	/**
+	 * Tests Arr::subset()
+	 *
+	 * @test
+	 * @dataProvider person_provider
+	 */
+	public function test_subset_basic_usage($person)
+	{
+		$expected = array(
+			"name" => "Jack",
+			"location" => array(
+				"city" => "Pittsburgh",
+				"state" => "PA",
+				"country" => "US"
+			),
+		);
+
+		$got = \Arr::subset($person, array("name", "location"));
+		$this->assertEquals($expected, $got);
+
+		$expected = array(
+			"name" => "Jack",
+			"location" => array(
+				"country" => "US"
+			),
+		);
+
+		$got = \Arr::subset($person, array("name", "location.country"));
+		$this->assertEquals($expected, $got);
+	}
+
+	/**
+	 * Tests Arr::subset()
+	 *
+	 * @test
+	 * @dataProvider person_provider
+	 */
+	public function test_subset_missing_items($person)
+	{
+		$expected = array(
+			"name" => "Jack",
+			"location" => array(
+				"street" => null,
+				"country" => "US"
+			),
+			"occupation" => null
+		);
+
+		$got = \Arr::subset($person, array("name", "location.street", "location.country", "occupation"));
+		$this->assertEquals($expected, $got);
+
+		$expected = array(
+			"name" => "Jack",
+			"location" => array(
+				"street" => "Unknown",
+				"country" => "US"
+			),
+			"occupation" => "Unknown"
+		);
+
+		$got = \Arr::subset($person, array("name", "location.street", "location.country", "occupation"), "Unknown");
+		$this->assertEquals($expected, $got);
 	}
 }

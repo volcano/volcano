@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -151,7 +151,7 @@ class Query
 			{
 				case 'select':
 					$val = (array) $val;
-					call_user_func_array(array($this, 'select'), $val);
+					call_fuel_func_array(array($this, 'select'), $val);
 					break;
 				case 'related':
 					$val = (array) $val;
@@ -164,7 +164,7 @@ class Query
 					$this->and_where_open();
 					foreach ($val as $where)
 					{
-						call_user_func_array(array($this, '_where'), array($where, 'or_where'));
+						call_fuel_func_array(array($this, '_where'), array($where, 'or_where'));
 					}
 					$this->and_where_close();
 					break;
@@ -176,7 +176,7 @@ class Query
 					$this->order_by($val);
 					break;
 				case 'group_by':
-					$this->group_by($val);
+					call_fuel_func_array(array($this, 'group_by'), $val);
 					break;
 				case 'limit':
 					$this->limit($val);
@@ -558,7 +558,7 @@ class Query
 			if (is_array($v_w) and ! empty($v_w[0]) and is_string($v_w[0]))
 			{
 				! $v_w[0] instanceof \Database_Expression and strpos($v_w[0], '.') === false and $v_w[0] = $base.$v_w[0];
-				call_user_func_array(array($this, ($k_w === 'or' ? 'or_' : '').'where'), $v_w);
+				call_fuel_func_array(array($this, ($k_w === 'or' ? 'or_' : '').'where'), $v_w);
 			}
 			elseif (is_int($k_w) or $k_w == 'or')
 			{
@@ -770,7 +770,7 @@ class Query
 					{
 						$conditional[0] = substr($conditional[0], strlen($this->alias.'.'));
 					}
-					call_user_func_array(array($query, $method), $conditional);
+					call_fuel_func_array(array($query, $method), $conditional);
 					unset($this->where[$key]);
 				}
 			}
@@ -790,7 +790,7 @@ class Query
 						{
 							$conditional[0] = substr($conditional[0], strlen($this->alias.'.'));
 						}
-						call_user_func_array(array($query, $method), $conditional);
+						call_fuel_func_array(array($query, $method), $conditional);
 						unset($this->where[$key]);
 					}
 				}
@@ -855,7 +855,7 @@ class Query
 			}
 
 			// make current query subquery of ultimate query
-			$new_query = call_user_func_array('DB::select', $columns);
+			$new_query = call_fuel_func_array('DB::select', $columns);
 			$query = $new_query->from(array($query, $this->alias));
 		}
 		else
@@ -958,7 +958,30 @@ class Query
 		// Get the grouping
 		if ( ! empty($this->group_by))
 		{
-			call_user_func_array(array($query, 'group_by'), $this->group_by);
+			foreach ($this->group_by as $gb)
+			{
+				if ( ! $gb instanceof \Fuel\Core\Database_Expression)
+				{
+					if (strpos($gb, $this->alias.'.') === false)
+					{
+						// try to rewrite on the relations to their table alias
+						$dotpos = strrpos($gb, '.');
+						$relation = substr($gb, 0, $dotpos);
+						if ($dotpos > 0)
+						{
+							if(array_key_exists($relation, $models))
+							{
+								$gb = $models[$relation]['table'][1].substr($gb, $dotpos);
+							}
+						}
+						else
+						{
+							$gb = $this->alias.'.'.$gb;
+						}
+					}
+				}
+				$query->group_by($gb);
+			}
 		}
 
 		// put omitted where conditions back
@@ -979,7 +1002,7 @@ class Query
 					}
 				}
 
-				call_user_func_array(array($query, $method), $conditional);
+				call_fuel_func_array(array($query, $method), $conditional);
 			}
 		}
 
@@ -1144,7 +1167,7 @@ class Query
 				$select[] = $c[0];
 			}
 		}
-		$query = call_user_func_array('DB::select', $select);
+		$query = call_fuel_func_array('DB::select', $select);
 
 		// Set from view/table
 		$query->from(array($this->_table(), $this->alias));
@@ -1207,13 +1230,16 @@ class Query
 				$select[] = $c[0];
 			}
 		}
-		$query = call_user_func_array('DB::select', $select);
+		$query = call_fuel_func_array('DB::select', $select);
+
+		// Set the defined connection on the query
+		$query->set_connection($this->connection);
 
 		// Set from table
 		$query->from(array($this->_table(), $this->alias));
 
 		// Build the query further
-		$tmp     = $this->build_query($query, $columns);
+		$tmp = $this->build_query($query, $columns);
 
 		return $tmp['query'];
 	}
@@ -1229,7 +1255,6 @@ class Query
 		$limit = $this->limit;
 		$rows_limit = $this->rows_limit;
 
-		// if a row limit is set, use that
 		if ($this->rows_limit !== null)
 		{
 			$this->limit = null;
@@ -1266,7 +1291,7 @@ class Query
 
 		// Get the columns
 		$columns = \DB::expr('COUNT('.($distinct ? 'DISTINCT ' : '').
-			\Database_Connection::instance()->quote_identifier($select).
+			\Database_Connection::instance($this->connection)->quote_identifier($select).
 			') AS count_result');
 
 		// Remove the current select and
@@ -1300,7 +1325,7 @@ class Query
 
 		// Get the columns
 		$columns = \DB::expr('MAX('.
-			\Database_Connection::instance()->quote_identifier($this->alias.'.'.$column).
+			\Database_Connection::instance($this->connection)->quote_identifier($this->alias.'.'.$column).
 			') AS max_result');
 
 		// Remove the current select and
@@ -1319,7 +1344,7 @@ class Query
 			return false;
 		}
 
-		return (int) $max;
+		return $max;
 	}
 
 	/**
@@ -1335,7 +1360,7 @@ class Query
 
 		// Get the columns
 		$columns = \DB::expr('MIN('.
-			\Database_Connection::instance()->quote_identifier($this->alias.'.'.$column).
+			\Database_Connection::instance($this->connection)->quote_identifier($this->alias.'.'.$column).
 			') AS min_result');
 
 		// Remove the current select and
@@ -1354,7 +1379,7 @@ class Query
 			return false;
 		}
 
-		return (int) $min;
+		return $min;
 	}
 
 	/**

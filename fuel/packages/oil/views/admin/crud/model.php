@@ -19,11 +19,11 @@ class Model_<?php echo $model_name; ?> extends Model_Crud
 			}
 			$rules[] = ! is_null($field['constraint']) ? "max_length[{$field['constraint']}]" : 'max_length[255]';
 		}
-		elseif (in_array($field['type'], array('int', 'intenger')))
+		elseif (in_array($field['type'], array('int', 'integer')))
 		{
 			$rules[] = 'valid_string[numeric]';
 		}
-		
+
 		$rules = implode('|', $rules);
 ?>
 		$val->add_field('<?php echo $field['name']; ?>', '<?php echo ucwords(str_replace('_', ' ', $field['name'])); ?>', '<?php echo $rules; ?>');

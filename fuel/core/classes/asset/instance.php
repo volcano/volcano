@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -232,6 +232,7 @@ class Asset_Instance
 			$type = $item['type'];
 			$filename = $item['file'];
 			$attr = $item['attr'];
+			$inline = $item['raw'];
 
 			// only do a file search if the asset is not a URI
 			if ( ! preg_match('|^(\w+:)?//|', $filename))
@@ -241,19 +242,41 @@ class Asset_Instance
 				{
 					if ( ! ($file = $this->find_file($filename, $type)))
 					{
-						if ($this->_fail_silently)
+						if ($raw or $inline)
 						{
-							continue;
+							$file = $filename;
 						}
+						else
+						{
+							if ($this->_fail_silently)
+							{
+								continue;
+							}
 
-						throw new \FuelException('Could not find asset: '.$filename);
+							throw new \FuelException('Could not find asset: '.$filename);
+						}
 					}
-
-					$raw or $file = $this->_asset_url.$file.($this->_add_mtime ? '?'.filemtime($file) : '');
+					else
+					{
+						if ($raw or $inline)
+						{
+							$file = file_get_contents($file);
+							$inline = true;
+						}
+						else
+						{
+							$file = $this->_asset_url.$file.($this->_add_mtime ? '?'.filemtime($file) : '');
+						}
+					}
 				}
 				else
 				{
-					$raw or $file = $this->_asset_url.$this->_path_folders[$type].$filename;
+					$file = $this->_asset_url.$this->_path_folders[$type].$filename;
+					if ($raw or $inline)
+					{
+						$file = file_get_contents($file);
+						$inline = true;
+					}
 				}
 			}
 			else
@@ -264,10 +287,10 @@ class Asset_Instance
 			switch($type)
 			{
 				case 'css':
-					$attr['type'] = 'text/css';
-					if ($raw)
+					isset($attr['type']) or $attr['type'] = 'text/css';
+					if ($inline)
 					{
-						$css .= html_tag('style', $attr, PHP_EOL.file_get_contents($file).PHP_EOL).PHP_EOL;
+						$css .= html_tag('style', $attr, PHP_EOL.$file.PHP_EOL).PHP_EOL;
 					}
 					else
 					{
@@ -282,9 +305,9 @@ class Asset_Instance
 				break;
 				case 'js':
 					$attr['type'] = 'text/javascript';
-					if ($raw)
+					if ($inline)
 					{
-						$js .= html_tag('script', $attr, PHP_EOL.file_get_contents($file).PHP_EOL).PHP_EOL;
+						$js .= html_tag('script', $attr, PHP_EOL.$file.PHP_EOL).PHP_EOL;
 					}
 					else
 					{
@@ -334,7 +357,7 @@ class Asset_Instance
 			$render = false;
 		}
 
-		$this->_parse_assets('css', $stylesheets, $attr, $group);
+		$this->_parse_assets('css', $stylesheets, $attr, $group, $raw);
 
 		if ($render)
 		{
@@ -371,7 +394,7 @@ class Asset_Instance
 			$render = false;
 		}
 
-		$this->_parse_assets('js', $scripts, $attr, $group);
+		$this->_parse_assets('js', $scripts, $attr, $group, $raw);
 
 		if ($render)
 		{
@@ -484,7 +507,7 @@ class Asset_Instance
 	 * @param	string	The asset group name
 	 * @return	string
 	 */
-	protected function _parse_assets($type, $assets, $attr, $group)
+	protected function _parse_assets($type, $assets, $attr, $group, $raw = false)
 	{
 		if ( ! is_array($assets))
 		{
@@ -502,6 +525,7 @@ class Asset_Instance
 			$this->_groups[$group][] = array(
 				'type'	=>	$type,
 				'file'	=>	$asset,
+				'raw'	=>	$raw,
 				'attr'	=>	(array) $attr
 			);
 		}

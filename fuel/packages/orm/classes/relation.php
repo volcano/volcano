@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -152,5 +152,15 @@ abstract class Relation
 		}
 
 		return $this->{$property};
+	}
+
+	/**
+	 * Returns true if this relation is a singular relation. Eg, has_one not has_many
+	 *
+	 * @return bool
+	 */
+	public function is_singular()
+	{
+		return $this->singular;
 	}
 }

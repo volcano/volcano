@@ -18,6 +18,11 @@ namespace Fuel\Core;
 abstract class Database_Connection
 {
 	/**
+	 * @var string Cache of the name of the readonly connection
+	 */
+	protected static $_readonly = array();
+
+	/**
 	 * @var  array  Database instances
 	 */
 	public static $instances = array();
@@ -33,17 +38,27 @@ abstract class Database_Connection
 	 *     // Create a custom configured instance
 	 *     $db = static::instance('custom', $config);
 	 *
-	 * @param   string   instance name
-	 * @param   array    configuration parameters
+	 * @param   string $name     instance name
+	 * @param   array  $config   configuration parameters
+	 * @param   bool   $writable when replication is enabled, whether to return the master connection
+	 *
 	 * @return  Database_Connection
+	 *
+	 * @throws \FuelException
 	 */
-	public static function instance($name = null, array $config = null)
+	public static function instance($name = null, array $config = null, $writable = true)
 	{
 		\Config::load('db', true);
 		if ($name === null)
 		{
 			// Use the default instance name
 			$name = \Config::get('db.active');
+		}
+
+		if ( ! $writable and ($readonly = \Config::get("db.{$name}.readonly", false)))
+		{
+			! isset(static::$_readonly[$name]) and static::$_readonly[$name] = \Arr::get($readonly, array_rand($readonly));
+			$name = static::$_readonly[$name];
 		}
 
 		if ( ! isset(static::$instances[$name]))
@@ -56,7 +71,7 @@ abstract class Database_Connection
 
 			if ( ! isset($config['type']))
 			{
-				throw new \FuelException("Database type not defined in {$name} configuration");
+				throw new \FuelException('Database type not defined in "{$name}" configuration or "{$name}" configuration does not exist');
 			}
 
 			// Set the driver class name
@@ -99,7 +114,8 @@ abstract class Database_Connection
 	 *
 	 * [!!] This method cannot be accessed directly, you must use [static::instance].
 	 *
-	 * @return  void
+	 * @param string $name
+	 * @param array  $config
 	 */
 	protected function __construct($name, array $config)
 	{
@@ -167,7 +183,7 @@ abstract class Database_Connection
 	 *     $db->set_charset('utf8');
 	 *
 	 * @throws  Database_Exception
-	 * @param   string   character set name
+	 * @param   string $charset character set name
 	 * @return  void
 	 */
 	abstract public function set_charset($charset);
@@ -181,9 +197,10 @@ abstract class Database_Connection
 	 *     // Make a SELECT query and use "Model_User" for the results
 	 *     $db->query(static::SELECT, 'SELECT * FROM users LIMIT 1', 'Model_User');
 	 *
-	 * @param   integer  static::SELECT, static::INSERT, etc
-	 * @param   string   SQL query
-	 * @param   mixed    result object class, true for stdClass, false for assoc array
+	 * @param   integer $type      static::SELECT, static::INSERT, etc
+	 * @param   string  $sql       SQL query
+	 * @param   mixed   $as_object result object class, true for stdClass, false for assoc array
+	 *
 	 * @return  object   Database_Result for SELECT queries
 	 * @return  array    list (insert id, row count) for INSERT queries
 	 * @return  integer  number of affected rows for all other queries
@@ -240,6 +257,7 @@ abstract class Database_Connection
 	 * Per connection cache controlle setter/getter
 	 *
 	 * @param   bool   $bool  wether to enable it [optional]
+	 *
 	 * @return  mixed  cache boolean when getting, current instance when setting.
 	 */
 	public function caching($bool = null)
@@ -258,7 +276,8 @@ abstract class Database_Connection
 	 *     // Get the total number of records in the "users" table
 	 *     $count = $db->count_records('users');
 	 *
-	 * @param   mixed    table name string or array(query, alias)
+	 * @param   mixed $table table name string or array(query, alias)
+	 *
 	 * @return  integer
 	 */
 	public function count_records($table)
@@ -275,7 +294,8 @@ abstract class Database_Connection
 	 *
 	 *     $db->datatype('char');
 	 *
-	 * @param   string  SQL data type
+	 * @param   string $type SQL data type
+	 *
 	 * @return  array
 	 */
 	public function datatype($type)
@@ -350,7 +370,8 @@ abstract class Database_Connection
 	 *     // Get all user-related tables
 	 *     $tables = $db->list_tables('user%');
 	 *
-	 * @param   string   table to search for
+	 * @param   string $like table to search for
+	 *
 	 * @return  array
 	 */
 	abstract public function list_tables($like = null);
@@ -365,8 +386,9 @@ abstract class Database_Connection
 	 *     // Get all name-related columns
 	 *     $columns = $db->list_columns('users', '%name%');
 	 *
-	 * @param   string  table to get columns from
-	 * @param   string  column to search for
+	 * @param   string $table table to get columns from
+	 * @param   string $like  column to search for
+	 *
 	 * @return  array
 	 */
 	abstract public function list_columns($table, $like = null);
@@ -377,7 +399,8 @@ abstract class Database_Connection
 	 *     // Returns: array('CHAR', '6')
 	 *     list($type, $length) = $db->_parse_type('CHAR(6)');
 	 *
-	 * @param   string
+	 * @param string $type
+	 *
 	 * @return  array   list containing the type and length, if any
 	 */
 	protected function _parse_type($type)
@@ -405,6 +428,8 @@ abstract class Database_Connection
 	 *
 	 *     $prefix = $db->table_prefix();
 	 *
+	 * @param string $table
+	 *
 	 * @return  string
 	 */
 	public function table_prefix($table = null)
@@ -429,8 +454,10 @@ abstract class Database_Connection
 	 * [Database_Query] objects will be compiled and converted to a sub-query.
 	 * All other objects will be converted using the `__toString` method.
 	 *
-	 * @param   mixed   any value to quote
+	 * @param   mixed $value any value to quote
+	 *
 	 * @return  string
+	 *
 	 * @uses    static::escape
 	 */
 	public function quote($value)
@@ -487,8 +514,10 @@ abstract class Database_Connection
 	 *
 	 *     $table = $db->quote_table($table);
 	 *
-	 * @param   mixed   table name or array(table, alias)
+	 * @param   mixed $value table name or array(table, alias)
+	 *
 	 * @return  string
+	 *
 	 * @uses    static::quote_identifier
 	 * @uses    static::table_prefix
 	 */
@@ -578,8 +607,10 @@ abstract class Database_Connection
 	 * [Database_Query] objects will be compiled and converted to a sub-query.
 	 * All other objects will be converted using the `__toString` method.
 	 *
-	 * @param   mixed   any identifier
+	 * @param   mixed $value any identifier
+	 *
 	 * @return  string
+	 *
 	 * @uses    static::table_prefix
 	 */
 	public function quote_identifier($value)
@@ -616,8 +647,10 @@ abstract class Database_Connection
 
 		if (strpos($value, '"') !== false)
 		{
+			// required for PHP 5.5- (no access to $this in closure)
+			$that = $this;
 			// Quote the column in FUNC("ident") identifiers
-			return preg_replace('/"(.+?)"/e', '$this->quote_identifier("$1")', $value);
+			return preg_replace_callback('/"(.+?)"/', function ($matches) use($that) { return $that->quote_identifier($matches[1]); }, $value);
 		}
 		elseif (preg_match("/^'(.*)?'$/", $value))
 		{
@@ -654,7 +687,8 @@ abstract class Database_Connection
 	 *
 	 *     $value = $db->escape('any string');
 	 *
-	 * @param   string   value to quote
+	 * @param   string $value value to quote
+	 *
 	 * @return  string
 	 */
 	abstract public function escape($value);
@@ -707,5 +741,18 @@ abstract class Database_Connection
 		// Make sure the database is connected
 		$this->_connection or $this->connect();
 		return $this->_connection;
+	}
+
+	/**
+	 * Returns whether or not we have a valid database connection object
+	 *
+	 *     $db->has_connection()
+	 *
+	 * @return  bool
+	 */
+	public function has_connection()
+	{
+		// return the status of the connection
+		return $this->_connection ? true : false;
 	}
 }

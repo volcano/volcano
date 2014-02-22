@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -31,7 +31,14 @@ if ( ! function_exists('import'))
 	}
 }
 
-
+/**
+ * Shortcut for writing to the Log
+ *
+ * @param	int|string	the error level
+ * @param	string	the error message
+ * @param	string	information about the method
+ * @return	bool
+ */
 if ( ! function_exists('logger'))
 {
 	function logger($level, $msg, $method = null)
@@ -362,5 +369,135 @@ if (!function_exists('http_build_url'))
 			.((isset($parse_url['query'])) ? '?' . $parse_url['query'] : '')
 			.((isset($parse_url['fragment'])) ? '#' . $parse_url['fragment'] : '')
 		;
+	}
+}
+
+/**
+ * Find the common "root" path of two given paths or FQFN's
+ *
+ * @param   array   array with the paths to compare
+ *
+ * @return  string  the determined common path section
+ */
+if ( ! function_exists('get_common_path'))
+{
+	function get_common_path($paths)
+	{
+		$lastOffset = 1;
+		$common = '/';
+		while (($index = strpos($paths[0], '/', $lastOffset)) !== false)
+		{
+			$dirLen = $index - $lastOffset + 1;	// include /
+			$dir = substr($paths[0], $lastOffset, $dirLen);
+			foreach ($paths as $path)
+			{
+				if (substr($path, $lastOffset, $dirLen) != $dir)
+				{
+					return $common;
+				}
+			}
+			$common .= $dir;
+			$lastOffset = $index + 1;
+		}
+		return $common;
+	}
+}
+
+/**
+ * Faster equivalent of call_user_func_array
+ */
+if ( ! function_exists('call_fuel_func_array'))
+{
+	function call_fuel_func_array($callback , array $args)
+	{
+		// deal with "class::method" syntax
+		if (is_string($callback) and strpos($callback, '::') !== false)
+		{
+			$callback = explode('::', $callback);
+		}
+
+		// if an array is passed, extract the object and method to call
+		if (is_array($callback) and isset($callback[1]) and is_object($callback[0]))
+		{
+			// make sure our arguments array is indexed
+			if ($count = count($args))
+			{
+				$args = array_values($args);
+			}
+
+			list($instance, $method) = $callback;
+
+			// calling the method directly is faster then call_user_func_array() !
+			switch ($count)
+			{
+				case 0:
+					return $instance->$method();
+
+				case 1:
+					return $instance->$method($args[0]);
+
+				case 2:
+					return $instance->$method($args[0], $args[1]);
+
+				case 3:
+					return $instance->$method($args[0], $args[1], $args[2]);
+
+				case 4:
+					return $instance->$method($args[0], $args[1], $args[2], $args[3]);
+			}
+		}
+
+		elseif (is_array($callback) and isset($callback[1]) and is_string($callback[0]))
+		{
+			list($class, $method) = $callback;
+			$class = '\\'.ltrim($class, '\\');
+
+			// calling the method directly is faster then call_user_func_array() !
+			switch (count($args))
+			{
+				case 0:
+					return $class::$method();
+
+				case 1:
+					return $class::$method($args[0]);
+
+				case 2:
+					return $class::$method($args[0], $args[1]);
+
+				case 3:
+					return $class::$method($args[0], $args[1], $args[2]);
+
+				case 4:
+					return $class::$method($args[0], $args[1], $args[2], $args[3]);
+			}
+		}
+
+		// if it's a string, it's a native function or a static method call
+		elseif (is_string($callback) or $callback instanceOf \Closure)
+		{
+			is_string($callback) and $callback = ltrim($callback, '\\');
+
+			// calling the method directly is faster then call_user_func_array() !
+			switch (count($args))
+			{
+				case 0:
+					return $callback();
+
+				case 1:
+					return $callback($args[0]);
+
+				case 2:
+					return $callback($args[0], $args[1]);
+
+				case 3:
+					return $callback($args[0], $args[1], $args[2]);
+
+				case 4:
+					return $callback($args[0], $args[1], $args[2], $args[3]);
+			}
+		}
+
+		// fallback, handle the old way
+		return call_user_func_array($callback, $args);
 	}
 }

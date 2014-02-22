@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -128,7 +128,7 @@ class Fieldset_Field
 
 		foreach ($rules as $rule)
 		{
-			call_user_func_array(array($this, 'add_rule'), (array) $rule);
+			call_fuel_func_array(array($this, 'add_rule'), (array) $rule);
 		}
 	}
 

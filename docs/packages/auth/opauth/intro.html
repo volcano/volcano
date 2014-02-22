@@ -138,7 +138,7 @@ $ php composer.phar update</code></pre>
 						<td><pre class="php"><code>true</code></pre>
 						</td>
 						<td>
-							Wether or not you want to support linking multiple OAuth providers to a single local account.
+							Whether or not you want to support linking multiple OAuth providers to a single local account.
 							If it is set to <strong>false</strong> and a provider is already linked, the user will get an
 							error message when a second provider is used, and the login will be rejected.
 						</td>
@@ -210,6 +210,12 @@ $ php composer.phar update</code></pre>
 				</tbody>
 			</table>
 
+			<p>
+				Pay attention to the differences in OpAuth Auth drivers when it comes to callbacks. For example, Facebook doesn't require you
+				to define a callback (redirect) URL, Twitter requires one in the form <strong>http://example.com/&lt;controller&gt;/callback/</strong>,
+				and Google one like this: <strong>http://example.com/&lt;controller&gt;/&lt;method&gt;/google/oauth2callback</strong> (where "method"
+				is the name of the method in your controller that instantiates the Auth_Opauth driver.
+			</p>
 
 			<p class="note">Pay very close attention to the value of <strong>default_group</strong>. For Ormauth, group id's are
 			not fixed as they are autoincrement in your database table. You don't want to define the wrong one, and ending up

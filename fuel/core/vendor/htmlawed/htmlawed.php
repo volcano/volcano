@@ -1,12 +1,14 @@
 <?php
 
 /*
-htmLawed 1.1.12, 5 July 2012
+htmLawed 1.1.16, 29 August 2013
 Copyright Santosh Patnaik
 Dual licensed with LGPL 3 and GPL 2+
 A PHP Labware internal utility; www.bioinformatics.org/phplabware/internal_utilities/htmLawed
 
 See htmLawed_README.txt/htm
+*
+* Changed bits are marked with CHANGED.
 */
 
 function htmLawed($t, $C=1, $S=array()){
@@ -88,10 +90,43 @@ if(isset($GLOBALS['S'])){$reS = $GLOBALS['S'];}
 $GLOBALS['S'] = $S;
 
 $t = preg_replace('`[\x00-\x08\x0b-\x0c\x0e-\x1f]`', '', $t);
-if($C['clean_ms_char']){
- $x = array("\x7f"=>'', "\x80"=>'&#8364;', "\x81"=>'', "\x83"=>'&#402;', "\x85"=>'&#8230;', "\x86"=>'&#8224;', "\x87"=>'&#8225;', "\x88"=>'&#710;', "\x89"=>'&#8240;', "\x8a"=>'&#352;', "\x8b"=>'&#8249;', "\x8c"=>'&#338;', "\x8d"=>'', "\x8e"=>'&#381;', "\x8f"=>'', "\x90"=>'', "\x95"=>'&#8226;', "\x96"=>'&#8211;', "\x97"=>'&#8212;', "\x98"=>'&#732;', "\x99"=>'&#8482;', "\x9a"=>'&#353;', "\x9b"=>'&#8250;', "\x9c"=>'&#339;', "\x9d"=>'', "\x9e"=>'&#382;', "\x9f"=>'&#376;');
- $x = $x + ($C['clean_ms_char'] == 1 ? array("\x82"=>'&#8218;', "\x84"=>'&#8222;', "\x91"=>'&#8216;', "\x92"=>'&#8217;', "\x93"=>'&#8220;', "\x94"=>'&#8221;') : array("\x82"=>'\'', "\x84"=>'"', "\x91"=>'\'', "\x92"=>'\'', "\x93"=>'"', "\x94"=>'"'));
- $t = strtr($t, $x);
+
+//Clean out any microsoft characters
+if ($C['clean_ms_char']) {
+	/**
+	* Note: CHANGED: This diverges from the htmLawed standard method to prevent breaking UTF-8
+	*/
+
+	//Convert Microsoft smarty quotes to boring quotes
+	$quotes = array(
+	"\xC2\xAB" => '"', // (U+00AB) in UTF-8
+	"\xC2\xBB" => '"', // (U+00BB) in UTF-8
+	"\xE2\x80\x83" => " ", // (U+2003) in UTF-8
+	"\xE2\x80\x98" => "'", // (U+2018) in UTF-8
+	"\xE2\x80\x99" => "'", // (U+2019) in UTF-8
+	"\xE2\x80\x9A" => "'", // (U+201A) in UTF-8
+	"\xE2\x80\x9B" => "'", // (U+201B) in UTF-8
+	"\xE2\x80\x9C" => '"', // (U+201C) in UTF-8
+	"\xE2\x80\x9D" => '"', // (U+201D) in UTF-8
+	"\xE2\x80\x9E" => '"', // (U+201E) in UTF-8
+	"\xE2\x80\x9F" => '"', // (U+201F) in UTF-8
+	"\xE2\x80\xB9" => "'", // (U+2039) in UTF-8
+	"\xE2\x80\xBA" => "'", // (U+203A) in UTF-8
+	);
+	$t = strtr($t, $quotes);
+
+	//Taken from http://www.php.net/manual/en/function.strtr.php#40253
+	$badlatin1_cp1252_to_htmlent = array(
+	'\x80'=>'&#x20AC;', '\x81'=>'?', '\x82'=>'&#x201A;', '\x83'=>'&#x0192;',
+	'\x84'=>'&#x201E;', '\x85'=>'&#x2026;', '\x86'=>'&#x2020;', '\x87'=>'&#x2021;',
+	'\x88'=>'&#x02C6;', '\x89'=>'&#x2030;', '\x8A'=>'&#x0160;', '\x8B'=>'&#x2039;',
+	'\x8C'=>'&#x0152;', '\x8D'=>'?', '\x8E'=>'&#x017D;', '\x8F'=>'?',
+	'\x90'=>'?', '\x91'=>'&#x2018;', '\x92'=>'&#x2019;', '\x93'=>'&#x201C;',
+	'\x94'=>'&#x201D;', '\x95'=>'&#x2022;', '\x96'=>'&#x2013;', '\x97'=>'&#x2014;',
+	'\x98'=>'&#x02DC;', '\x99'=>'&#x2122;', '\x9A'=>'&#x0161;', '\x9B'=>'&#x203A;',
+	'\x9C'=>'&#x0153;', '\x9D'=>'?', '\x9E'=>'&#x017E;', '\x9F'=>'&#x0178;'
+	);
+	$t = strtr($t, $badlatin1_cp1252_to_htmlent);
 }
 if($C['cdata'] or $C['comment']){$t = preg_replace_callback('`<!(?:(?:--.*?--)|(?:\[CDATA\[.*?\]\]))>`sm', 'hl_cmtcd', $t);}
 $t = preg_replace_callback('`&amp;([A-Za-z][A-Za-z0-9]{1,30}|#(?:[0-9]{1,8}|[Xx][0-9A-Fa-f]{1,7}));`', 'hl_ent', str_replace('&', '&amp;', $t));
@@ -194,7 +229,10 @@ for($i=-1, $ci=count($t); ++$i<$ci;){
   echo '&lt;', $s, $e, $a, '&gt;';
  }
  if(isset($x[0])){
-  if($do < 3 or isset($ok['#pcdata'])){echo $x;}
+  if(strlen(trim($x)) && (($ql && isset($cB[$p])) or (isset($cB[$in]) && !$ql))){
+   echo '<div>', $x, '</div>';
+  }
+  elseif($do < 3 or isset($ok['#pcdata'])){echo $x;}
   elseif(strpos($x, "\x02\x04")){
    foreach(preg_split('`(\x01\x02[^\x01\x02]+\x02\x01)`', $x, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY) as $v){
     echo (substr($v, 0, 2) == "\x01\x02" ? $v : ($do > 4 ? preg_replace('`\S`', '', $v) : ''));
@@ -202,7 +240,7 @@ for($i=-1, $ci=count($t); ++$i<$ci;){
   }elseif($do > 4){echo preg_replace('`\S`', '', $x);}
  }
  // get markup
- if(!preg_match('`^(/?)([a-zA-Z1-6]+)([^>]*)>(.*)`sm', $t[$i], $r)){$x = $t[$i]; continue;}
+ if(!preg_match('`^(/?)([a-z1-6]+)([^>]*)>(.*)`sm', $t[$i], $r)){$x = $t[$i]; continue;}
  $s = null; $e = null; $a = null; $x = null; list($all, $s, $e, $a, $x) = $r;
  // close tag
  if($s){
@@ -333,7 +371,7 @@ $c = isset($C['schemes'][$c]) ? $C['schemes'][$c] : $C['schemes']['*'];
 static $d = 'denied:';
 if(isset($c['!']) && substr($p, 0, 7) != $d){$p = "$d$p";}
 if(isset($c['*']) or !strcspn($p, '#?;') or (substr($p, 0, 7) == $d)){return "{$b}{$p}{$a}";} // All ok, frag, query, param
-if(preg_match('`^([a-z\d\-+.&#; ]+?)(:|&#(58|x3a);|%3a|\\\\0{0,4}3a).`i', $p, $m) && !isset($c[strtolower($m[1])])){ // Denied prot
+if(preg_match('`^([^:?[@!$()*,=/\'\]]+?)(:|&#(58|x3a);|%3a|\\\\0{0,4}3a).`i', $p, $m) && !isset($c[strtolower($m[1])])){ // Denied prot
  return "{$b}{$d}{$p}{$a}";
 }
 if($C['abs_url']){
@@ -488,7 +526,7 @@ global $S;
 $rl = isset($S[$e]) ? $S[$e] : array();
 $a = array(); $nfr = 0;
 foreach($aA as $k=>$v){
- if(((isset($C['deny_attribute']['*']) ? isset($C['deny_attribute'][$k]) : !isset($C['deny_attribute'][$k])) or isset($rl[$k])) && ((!isset($rl['n'][$k]) && !isset($rl['n']['*'])) or isset($rl[$k])) && (isset($aN[$k][$e]) or (isset($aNU[$k]) && !isset($aNU[$k][$e])))){
+  if(((isset($C['deny_attribute']['*']) ? isset($C['deny_attribute'][$k]) : !isset($C['deny_attribute'][$k])) && (isset($aN[$k][$e]) or (isset($aNU[$k]) && !isset($aNU[$k][$e]))) && !isset($rl['n'][$k]) && !isset($rl['n']['*'])) or isset($rl[$k])){
   if(isset($aNE[$k])){$v = $k;}
   elseif(!empty($lcase) && (($e != 'button' or $e != 'input') or $k == 'type')){ // Rather loose but ?not cause issues
    $v = (isset($aNL[($v2 = strtolower($v))])) ? $v2 : $v;
@@ -641,41 +679,50 @@ return '';
 function hl_tidy($t, $w, $p){
 // Tidy/compact HTM
 if(strpos(' pre,script,textarea', "$p,")){return $t;}
-$t = str_replace(' </', '</', preg_replace(array('`(<\w[^>]*(?<!/)>)\s+`', '`\s+`', '`(<\w[^>]*(?<!/)>) `'), array(' $1', ' ', '$1'), preg_replace_callback(array('`(<(!\[CDATA\[))(.+?)(\]\]>)`sm', '`(<(!--))(.+?)(-->)`sm', '`(<(pre|script|textarea)[^>]*?>)(.+?)(</\2>)`sm'), create_function('$m', 'return $m[1]. str_replace(array("<", ">", "\n", "\r", "\t", " "), array("\x01", "\x02", "\x03", "\x04", "\x05", "\x07"), $m[3]). $m[4];'), $t)));
+$t = preg_replace('`\s+`', ' ', preg_replace_callback(array('`(<(!\[CDATA\[))(.+?)(\]\]>)`sm', '`(<(!--))(.+?)(-->)`sm', '`(<(pre|script|textarea)[^>]*?>)(.+?)(</\2>)`sm'), create_function('$m', 'return $m[1]. str_replace(array("<", ">", "\n", "\r", "\t", " "), array("\x01", "\x02", "\x03", "\x04", "\x05", "\x07"), $m[3]). $m[4];'), $t));
 if(($w = strtolower($w)) == -1){
  return str_replace(array("\x01", "\x02", "\x03", "\x04", "\x05", "\x07"), array('<', '>', "\n", "\r", "\t", ' '), $t);
 }
 $s = strpos(" $w", 't') ? "\t" : ' ';
 $s = preg_match('`\d`', $w, $m) ? str_repeat($s, $m[0]) : str_repeat($s, ($s == "\t" ? 1 : 2));
-$n = preg_match('`[ts]([1-9])`', $w, $m) ? $m[1] : 0;
+$N = preg_match('`[ts]([1-9])`', $w, $m) ? $m[1] : 0;
 $a = array('br'=>1);
-$b = array('button'=>1, 'input'=>1, 'option'=>1);
+$b = array('button'=>1, 'input'=>1, 'option'=>1, 'param'=>1);
 $c = array('caption'=>1, 'dd'=>1, 'dt'=>1, 'h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1, 'isindex'=>1, 'label'=>1, 'legend'=>1, 'li'=>1, 'object'=>1, 'p'=>1, 'pre'=>1, 'td'=>1, 'textarea'=>1, 'th'=>1);
-$d = array('address'=>1, 'blockquote'=>1, 'center'=>1, 'colgroup'=>1, 'dir'=>1, 'div'=>1, 'dl'=>1, 'fieldset'=>1, 'form'=>1, 'hr'=>1, 'iframe'=>1, 'map'=>1, 'menu'=>1, 'noscript'=>1, 'ol'=>1, 'optgroup'=>1, 'rbc'=>1, 'rtc'=>1, 'ruby'=>1, 'script'=>1, 'select'=>1, 'table'=>1, 'tfoot'=>1, 'thead'=>1, 'tr'=>1, 'ul'=>1);
-ob_start();
-if(isset($d[$p])){echo str_repeat($s, ++$n);}
-$t = explode('<', $t);
-echo ltrim(array_shift($t));
-for($i=-1, $j=count($t); ++$i<$j;){
- $r = ''; list($e, $r) = explode('>', $t[$i]);
- $x = $e[0] == '/' ? 0 : (substr($e, -1) == '/' ? 1 : ($e[0] != '!' ? 2 : -1));
- $y = !$x ? ltrim($e, '/') : ($x > 0 ? substr($e, 0, strcspn($e, ' ')) : 0);
- $e = "<$e>";
- if(isset($d[$y])){
-  if(!$x){echo "\n", str_repeat($s, --$n), "$e\n", str_repeat($s, $n);}
-  else{echo "\n", str_repeat($s, $n), "$e\n", str_repeat($s, ($x != 1 ? ++$n : $n));}
-  echo ltrim($r); continue;
+$d = array('address'=>1, 'blockquote'=>1, 'center'=>1, 'colgroup'=>1, 'dir'=>1, 'div'=>1, 'dl'=>1, 'fieldset'=>1, 'form'=>1, 'hr'=>1, 'iframe'=>1, 'map'=>1, 'menu'=>1, 'noscript'=>1, 'ol'=>1, 'optgroup'=>1, 'rbc'=>1, 'rtc'=>1, 'ruby'=>1, 'script'=>1, 'select'=>1, 'table'=>1, 'tbody'=>1, 'tfoot'=>1, 'thead'=>1, 'tr'=>1, 'ul'=>1);
+$T = explode('<', $t);
+$X = 1;
+while($X){
+ $n = $N;
+ $t = $T;
+ ob_start();
+ if(isset($d[$p])){echo str_repeat($s, ++$n);}
+ echo ltrim(array_shift($t));
+ for($i=-1, $j=count($t); ++$i<$j;){
+  $r = ''; list($e, $r) = explode('>', $t[$i]);
+  $x = $e[0] == '/' ? 0 : (substr($e, -1) == '/' ? 1 : ($e[0] != '!' ? 2 : -1));
+  $y = !$x ? ltrim($e, '/') : ($x > 0 ? substr($e, 0, strcspn($e, ' ')) : 0);
+  $e = "<$e>";
+  if(isset($d[$y])){
+   if(!$x){
+    if($n){echo "\n", str_repeat($s, --$n), "$e\n", str_repeat($s, $n);}
+    else{++$N; ob_end_clean(); continue 2;}
+   }
+   else{echo "\n", str_repeat($s, $n), "$e\n", str_repeat($s, ($x != 1 ? ++$n : $n));}
+   echo $r; continue;
+  }
+  $f = "\n". str_repeat($s, $n);
+  if(isset($c[$y])){
+   if(!$x){echo $e, $f, $r;}
+   else{echo $f, $e, $r;}
+  }elseif(isset($b[$y])){echo $f, $e, $r;
+  }elseif(isset($a[$y])){echo $e, $f, $r;
+  }elseif(!$y){echo $f, $e, $f, $r;
+  }else{echo $e, $r;}
  }
- $f = "\n". str_repeat($s, $n);
- if(isset($c[$y])){
-  if(!$x){echo $e, $f, ltrim($r);}
-  else{echo $f, $e, $r;}
- }elseif(isset($b[$y])){echo $f, $e, $r;
- }elseif(isset($a[$y])){echo $e, $f, ltrim($r);
- }elseif(!$y){echo $f, $e, $f, ltrim($r);
- }else{echo $e, $r;}
+ $X = 0;
 }
-$t = preg_replace('`[\n]\s*?[\n]+`', "\n", ob_get_contents());
+$t = str_replace(array("\n ", " \n"), "\n", preg_replace('`[\n]\s*?[\n]+`', "\n", ob_get_contents()));
 ob_end_clean();
 if(($l = strpos(" $w", 'r') ? (strpos(" $w", 'n') ? "\r\n" : "\r") : 0)){
  $t = str_replace("\n", $l, $t);
@@ -686,7 +733,7 @@ return str_replace(array("\x01", "\x02", "\x03", "\x04", "\x05", "\x07"), array(
 
 function hl_version(){
 // rel
-return '1.1.12';
+return '1.1.16';
 // eof
 }
 

@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -32,7 +32,8 @@ class Auth_Opauth
 			throw new \OpauthException('Opauth composer package not installed. Add "opauth/opauth" to composer.json and run a composer update.');
 		}
 
-		// load the opauth config
+		// load the auth and opauth config
+		\Config::load('auth', true);
 		\Config::load('opauth', true);
 
 		// determine the auth driver we're going to use
@@ -93,9 +94,13 @@ class Auth_Opauth
 
 		if (empty($config['path']))
 		{
+			$parsed_url = parse_url(\Uri::base().\Request::main()->uri->get());
+			$path = explode('/', trim($parsed_url['path'], '/'));
+
 			// construct the path if needed
-			$path = \Request::active()->uri->segments();
+//			$path = \Request::main()->uri->get_segments();
 			$params = count(\Request::active()->route->method_params);
+
 			while ($params-- > 0)
 			{
 				array_pop($path);
@@ -124,12 +129,14 @@ class Auth_Opauth
 		{
 			if (empty($config['provider']))
 			{
-				$provider = explode('/', substr(\Request::active()->uri->get(), strlen($config['path']) - 1));
+				$parsed_url = parse_url(\Uri::base().\Request::main()->uri->get());
+				$provider = explode('/', substr($parsed_url['path'], strlen($config['path'])));
 				$config['provider'] = ucfirst($provider[0]);
 			}
 
 			// check if we have a strategy defined for this provider
-			if ( ! \Config::get('opauth.Strategy.'.$config['provider'], false))
+			$strategies = \Config::get('opauth.Strategy', array());
+			if ( ! array_key_exists(strtolower($config['provider']), array_change_key_case($strategies)))
 			{
 				throw new \OpauthException('Opauth strategy "'.$config['provider'].'" is not supported');
 			}
@@ -199,10 +206,10 @@ class Auth_Opauth
 					'parent_id'		=> $user_id,
 					'provider' 		=> $this->get('auth.provider'),
 					'uid' 			=> $this->get('auth.uid'),
-					'access_token' 	=> $this->get('credentials.token', null),
-					'secret' 		=> $this->get('credentials.secret', null),
-					'expires' 		=> $this->get('credentials.expires', null),
-					'refresh_token' => $this->get('credentials.refresh_token', null),
+					'access_token' 	=> $this->get('auth.credentials.token', null),
+					'secret' 		=> $this->get('auth.credentials.secret', null),
+					'expires' 		=> $this->get('auth.credentials.expires', null),
+					'refresh_token' => $this->get('auth.credentials.refresh_token', null),
 					'created_at' 	=> time(),
 				));
 
@@ -235,21 +242,27 @@ class Auth_Opauth
 		// not an existing user of any type, so we need to create a user somehow
 		else
 		{
+			// generate a dummy password if we don't have one, and want auto registration for this user
+			if ($this->config['auto_registration'])
+			{
+				$this->get('auth.info.password') or $this->response['auth']['info']['password'] = \Str::random('sha1');
+			}
+
 			// did the provider return enough information to log the user in?
-			if ($this->get('auth.nickname') and $this->get('auth.email') and $this->get('auth.password'))
+			if ($this->get('auth.info.nickname') and $this->get('auth.info.email') and $this->get('auth.info.password'))
 			{
 				// make a user with what we have
-				$user_id = $this->create_user($this->response['auth']);
+				$user_id = $this->create_user($this->response['auth']['info']);
 
 				// attach this authentication to the new user
 				$insert_id = $this->link_provider(array(
 					'parent_id'		=> $user_id,
 					'provider' 		=> $this->get('auth.provider'),
 					'uid' 			=> $this->get('auth.uid'),
-					'access_token' 	=> $this->get('credentials.token', null),
-					'secret' 		=> $this->get('credentials.secret', null),
-					'expires' 		=> $this->get('credentials.expires', null),
-					'refresh_token' => $this->get('credentials.refresh_token', null),
+					'access_token' 	=> $this->get('auth.credentials.token', null),
+					'secret' 		=> $this->get('auth.credentials.secret', null),
+					'expires' 		=> $this->get('auth.credentials.expires', null),
+					'refresh_token' => $this->get('auth.credentials.refresh_token', null),
 					'created_at' 	=> time(),
 				));
 
@@ -271,10 +284,10 @@ class Auth_Opauth
 					'authentication' => array(
 						'provider' 		=> $this->get('auth.provider'),
 						'uid' 			=> $this->get('auth.uid'),
-						'access_token' 	=> $this->get('credentials.token', null),
-						'secret' 		=> $this->get('credentials.secret', null),
-						'expires' 		=> $this->get('credentials.expires', null),
-						'refresh_token' => $this->get('credentials.refresh_token', null),
+						'access_token' 	=> $this->get('auth.credentials.token', null),
+						'secret' 		=> $this->get('auth.credentials.secret', null),
+						'expires' 		=> $this->get('auth.credentials.expires', null),
+						'refresh_token' => $this->get('auth.credentials.refresh_token', null),
 					),
 				));
 
@@ -288,6 +301,27 @@ class Auth_Opauth
 	 */
 	public function link_provider(array $data)
 	{
+		// do some validation
+		if ( ! is_numeric($data['expires']))
+		{
+			if ($date = \DateTime::createFromFormat(\DateTime::ISO8601, $data['expires']))
+			{
+				$data['expires'] = $date->getTimestamp();
+			}
+			elseif ($date = \DateTime::createFromFormat('Y-m-d H:i:s', $data['expires']))
+			{
+				$data['expires'] = $date->getTimestamp();
+			}
+			else
+			{
+				$data['expires'] = time();
+			}
+		}
+
+		// get rid of old registrations to prevent duplicates
+		\DB::delete($this->config['table'])->where('uid', '=', $data['uid'])->where('provider', '=', $data['provider'])->execute();
+
+		// insert the new provider UID
 		list($insert_id, $rows_affected) = \DB::insert($this->config['table'])->set($data)->execute();
 		return $rows_affected ? $insert_id : false;
 	}

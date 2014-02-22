@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -29,7 +29,7 @@ class Fuel
 	/**
 	 * @var  string  The version of Fuel
 	 */
-	const VERSION = '1.6';
+	const VERSION = '1.7.1';
 
 	/**
 	 * @var  string  constant used for when in testing mode
@@ -127,6 +127,10 @@ class Fuel
 			throw new \FuelException("You can't initialize Fuel more than once.");
 		}
 
+		// BC FIX FOR APPLICATIONS <= 1.6.1, makes Redis_Db available as Redis,
+		// like it was in versions before 1.7
+		class_exists('Redis', false) or class_alias('Redis_Db', 'Redis');
+
 		static::$_paths = array(APPPATH, COREPATH);
 
 		// Is Fuel running on the command line?
@@ -135,7 +139,7 @@ class Fuel
 		\Config::load($config);
 
 		// Start up output buffering
-		ob_start(\Config::get('ob_callback', null));
+		static::$is_cli or ob_start(\Config::get('ob_callback', null));
 
 		if (\Config::get('caching', false))
 		{
@@ -173,7 +177,7 @@ class Fuel
 		// Run Input Filtering
 		\Security::clean_input();
 
-		\Event::register('shutdown', 'Fuel::finish');
+		\Event::register('fuel-shutdown', 'Fuel::finish');
 
 		// Always load classes, config & language set in always_load.php config
 		static::always_load();
@@ -214,7 +218,7 @@ class Fuel
 			\Finder::instance()->write_cache('FuelFileFinder');
 		}
 
-		if (static::$profiling)
+		if (static::$profiling and ! static::$is_cli and ! \Input::is_ajax())
 		{
 			// Grab the output buffer and flush it, we will rebuffer later
 			$output = ob_get_clean();
@@ -264,7 +268,8 @@ class Fuel
 		}
 		if (\Input::server('script_name'))
 		{
-			$base_url .= str_replace('\\', '/', dirname(\Input::server('script_name')));
+			$common = get_common_path(array(\Input::server('request_uri'), \Input::server('script_name')));
+			$base_url .= $common;
 		}
 
 		// Add a slash if it is missing and return it

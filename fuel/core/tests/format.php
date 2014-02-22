@@ -152,10 +152,180 @@ line 2","Value 3"',
 		$this->assertEquals(Format::forge($expected)->to_php(), Format::forge($xml, 'xml')->to_php());
 	}
 
-	function test_to_array_empty()
+	/**
+	 * Test for Format::forge(null)->to_array()
+	 *
+	 * @test
+	 */
+	public function test_to_array_empty()
 	{
 		$array = null;
 		$expected = array();
 		$this->assertEquals($expected, Format::forge($array)->to_array());
+	}
+
+	/**
+	 * Test for Format::forge($foo)->to_xml()
+	 *
+	 * @test
+	 */
+	public function test_to_xml()
+	{
+		$array = array(
+			'articles' => array(
+				array(
+					'title' => 'test',
+					'author' => 'foo',
+				)
+			)
+		);
+
+		$expected = '<?xml version="1.0" encoding="utf-8"?>
+<xml><articles><article><title>test</title><author>foo</author></article></articles></xml>
+';
+
+		$this->assertEquals($expected, Format::forge($array)->to_xml());
+	}
+
+	/**
+	 * Test for Format::forge($foo)->to_xml(null, null, 'root')
+	 *
+	 * @test
+	 */
+	public function test_to_xml_basenode()
+	{
+		$array = array(
+			'articles' => array(
+				array(
+					'title' => 'test',
+					'author' => 'foo',
+				)
+			)
+		);
+
+		$expected = '<?xml version="1.0" encoding="utf-8"?>
+<root><articles><article><title>test</title><author>foo</author></article></articles></root>
+';
+
+		$this->assertEquals($expected, Format::forge($array)->to_xml(null, null, 'root'));
+	}
+
+	/**
+	 * Test for Format::forge($foo)->to_xml() espace tags
+	 *
+	 * @test
+	 */
+	public function test_to_xml_escape_tags()
+	{
+		$array = array(
+			'articles' => array(
+				array(
+					'title' => 'test',
+					'author' => '<h1>hero</h1>',
+				)
+			)
+		);
+
+		$expected = '<?xml version="1.0" encoding="utf-8"?>
+<xml><articles><article><title>test</title><author>&lt;h1&gt;hero&lt;/h1&gt;</author></article></articles></xml>
+';
+
+		$this->assertEquals($expected, Format::forge($array)->to_xml());
+	}
+
+	/**
+	 * Test for Format::forge($foo)->to_xml(null, null, 'xml', true)
+	 *
+	 * @test
+	 */
+	public function test_to_xml_cdata()
+	{
+		$array = array(
+			'articles' => array(
+				array(
+					'title' => 'test',
+					'author' => '<h1>hero</h1>',
+				)
+			)
+		);
+
+		$expected = '<?xml version="1.0" encoding="utf-8"?>
+<xml><articles><article><title>test</title><author><![CDATA[<h1>hero</h1>]]></author></article></articles></xml>
+';
+
+		$this->assertEquals($expected, Format::forge($array)->to_xml(null, null, 'xml', true));
+	}
+
+	/**
+	 * Test for Format::forge($namespaced_xml, 'xml')->to_array()
+	 *
+	 * @test
+	 */
+	public function test_namespaced_xml()
+	{
+		$xml = '<?xml version="1.0" encoding="utf-8"?>
+<xml xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:app="http://www.w3.org/2007/app"><article><title>test</title><app:title>app test</app:title></article></xml>';
+
+		$data = Format::forge($xml, 'xml')->to_array();
+
+		$expected = array(
+			'article' => array(
+				'title' => 'test',
+			)
+		);
+
+		$this->assertEquals($expected, $data);
+	}
+
+	/**
+	 * Test for Format::forge($namespaced_xml, 'xml:ns')->to_array()
+	 *
+	 * @test
+	 */
+	public function test_namespaced_xml_and_include_xmlns()
+	{
+		$xml = '<?xml version="1.0" encoding="utf-8"?>
+<xml xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xmlns:app="http://www.w3.org/2007/app"><article><title>test</title><app:title>app test</app:title></article></xml>';
+
+		$data = Format::forge($xml, 'xml:ns')->to_array();
+
+		$expected = array(
+			'@attributes' => array(
+				'xmlns' => 'http://www.w3.org/2005/Atom',
+				'xmlns:media' => 'http://search.yahoo.com/mrss/',
+				'xmlns:app' => 'http://www.w3.org/2007/app',
+			),
+			'article' => array(
+				'title' => 'test',
+				'app:title' => 'app test',
+			)
+		);
+
+		$this->assertEquals($expected, $data);
+	}
+	/**
+	 * Test for Format::forge($foo)->to_json()
+	 *
+	 * @test
+	 */
+	public function test_to_json()
+	{
+		$array = array(
+			'articles' => array(
+				array(
+					'title' => 'test',
+					'author' => 'foo',
+					'tag' => '<tag>',
+					'apos' => 'McDonald\'s',
+					'quot' => '"test"',
+					'amp' => 'M&M',
+					
+				)
+			)
+		);
+
+		$expected = '{"articles":[{"title":"test","author":"foo","tag":"\u003Ctag\u003E","apos":"McDonald\u0027s","quot":"\u0022test\u0022","amp":"M\u0026M"}]}';
+
+		$this->assertEquals($expected, Format::forge($array)->to_json());
 	}
 }

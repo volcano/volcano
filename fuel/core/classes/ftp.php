@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -272,7 +272,7 @@ class Ftp
 			return false;
 		}
 
-		if ( ! file_exists($local_path))
+		if ( ! is_file($local_path))
 		{
 			throw new \FtpFileAccessException('No source file');
 			return false;

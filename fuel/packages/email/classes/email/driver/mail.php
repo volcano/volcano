@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -20,7 +20,9 @@ class Email_Driver_Mail extends \Email_Driver
 	/**
 	 * Send the email using php's mail function.
 	 *
-	 * @return	bool	success boolean.
+	 * @throws \EmailSendingFailedException Failed sending email
+	 *
+	 * @return  bool    success boolean.
 	 */
 	protected function _send()
 	{

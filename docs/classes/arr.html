@@ -997,6 +997,113 @@ Array
 			</article>
 
 			<article>
+				<h4 id="method_subset" class="method">subset($array, $keys, $default = null)</h4>
+				<p>Similar to <a href="#method_filter_keys"><strong>filter_keys</strong></a>, the <strong>subset</strong> method uses the values in <kbd>$keys</kbd> to access this array and return the associated values. The difference is that <strong>subset</strong> returns all requested keys, providing <kbd>$default</kbd> for any missing keys.</p>
+				<p>This method uses <a href="#method_get"><strong>get</strong></a> and <a href="#method_set"><strong>set</strong></a> internally, so <kbd>$keys</kbd> may contain dotted notation.</p>
+
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$array</kbd></th>
+									<td><em>required</em></td>
+									<td>The array to filter.</td>
+								</tr>
+								<tr>
+									<th><kbd>$keys</kbd></th>
+									<td><em>required</em></td>
+									<td>Array of keys to filter the above array with.</td>
+								</tr>
+								<tr>
+									<th><kbd>$default</kbd></th>
+									<td><pre class="php"><code>null</code></pre></td>
+									<td>Keys not found in <kbd>$array</kbd> are given this value instead.</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>array</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>$arr = array(
+	"user" => array(
+		"name" => "John",
+		"surname" => "Lastname",
+	),
+	"project" => array(
+		"name" => "Fuel",
+		"type" => "Framework",
+	),
+);
+
+print_r(Arr::subset($arr, array('project.name', 'user.name')));
+
+// Result:
+Array
+(
+ 	[project] => Array
+         (
+			 [name] => Fuel
+		 )
+	[user] => Array
+         (
+			 [name] => John
+		 )
+)
+
+print_r(Arr::subset($arr, array('project.name', 'project.manager')));
+
+// Result:
+Array
+(
+ 	[project] => Array
+         (
+			 [name] => Fuel
+			 [manager] =>
+		 )
+)
+
+print_r(Arr::subset($arr, array('project.name', 'project.manager', 'user', 'not_provided'), 'Not Provided'));
+
+// Result:
+Array
+(
+ 	[project] => Array
+         (
+			 [name] => Fuel
+			 [manager] => Not Provided
+		 )
+ 	[user] => Array
+         (
+			 [name] => John
+			 [surname] => Lastname
+		 )
+	[not_provided] => Not Provided
+)
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
 				<h4 id="method_get" class="method">get($array, $key, $default = false)</h4>
 				<p>The <strong>get</strong> method returns the element of the given array using dot-notation, or a default if it is not set.</p>
 				<table class="method">
@@ -1371,9 +1478,74 @@ Array
 			</article>
 
 			<article>
+				<h4 id="method_insert_assoc" class="method">insert_assoc(array &amp;$original, array $values, $pos)</h4>
+				<p>The <strong>insert_assoc</strong> method inserts elements into an associative array, at the specified position.<br />
+				<u>WARNING</u>: The original array is edited by reference, only boolean success is returned.</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$original</kbd></th>
+									<td><em>required</em></td>
+									<td>The array to use</td>
+								</tr>
+								<tr>
+									<th><kbd>$values</kbd></th>
+									<td><em>required</em></td>
+									<td>Array with value(s) to insert</td>
+								</tr>
+								<tr>
+									<th><kbd>$pos</kbd></th>
+									<td><em>required</em></td>
+									<td>
+										The location in the original array where the new values should be inserted.
+										If a negative value is given, the position is counted from the back of the array.</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>boolean, true on success, false if $pos is out of bounds.</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>$character = array("name" =&gt; "Jack", "surname" =&gt; "Reacher");
+
+Arr::insert_assoc($people, array("initial" =&gt; "P.");
+print_r($people);
+
+// Result:
+Array
+(
+	[name] =&gt; Jack
+	[initial] =&gt; P.
+	[surname] =&gt; Reacher
+)
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
 				<h4 id="method_insert_before_key" class="method">insert_before_key(Array &amp;$original, $value, $key)</h4>
-				<p>The <strong>insert_before_key</strong> method adds an element to an array before the key specified <br />
-				<u>WARNING</u>: The original array is edited by reference, only boolean success is returned</p>
+				<p>The <strong>insert_before_key</strong> method adds an element to an array before the key specified.<br />
+				<u>WARNING</u>: The original array is edited by reference, only boolean success is returned.</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -1703,7 +1875,7 @@ array(
 								<tr>
 									<th><kbd>$ornire_case</kbd></th>
 									<td><pre class="php"><code>false</code></pre></td>
-									<td>Wether to sort case insensitive.</td>
+									<td>Whether to sort case insensitive.</td>
 								</tr>
 							</table>
 						</td>
@@ -1796,7 +1968,7 @@ Array
 
 			<article>
 				<h4 id="method_in_array_recursive" class="method">in_array_recursive($needle, $haystack, $strict = false)</h4>
-				<p>The <strong>in_array_recursive</strong> method checks wether a value is in an array recursively.</p>
+				<p>The <strong>in_array_recursive</strong> method checks whether a value is in an array recursively.</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -1825,7 +1997,7 @@ Array
 								<tr>
 									<th><kbd>$strict</kbd></th>
 									<td><pre class="php"><code>false</code></pre></td>
-									<td>The wether to use == or ===.</td>
+									<td>Whether to use == or ===.</td>
 								</tr>
 							</table>
 						</td>
@@ -1941,7 +2113,91 @@ Array
 				</table>
 			</article>
 			<article>
-				<h4 id="method_search" class="method">search($array, $value, $default = null, $recursive = true, $delimiter = '.')</h4>
+				<h4 id="method_merge_assoc" class="method">merge_assoc($array)</h4>
+				<p>The <strong>merge_assoc</strong> method merges 2 or more arrays recursively, differs in 2 important ways from array_merge_recursive(): <br />
+				- When there's 2 different values and not both arrays, the latter value overwrites the earlier
+	 			  instead of merging both into an array<br />
+	 			- Numeric keys aren't changed</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Type</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$array</kbd></th>
+									<td><em>array</em></td>
+									<td><em>required</em></td>
+									<td>Multiple variables all of which must be arrays</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>array</td>
+					</tr>
+					<tr>
+						<th>Throws</th>
+						<td><kbd>InvalidArgumentException</kbd> when one of the passed arguments is no array.</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>$arr1 = array(
+	'one' => 1,
+	2 => 2,
+	3 => 3,
+	4 => array(
+		56
+	),
+	5=> 87
+);
+
+$arr2 = array(
+	1 => 27,
+	2 => 90,
+	4 => array(
+		'give_me' => 'bandwidth'
+	),
+	6 => '90',
+	7 => 'php',
+);
+
+print_r( Arr::merge_assoc($arr1, $arr2) );
+// Result:
+Array
+(
+	[one] => 1
+	[2] => 90
+	[3] => 3
+	[4] => Array (
+		[0] => 56
+		[give_me] => bandwidth
+	)
+	[5] => 87
+	[1] => 27
+	[6] => 90
+	[7] => php
+)
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+			<article>
+				<h4 id="method_search" class="method">search($array, $value, $default = null, $recursive = true, $delimiter = '.', $strict = false)</h4>
 				<p>The <strong>search</strong> method searches the array for a given value and returns the corresponding key or default value.<br />
 				- If $recursive is set to true, then the <strong>search</strong> method will return a delimiter-notated key using $delimiter.</p>
 				<table class="method">
@@ -1990,6 +2246,12 @@ Array
 									<td><pre class="php"><code>'.'</code></pre></td>
 									<td>The delimiter when $recursive is true</td>
 								</tr>
+								<tr>
+									<th><kbd>$strict</kbd></th>
+									<td><em>bool</em></td>
+									<td><pre class="php"><code>false</code></pre></td>
+									<td>Do a strict comparison on key values</td>
+								</tr>
 							</table>
 						</td>
 					</tr>
@@ -2027,7 +2289,6 @@ Array
 				)
 			)
 		),
-	);
 );
 
 echo Arr::search($arr, 1);
@@ -2041,6 +2302,9 @@ var_dump(Arr::search($arr, 5));
 
 echo Arr::search($arr, 4, null, true);
 // three.a
+
+var_dump(Arr::search($arr, '4', null, true, '.', true));
+// NULL
 
 echo Arr::search($arr, 'deep', null, true);
 // 1.1.3.0
@@ -2174,6 +2438,75 @@ $total_age = Arr::sum($collection, 'age'); // 83
 
 // Calculate sum of an array plucked by 'scores.math'
 $total_score = Arr::sum($collection, 'scores.math'); // 30
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
+				<h4 id="method_reindex" class="method">reindex($array)</h4>
+				<p>The <strong>reindex</strong> method recusively re-indexes the numeric keys of an array. It will not alter string keys.</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Type</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$array</kbd></th>
+									<td><em>array</em></td>
+									<td><em>required</em></td>
+									<td>the array to re-index</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>array</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>$array = array(
+	2 => 2,
+	'three' => 3,
+	5 => array(
+		2 => 2,
+		'three' => 3,
+		5 => 5
+	),
+	7 => 7
+);
+
+// reindex the array
+print_r( Arr::reindex($array) );
+// Result:
+Array
+(
+    [0] => 2
+    [three] => 3
+    [1] => Array
+        (
+            [0] => 2
+            [three] => 3
+            [1] => 5
+        )
+
+    [2] => 7
+)
 </code></pre>
 						</td>
 					</tr>

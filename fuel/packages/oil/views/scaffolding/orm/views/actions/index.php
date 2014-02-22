@@ -12,17 +12,20 @@
 		</tr>
 	</thead>
 	<tbody>
-<?php echo '<?php'; ?> foreach ($<?php echo $plural_name; ?> as $<?php echo $singular_name; ?>): <?php echo '?>'; ?>
+<?php echo '<?php'; ?> foreach ($<?php echo $plural_name; ?> as $item): <?php echo '?>'; ?>
 		<tr>
 
 <?php foreach ($fields as $field): ?>
-			<td><?php echo '<?php'; ?> echo $<?php echo $singular_name.'->'.$field['name']; ?>; <?php echo '?>'; ?></td>
+			<td><?php echo '<?php'; ?> echo $item<?php echo '->'.$field['name']; ?>; <?php echo '?>'; ?></td>
 <?php endforeach; ?>
 			<td>
-				<?php echo '<?php'; ?> echo Html::anchor('<?php echo $uri; ?>/view/'.$<?php echo $singular_name; ?>->id, '<i class="icon-eye-open" title="View"></i>'); <?php echo '?>'; ?> |
-				<?php echo '<?php'; ?> echo Html::anchor('<?php echo $uri; ?>/edit/'.$<?php echo $singular_name; ?>->id, '<i class="icon-wrench" title="Edit"></i>'); <?php echo '?>'; ?> |
-				<?php echo '<?php'; ?> echo Html::anchor('<?php echo $uri; ?>/delete/'.$<?php echo $singular_name; ?>->id, '<i class="icon-trash" title="Delete"></i>', array('onclick' => "return confirm('Are you sure?')")); <?php echo '?>'; ?>
-
+				<div class="btn-toolbar">
+					<div class="btn-group">
+						<?php echo '<?php'; ?> echo Html::anchor('<?php echo $uri; ?>/view/'.$item->id, '<i class="icon-eye-open"></i> View', array('class' => 'btn btn-small')); <?php echo '?>'; ?>
+						<?php echo '<?php'; ?> echo Html::anchor('<?php echo $uri; ?>/edit/'.$item->id, '<i class="icon-wrench"></i> Edit', array('class' => 'btn btn-small')); <?php echo '?>'; ?>
+						<?php echo '<?php'; ?> echo Html::anchor('<?php echo $uri; ?>/delete/'.$item->id, '<i class="icon-trash icon-white"></i> Delete', array('class' => 'btn btn-small btn-danger', 'onclick' => "return confirm('Are you sure?')")); <?php echo '?>'; ?>
+					</div>
+				</div>
 
 			</td>
 		</tr>

@@ -3,7 +3,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -82,7 +82,7 @@ class Auth_Group extends \Orm\Model
 		'users' => array(
 			'model_to' => 'Model\\Auth_User',
 			'key_from' => 'id',
-			'key_to'   => 'group',
+			'key_to'   => 'group_id',
 		),
 		'grouppermission' => array(
 			'model_to' => 'Model\\Auth_Grouppermission',

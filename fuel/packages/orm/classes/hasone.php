@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -43,7 +43,7 @@ class HasOne extends Relation
 		$this->model_to = get_real_class($this->model_to);
 	}
 
-	public function get(Model $from)
+	public function get(Model $from, array $conditions = array())
 	{
 		$query = call_user_func(array($this->model_to, 'query'));
 		reset($this->key_to);
@@ -58,7 +58,9 @@ class HasOne extends Relation
 			next($this->key_to);
 		}
 
-		foreach (\Arr::get($this->conditions, 'where', array()) as $key => $condition)
+		$conditions = \Arr::merge($this->conditions, $conditions);
+
+		foreach (\Arr::get($conditions, 'where', array()) as $key => $condition)
 		{
 			is_array($condition) or $condition = array($key, '=', $condition);
 			$query->where($condition);

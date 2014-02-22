@@ -18,6 +18,9 @@ class Auth_Create_Providers
 			// get the tablename
 			\Config::load('simpleauth', true);
 			$table = \Config::get('simpleauth.table_name', 'users').'_providers';
+
+			// make sure the configured DB is used
+			\DBUtil::set_connection(\Config::get('simpleauth.db_connection', null));
 		}
 
 		elseif (in_array('Ormauth', $drivers))
@@ -25,6 +28,9 @@ class Auth_Create_Providers
 			// get the tablename
 			\Config::load('ormauth', true);
 			$table = \Config::get('ormauth.table_name', 'users').'_providers';
+
+			// make sure the configured DB is used
+			\DBUtil::set_connection(\Config::get('ormauth.db_connection', null));
 		}
 
 		if (isset($table))
@@ -45,6 +51,9 @@ class Auth_Create_Providers
 
 			\DBUtil::create_index($table, 'parent_id', 'parent_id');
 		}
+
+		// reset any DBUtil connection set
+		\DBUtil::set_connection(null);
 	}
 
 	function down()
@@ -60,6 +69,9 @@ class Auth_Create_Providers
 			// get the tablename
 			\Config::load('simpleauth', true);
 			$table = \Config::get('simpleauth.table_name', 'users').'_providers';
+
+			// make sure the configured DB is used
+			\DBUtil::set_connection(\Config::get('simpleauth.db_connection', null));
 		}
 
 		elseif (in_array('Ormauth', $drivers))
@@ -67,6 +79,9 @@ class Auth_Create_Providers
 			// get the tablename
 			\Config::load('ormauth', true);
 			$table = \Config::get('ormauth.table_name', 'users').'_providers';
+
+			// make sure the configured DB is used
+			\DBUtil::set_connection(\Config::get('ormauth.db_connection', null));
 		}
 
 		if (isset($table))
@@ -74,5 +89,8 @@ class Auth_Create_Providers
 			// drop the users remote table
 			\DBUtil::drop_table($table);
 		}
+
+		// reset any DBUtil connection set
+		\DBUtil::set_connection(null);
 	}
 }

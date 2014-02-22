@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -184,9 +184,11 @@ class Model_Nestedset extends Model
 	/**
 	 * Returns a query object on the selected tree
 	 *
+	 * @param  bool  whether or not to include related models
+	 *
 	 * @return  Query  the constructed query object
 	 */
-	public function build_query()
+	public function build_query($include_related = true)
 	{
 		// create a new query object
 		$query = $this->query();
@@ -198,6 +200,15 @@ class Model_Nestedset extends Model
 		if ( ! is_null($tree_field))
 		{
 			$query->where($tree_field, $this->get_tree_id());
+		}
+
+		// add any relations if needed
+		if ($include_related and isset($this->_node_operation['related']))
+		{
+			foreach ($this->_node_operation['related'] as $relation => $conditions)
+			{
+				$query->related($relation, $conditions);
+			}
 		}
 
 		// return the query object
@@ -214,6 +225,7 @@ class Model_Nestedset extends Model
 	public function root()
 	{
 		$this->_node_operation = array(
+			'related' => array(),
 			'single' => true,
 			'action' => 'root',
 			'to' => null,
@@ -233,6 +245,7 @@ class Model_Nestedset extends Model
 	public function roots()
 	{
 		$this->_node_operation = array(
+			'related' => array(),
 			'single' => false,
 			'action' => 'roots',
 			'to' => null,
@@ -252,6 +265,7 @@ class Model_Nestedset extends Model
 	public function parent()
 	{
 		$this->_node_operation = array(
+			'related' => array(),
 			'single' => true,
 			'action' => 'parent',
 			'to' => null,
@@ -271,6 +285,7 @@ class Model_Nestedset extends Model
 	public function children()
 	{
 		$this->_node_operation = array(
+			'related' => array(),
 			'single' => false,
 			'action' => 'children',
 			'to' => null,
@@ -290,6 +305,7 @@ class Model_Nestedset extends Model
 	public function ancestors()
 	{
 		$this->_node_operation = array(
+			'related' => array(),
 			'single' => false,
 			'action' => 'ancestors',
 			'to' => null,
@@ -309,6 +325,7 @@ class Model_Nestedset extends Model
 	public function descendants()
 	{
 		$this->_node_operation = array(
+			'related' => array(),
 			'single' => false,
 			'action' => 'descendants',
 			'to' => null,
@@ -328,6 +345,7 @@ class Model_Nestedset extends Model
 	public function leaf_descendants()
 	{
 		$this->_node_operation = array(
+			'related' => array(),
 			'single' => false,
 			'action' => 'leaf_descendants',
 			'to' => null,
@@ -347,6 +365,7 @@ class Model_Nestedset extends Model
 	public function siblings()
 	{
 		$this->_node_operation = array(
+			'related' => array(),
 			'single' => false,
 			'action' => 'siblings',
 			'to' => null,
@@ -363,12 +382,14 @@ class Model_Nestedset extends Model
 	 *
 	 * @return  Model_Nestedset  this object, for chaining
 	 */
-	public function path()
+	public function path($addroot = true)
 	{
 		$this->_node_operation = array(
+			'related' => array(),
 			'single' => false,
 			'action' => 'path',
 			'to' => null,
+			'addroot' => $addroot,
 		);
 
 		// return the object for chaining
@@ -402,6 +423,7 @@ class Model_Nestedset extends Model
 	public function first_child($to = null)
 	{
 		$this->_node_operation = array(
+			'related' => array(),
 			'single' => true,
 			'action' => 'first_child',
 			'to' => $to,
@@ -422,6 +444,7 @@ class Model_Nestedset extends Model
 	public function last_child($to = null)
 	{
 		$this->_node_operation = array(
+			'related' => array(),
 			'single' => true,
 			'action' => 'last_child',
 			'to' => $to,
@@ -455,6 +478,7 @@ class Model_Nestedset extends Model
 	public function previous_sibling($to = null)
 	{
 		$this->_node_operation = array(
+			'related' => array(),
 			'single' => true,
 			'action' => 'previous_sibling',
 			'to' => $to,
@@ -475,6 +499,7 @@ class Model_Nestedset extends Model
 	public function next_sibling($to = null)
 	{
 		$this->_node_operation = array(
+			'related' => array(),
 			'single' => true,
 			'action' => 'next_sibling',
 			'to' => $to,
@@ -726,7 +751,7 @@ class Model_Nestedset extends Model
 		else
 		{
 			// if we have a valid object, run the query to calculate the depth
-			$query = $this->build_query()
+			$query = $this->build_query(false)
 				->where($left_field, '<', $this->{$left_field})
 				->where($right_field, '>', $this->{$right_field});
 
@@ -744,7 +769,7 @@ class Model_Nestedset extends Model
 	 * @param   string  property name to store the node's children
 	 * @return	array
 	 */
-	public function dump_tree($as_object = false, $children = 'children')
+	public function dump_tree($as_object = false, $children = 'children', $path = 'path')
 	{
 		// get the PK
 		$pk = reset(static::$_primary_key);
@@ -752,10 +777,31 @@ class Model_Nestedset extends Model
 		// and the tree pointers
 		$left_field = static::tree_config('left_field');
 		$right_field = static::tree_config('right_field');
+		$title_field = static::tree_config('title_field');
 
 		// storage for the result, start with the current node
-		$this[$children] = array();
-		$tree = $as_object ? array($this->{$pk} => $this) : array($this->{$pk} => $this->to_array(true));
+		if ($as_object)
+		{
+			$this->_custom_data[$children] = array();
+			$tree = array($this->{$pk} => $this);
+		}
+		else
+		{
+			$this[$children] = array();
+			$tree = array($this->{$pk} => $this->to_array(true));
+		}
+
+		if ( ! empty($title_field) and isset($this->{$title_field}))
+		{
+			if ($as_object)
+			{
+				$this->_custom_data[$path] = '/';
+			}
+			else
+			{
+				$tree[$this->{$pk}][$path] = '/';
+			}
+		}
 
 		// parent tracker
 		$tracker = array();
@@ -765,23 +811,42 @@ class Model_Nestedset extends Model
 		// loop over the descendants
 		foreach ($this->descendants()->get() as $treenode)
 		{
-			// get the data for this node
-			$node = $as_object ? $treenode : $treenode->to_array(true);
-
-			// make sure we have a place to store child information
-			$node[$children] = array();
+			// get the data for this node and make sure we have a place to store child information
+			if ($as_object)
+			{
+				$node = $treenode;
+				$node->_custom_data[$children] = array();
+			}
+			else
+			{
+				$node = $treenode->to_array(true);
+				$node[$children] = array();
+			}
 
 			// is this node a child of the current parent?
-			if ($treenode->{$left_field} > $tracker[$index][$right_field])
+			while ($treenode->{$left_field} > $tracker[$index][$right_field])
 			{
 				// no, so pop the last parent and move a level back up
 				$index--;
 			}
 
+			// add the path to this node
+			if ( ! empty($title_field) and isset($treenode->{$title_field}))
+			{
+				if ($as_object)
+				{
+					$node->_custom_data[$path] = rtrim($tracker[$index][$path],'/').'/'.$node->{$title_field};
+				}
+				else
+				{
+					$node[$path] = rtrim($tracker[$index][$path],'/').'/'.$node[$title_field];
+				}
+			}
+
 			// add it as a child to the current parent
 			if ($as_object)
 			{
-				$tracker[$index]->{$children}[$treenode->{$pk}] = $node;
+				$tracker[$index]->_custom_data[$children][$treenode->{$pk}] = $node;
 			}
 			else
 			{
@@ -794,7 +859,7 @@ class Model_Nestedset extends Model
 				// create a new parent level
 				if ($as_object)
 				{
-					$tracker[$index+1] =& $tracker[$index]->{$children}[$treenode->{$pk}];
+					$tracker[$index+1] =& $tracker[$index]->_custom_data[$children][$treenode->{$pk}];
 				}
 				else
 				{
@@ -953,9 +1018,10 @@ class Model_Nestedset extends Model
 				// set the left- and right pointers for the new root
 				$this->_data[$left_field] = 1;
 				$this->_data[$right_field] = 2;
+				$pk = reset(static::$_primary_key);
 
 				// we need to check if we don't already have this root
-				$query = \DB::select('id')
+				$query = \DB::select($pk)
 					->from(static::table())
 					->where($left_field, '=', 1);
 
@@ -1165,7 +1231,7 @@ class Model_Nestedset extends Model
 				// and delete them to
 				foreach ($children as $child)
 				{
-					if ($child->delete($cascade) === false)
+					if ($child->delete_tree($cascade) === false)
 					{
 						throw new \UnexpectedValueException('delete of child node with PK "'.$child->{$pk}.'" failed.');
 					}
@@ -1213,6 +1279,7 @@ class Model_Nestedset extends Model
 		{
 			// assume a get-all operation
 			$this->_node_operation = array(
+				'related' => array(),
 				'single' => false,
 				'action' => 'all',
 				'to' => null,
@@ -1233,7 +1300,7 @@ class Model_Nestedset extends Model
 	 * @returns  mixed
 	 * @throws  BadMethodCallException if called without a parameter and without a node to fetch
 	 */
-	public function & get($query = null)
+	public function & get($query = null, array $conditions = array())
 	{
 		// do we have any parameters passed?
 		if (func_num_args())
@@ -1247,7 +1314,7 @@ class Model_Nestedset extends Model
 			else
 			{
 				// assume it's a model getter call
-				return parent::get($query);
+				return parent::get($query, $conditions);
 			}
 		}
 
@@ -1256,6 +1323,7 @@ class Model_Nestedset extends Model
 		{
 			// assume a get-all operation
 			$this->_node_operation = array(
+				'related' => array(),
 				'single' => false,
 				'action' => 'all',
 				'to' => null,
@@ -1291,6 +1359,7 @@ class Model_Nestedset extends Model
 		{
 			// assume a get-all operation
 			$this->_node_operation = array(
+				'related' => array(),
 				'single' => true,
 				'action' => 'all',
 				'to' => null,
@@ -1299,6 +1368,34 @@ class Model_Nestedset extends Model
 
 		// so we need to fetch something
 		return $this->_fetch_nodes('single');
+	}
+
+	/**
+	 * Set a relation to include
+	 *
+	 * @param   string  $relation
+	 * @param   array   $conditions    Optionally
+	 *
+	 * @return  $this
+	 */
+	public function related($relation, $conditions = array())
+	{
+		// make sure there's a node operation defined
+		if (empty($this->_node_operation))
+		{
+			// assume a get-all operation
+			$this->_node_operation = array(
+				'related' => array(),
+				'single' => false,
+				'action' => 'all',
+				'to' => null,
+			);
+		}
+
+		// store the relation to include
+		$this->_node_operation['related'][$relation] = $conditions;
+
+		return $this;
 	}
 
 	// -------------------------------------------------------------------------
@@ -1329,6 +1426,8 @@ class Model_Nestedset extends Model
 	 *
 	 * @param  string  action, either 'single' or 'multiple'
 	 * @return  mixed  Model_Nestedset or an array of Model_Nestedset, or null if none found
+	 *
+	 * @throws \UnexpectedValueException Relation was not found in the model
 	 */
 	protected function _fetch_nodes($action)
 	{
@@ -1421,9 +1520,11 @@ class Model_Nestedset extends Model
 				if ( ! $this->is_new())
 				{
 					$parent = $this;
+					$pk = reset(static::$_primary_key);
+
 					while (($parent = $parent->parent()->get_one()) !== null)
 					{
-						$result[$parent->id] = $parent;
+						$result[$parent->{$pk}] = $parent;
 					}
 				}
 
@@ -1480,15 +1581,21 @@ class Model_Nestedset extends Model
 					// storage for the path
 					$path = '';
 
+					// do we need to add the root?
+					$addroot = $this->_node_operation['addroot'];
+
 					// get all parents
 					$result = $this->ancestors()->get();
 
 					// construct the path
 					foreach($result as $object)
 					{
-						$path .= $object->{$title_field}.'/';
+						if ($addroot or $object->{$left_field} > 1)
+						{
+							$path .= $object->{$title_field}.'/';
+						}
 					}
-					$path .= $this->{$title_field}.'/';
+					$path .= $this->{$title_field};
 
 					// and return it
 					return $path;

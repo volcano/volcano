@@ -1,6 +1,6 @@
 <?php echo '<?php' ?>
 
-class Controller_<?php echo $controller_name; ?> extends <?php echo \Cli::option('extends', $controller_parent) ?> 
+class Controller_<?php echo $controller_name; ?> extends <?php echo \Cli::option('extends', $controller_parent) ?>
 {
 
 <?php foreach ($actions as $action): ?>

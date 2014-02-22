@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -126,12 +126,26 @@ class Security
 				{
 					foreach($var as $key => $value)
 					{
-						$var[$key] = call_user_func($filter, $value);
+						if ($value instanceOf \Sanitization)
+						{
+							$value->sanitize();
+						}
+						else
+						{
+							$var[$key] = call_user_func($filter, $value);
+						}
 					}
 				}
 				else
 				{
-					$var = call_user_func($filter, $var);
+					if ($var instanceOf \Sanitization)
+					{
+						$var->sanitize();
+					}
+					else
+					{
+						$var = call_user_func($filter, $var);
+					}
 				}
 			}
 
@@ -142,19 +156,33 @@ class Security
 				{
 					foreach($var as $key => $value)
 					{
-						$var[$key] = preg_replace('#['.$filter.']#ui', '', $value);
+						if ($value instanceOf \Sanitization)
+						{
+							$value->sanitize();
+						}
+						else
+						{
+							$var[$key] = preg_replace('#['.$filter.']#ui', '', $value);
+						}
 					}
 				}
 				else
 				{
-					$var = preg_replace('#['.$filter.']#ui', '', $var);
+					if ($var instanceOf \Sanitization)
+					{
+						$var->sanitize();
+					}
+					else
+					{
+						$var = preg_replace('#['.$filter.']#ui', '', $var);
+					}
 				}
 			}
 		}
 		return $var;
 	}
 
-	public static function xss_clean($value)
+	public static function xss_clean($value, array $options = array())
 	{
 		if ( ! is_array($value))
 		{
@@ -163,7 +191,7 @@ class Security
 				import('htmlawed/htmlawed', 'vendor');
 			}
 
-			return htmLawed($value, array('safe' => 1, 'balanced' => 0));
+			return htmLawed($value, array_merge(array('safe' => 1, 'balanced' => 0), $options));
 		}
 
 		foreach ($value as $k => $v)
@@ -208,6 +236,12 @@ class Security
 		if (is_string($value))
 		{
 			$value = htmlentities($value, $flags, $encoding, $double_encode);
+		}
+		elseif (is_object($value) and $value instanceOf \Sanitization)
+		{
+			$value->sanitize();
+			return $value;
+
 		}
 		elseif (is_array($value) or ($value instanceof \Iterator and $value instanceof \ArrayAccess))
 		{
@@ -265,7 +299,7 @@ class Security
 	 */
 	public static function check_token($value = null)
 	{
-		$value = $value ?: \Input::post(static::$csrf_token_key, \Input::json(static::$csrf_token_key, 'fail'));
+		$value = $value ?: \Input::param(static::$csrf_token_key, \Input::json(static::$csrf_token_key, 'fail'));
 
 		// always reset token once it's been checked and still the same
 		if (static::fetch_token() == static::$csrf_old_token and ! empty($value))

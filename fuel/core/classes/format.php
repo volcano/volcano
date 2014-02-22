@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -27,11 +27,6 @@ class Format
 {
 
 	/**
-	 * @var  array|mixed  input to convert
-	 */
-	protected $_data = array();
-
-	/**
 	 * Returns an instance of the Format object.
 	 *
 	 *     echo Format::forge(array('foo' => 'bar'))->to_xml();
@@ -46,6 +41,16 @@ class Format
 	}
 
 	/**
+	 * @var  array|mixed  input to convert
+	 */
+	protected $_data = array();
+
+	/**
+	 * @var  bool 	whether to ignore namespaces when parsing xml
+	 */
+	protected $ignore_namespaces = true;
+
+	/**
 	 * Do not use this directly, call forge()
 	 */
 	public function __construct($data = null, $from_type = null)
@@ -53,6 +58,13 @@ class Format
 		// If the provided data is already formatted we should probably convert it to an array
 		if ($from_type !== null)
 		{
+
+			if ($from_type == 'xml:ns')
+			{
+				$this->ignore_namespaces = false;
+				$from_type = 'xml';
+			}
+
 			if (method_exists($this, '_from_' . $from_type))
 			{
 				$data = call_user_func(array($this, '_from_' . $from_type), $data);
@@ -117,14 +129,18 @@ class Format
 	 * @param   mixed        $data
 	 * @param   null         $structure
 	 * @param   null|string  $basenode
+	 * @param   null|bool    whether to use CDATA in nodes
 	 * @return  string
 	 */
-	public function to_xml($data = null, $structure = null, $basenode = 'xml')
+	public function to_xml($data = null, $structure = null, $basenode = null, $use_cdata = null)
 	{
 		if ($data == null)
 		{
 			$data = $this->_data;
 		}
+
+		is_null($basenode) and $basenode = \Config::get('format.xml.basenode', 'xml');
+		is_null($use_cdata) and $use_cdata = \Config::get('format.xml.use_cdata', false);
 
 		// turn off compatibility mode as simple xml throws a wobbly if you don't.
 		if (ini_get('zend.ze1_compatibility_mode') == 1)
@@ -163,16 +179,25 @@ class Format
 				// recursive call if value is not empty
 				if( ! empty($value))
 				{
-					$this->to_xml($value, $node, $key);
+					$this->to_xml($value, $node, $key, $use_cdata);
 				}
 			}
 
 			else
 			{
 				// add single node.
-				$value = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, "UTF-8");
+				$encoded = htmlspecialchars(html_entity_decode($value, ENT_QUOTES, 'UTF-8'), ENT_QUOTES, "UTF-8");
 
-				$structure->addChild($key, $value);
+				if ($use_cdata and ($encoded !== (string) $value))
+				{
+					$dom = dom_import_simplexml($structure->addChild($key));
+					$owner = $dom->ownerDocument;
+					$dom->appendChild($owner->createCDATASection($value));
+				}
+				else
+				{
+					$structure->addChild($key, $encoded);
+				}
 			}
 		}
 
@@ -190,10 +215,10 @@ class Format
 	public function to_csv($data = null, $delimiter = null)
 	{
 		// csv format settings
-		$newline = \Config::get('format.csv.newline', "\n");
-		$delimiter or $delimiter = \Config::get('format.csv.delimiter', ',');
-		$enclosure = \Config::get('format.csv.enclosure', '"');
-		$escape = \Config::get('format.csv.escape', '\\');
+		$newline = \Config::get('format.csv.export.newline', \Config::get('format.csv.newline', "\n"));
+		$delimiter or $delimiter = \Config::get('format.csv.export.delimiter', \Config::get('format.csv.delimiter', ','));
+		$enclosure = \Config::get('format.csv.export.enclosure', \Config::get('format.csv.enclosure', '"'));
+		$escape = \Config::get('format.csv.export.escape', \Config::get('format.csv.escape', '"'));
 
 		// escape function
 		$escaper = function($items) use($enclosure, $escape) {
@@ -260,7 +285,7 @@ class Format
 		// To allow exporting ArrayAccess objects like Orm\Model instances they need to be
 		// converted to an array first
 		$data = (is_array($data) or is_object($data)) ? $this->to_array($data) : $data;
-		return $pretty ? static::pretty_json($data) : json_encode($data);
+		return $pretty ? static::pretty_json($data) : json_encode($data, \Config::get('format.json.encode.option', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP));
 	}
 
 	/**
@@ -338,15 +363,45 @@ class Format
 	 * @param   string  $string
 	 * @return  array
 	 */
-	protected function _from_xml($string)
+	protected function _from_xml($string, $recursive = false)
 	{
+
+		// If it forged with 'xml:ns'
+		if ( ! $this->ignore_namespaces)
+		{
+			static $escape_keys = array();
+			$recursive or $escape_keys = array('_xmlns' => 'xmlns');
+
+			if ( ! $recursive and strpos($string, 'xmlns') !== false and preg_match_all('/(\<.+?\>)/s', $string, $matches))
+			{
+				foreach ($matches[1] as $tag)
+				{
+					$escaped_tag = $tag;
+
+					strpos($tag, 'xmlns=') !== false and $escaped_tag = str_replace('xmlns=', '_xmlns=', $tag);
+
+					if (preg_match_all('/[\s\<\/]([^\/\s\'"]*?:\S*?)[=\/\>\s]/s', $escaped_tag, $xmlns))
+					{
+						foreach ($xmlns[1] as $ns)
+						{
+							$escaped = \Arr::search($escape_keys, $ns);
+							$escaped or $escape_keys[$escaped = str_replace(':', '_', $ns)] = $ns;
+							$string = str_replace($tag, $escaped_tag = str_replace($ns, $escaped, $escaped_tag), $string);
+							$tag = $escaped_tag;
+						}
+					}
+				}
+			}
+		}
+
 		$_arr = is_string($string) ? simplexml_load_string($string, 'SimpleXMLElement', LIBXML_NOCDATA) : $string;
 		$arr = array();
 
 		// Convert all objects SimpleXMLElement to array recursively
 		foreach ((array)$_arr as $key => $val)
 		{
-			$arr[$key] = (is_array($val) or is_object($val)) ? $this->_from_xml($val) : $val;
+			$this->ignore_namespaces or $key = \Arr::get($escape_keys, $key, $key);
+			$arr[$key] = (is_array($val) or is_object($val)) ? $this->_from_xml($val, true) : $val;
 		}
 
 		return $arr;
@@ -378,12 +433,12 @@ class Format
 	{
 		$data = array();
 
-		$rows = preg_split('/(?<='.preg_quote(\Config::get('format.csv.enclosure', '"')).')'.\Config::get('format.csv.regex_newline', '\n').'/', trim($string));
+		$rows = preg_split('/(?<='.preg_quote(\Config::get('format.csv.import.enclosure', \Config::get('format.csv.enclosure', '"'))).')'.\Config::get('format.csv.regex_newline', '\n').'/', trim($string));
 
 		// csv config
-		$delimiter = \Config::get('format.csv.delimiter', ',');
-		$enclosure = \Config::get('format.csv.enclosure', '"');
-		$escape = \Config::get('format.csv.escape', '\\');
+		$delimiter = \Config::get('format.csv.import.delimiter', \Config::get('format.csv.delimiter', ','));
+		$enclosure = \Config::get('format.csv.import.enclosure', \Config::get('format.csv.enclosure', '"'));
+		$escape = \Config::get('format.csv.import.escape', \Config::get('format.csv.escape', '"'));
 
 		// Get the headings
 		$headings = str_replace($escape.$enclosure, $enclosure, str_getcsv(array_shift($rows), $delimiter, $enclosure, $escape));
@@ -433,7 +488,7 @@ class Format
 	 */
 	protected static function pretty_json($data)
 	{
-		$json = json_encode($data);
+		$json = json_encode($data, \Config::get('format.json.encode.option', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP));
 
 		if ( ! $json)
 		{

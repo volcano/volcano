@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -120,7 +120,7 @@ class File
 		{
 			throw new \InvalidPathException('Invalid basepath: "'.$basepath.'", cannot create file at this location.');
 		}
-		elseif (file_exists($new_file))
+		elseif (is_file($new_file))
 		{
 			throw new \FileAccessException('File: "'.$new_file.'" already exists, cannot be created.');
 		}
@@ -197,7 +197,7 @@ class File
 	{
 		$path = static::instance($area)->get_path($path);
 
-		if( ! file_exists($path) or ! is_file($path))
+		if ( ! is_file($path))
 		{
 			throw new \InvalidPathException('Cannot read file: "'.$path.'", file does not exists.');
 		}
@@ -367,7 +367,7 @@ class File
 		$basepath  = rtrim(static::instance($area)->get_path($basepath), '\\/').DS;
 		$new_file  = static::instance($area)->get_path($basepath.$name);
 
-		if ( ! file_exists($new_file))
+		if ( ! is_file($new_file))
 		{
 			throw new \FileAccessException('File: "'.$new_file.'" does not exist, cannot be appended.');
 		}
@@ -713,15 +713,13 @@ class File
 	 */
 	public static function close_file($resource, $area = null)
 	{
-		fclose($resource);
-
 		// If locks aren't used, don't unlock
-		if ( ! static::instance($area)->use_locks())
+		if ( static::instance($area)->use_locks())
 		{
-			return;
+			flock($resource, LOCK_UN);
 		}
 
-		flock($resource, LOCK_UN);
+		fclose($resource);
 	}
 
 	/**
@@ -747,7 +745,7 @@ class File
 			'time_modified' => '',
 		);
 
-		if ( ! $info['realpath'] = static::instance($area)->get_path($path) or ! file_exists($info['realpath']))
+		if ( ! $info['realpath'] = static::instance($area)->get_path($path) or ! is_file($info['realpath']))
 		{
 			throw new \InvalidPathException('Filename given is not a valid file.');
 		}
@@ -792,7 +790,7 @@ class File
 		empty($mime) or $info['mimetype'] = $mime;
 		empty($name) or $info['basename'] = $name;
 
-		\Event::register('shutdown', function () use($info, $area, $class) {
+		\Event::register('fuel-shutdown', function () use($info, $area, $class) {
 
 			if ( ! $file = call_user_func(array($class, 'open_file'), @fopen($info['realpath'], 'rb'), LOCK_SH, $area))
 			{

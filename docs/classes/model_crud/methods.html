@@ -627,7 +627,7 @@ protected static function post_find($result)
 									<th><kbd>$validate</kbd></th>
 									<th><em>boolean</em></th>
 									<td><pre class="php"><code>true</code></pre></td>
-									<td>Wether to run the validation.</td>
+									<td>Whether to run the validation.</td>
 								</tr>
 							</table>
 						</td>
@@ -816,8 +816,8 @@ $nbr_of_records = Model_User::count('id', true, array('group', '=', 100));
 			</article>
 
 			<article>
-				<h4 class="method" id="method_is_frozen">is_frozen($frozen = null)</h4>
-				<p>The <strong>is_frozen</strong> method checks if the record is frozen or sets whether it is frozen or not.</p>
+				<h4 class="method" id="method_frozen">frozen($frozen = null)</h4>
+				<p>The <strong>frozen</strong> method checks if the record is frozen or sets whether it is frozen or not.</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -898,7 +898,7 @@ $validation_object = $user->validation();
 
 			<article>
 				<h4 class="method" id="method_validates">validates()</h4>
-				<p>The <strong>validates</strong> method returns wether the instance will pass validation.</p>
+				<p>The <strong>validates</strong> method returns whether or not the instance will pass validation.</p>
 				<table class="method">
 					<tbody>
 					<tr>

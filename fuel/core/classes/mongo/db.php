@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -193,13 +193,13 @@ class Mongo_Db
 		// Let's give this a go
 		try
 		{
-			$this->connection = new \Mongo(trim($connection_string), $options);
+			$this->connection = new \MongoClient(trim($connection_string), $options);
 			$this->db = $this->connection->{$config['database']};
 			return $this;
 		}
 		catch (\MongoConnectionException $e)
 		{
-			throw new \Mongo_DbException("Unable to connect to MongoDB: {$e->getMessage()}");
+			throw new \Mongo_DbException("Unable to connect to MongoDB: {$e->getMessage()}", $e->getCode());
 		}
 	}
 
@@ -225,7 +225,7 @@ class Mongo_Db
 			}
 			catch (\Exception $e)
 			{
-				throw new \Mongo_DbException("Unable to drop Mongo database `{$database}`: {$e->getMessage()}");
+				throw new \Mongo_DbException("Unable to drop Mongo database `{$database}`: {$e->getMessage()}", $e->getCode());
 			}
 
 		}
@@ -259,7 +259,7 @@ class Mongo_Db
 			}
 			catch (\Exception $e)
 			{
-				throw new \Mongo_DbException("Unable to drop Mongo collection `{$col}`: {$e->getMessage()}");
+				throw new \Mongo_DbException("Unable to drop Mongo collection `{$col}`: {$e->getMessage()}", $e->getCode());
 			}
 		}
 	}
@@ -631,18 +631,18 @@ class Mongo_Db
 	 *	@usage	$mongodb->get_cursor('foo', array('bar' => 'something'));
 	 */
 	public function get_cursor($collection = "")
-    {
-        if (empty($collection))
-        {
-            throw new \Mongo_DbException("In order to retrieve documents from MongoDB you must provide a collection name.");
-        }
+	{
+		if (empty($collection))
+		{
+			throw new \Mongo_DbException("In order to retrieve documents from MongoDB you must provide a collection name.");
+		}
 
-        $documents = $this->db->{$collection}->find($this->wheres, $this->selects)->limit((int) $this->limit)->skip((int) $this->offset)->sort($this->sorts);
+		$documents = $this->db->{$collection}->find($this->wheres, $this->selects)->limit((int) $this->limit)->skip((int) $this->offset)->sort($this->sorts);
 
-        $this->_clear();
+		$this->_clear();
 
-        return $documents;
-    }
+		return $documents;
+	}
 
 	/**
 	 *	Get the documents based upon the passed parameters
@@ -664,7 +664,7 @@ class Mongo_Db
 			'sort'			=> $this->sorts,
 			));
 
-			$benchmark = \Profiler::start("Database {$this->db}", $query);
+			$benchmark = \Profiler::start((string) $this->db, $query);
 		}
 
 		$documents = $this->get_cursor($collection);
@@ -693,11 +693,11 @@ class Mongo_Db
 	 *	@param	string	$collection		the collection name
 	 *	@usage	$mongodb->get_one('foo');
 	 */
-	 public function get_one($collection = "")
+	public function get_one($collection = "")
 	{
 		if (empty($collection))
 		{
-			throw new \Mongo_DbException("In order to retrieve documents from MongoDB");
+			throw new \Mongo_DbException("In order to retrieve documents from MongoDB you must provide a collection name.");
 		}
 
 		if ($this->profiling)
@@ -709,7 +709,7 @@ class Mongo_Db
 			'where'			=> $this->wheres,
 			));
 
-			$benchmark = \Profiler::start("Database {$this->db}", $query);
+			$benchmark = \Profiler::start((string) $this->db, $query);
 		}
 
 		$returns = $this->db->{$collection}->findOne($this->wheres, $this->selects);
@@ -736,7 +736,7 @@ class Mongo_Db
 	{
 		if (empty($collection))
 		{
-			throw new \Mongo_DbException("In order to retrieve a count of documents from MongoDB");
+			throw new \Mongo_DbException("In order to retrieve a count of documents from MongoDB you must provide a collection name.");
 		}
 
 		if ($this->profiling)
@@ -749,7 +749,7 @@ class Mongo_Db
 			'offset'		=> $this->offset,
 			));
 
-			$benchmark = \Profiler::start("Database {$this->db}", $query);
+			$benchmark = \Profiler::start((string) $this->db, $query);
 		}
 
 		$count = $this->db->{$collection}->find($this->wheres)->limit((int) $this->limit)->skip((int) $this->offset)->count($foundonly);
@@ -778,12 +778,12 @@ class Mongo_Db
 	{
 		if (empty($collection))
 		{
-			throw new \Mongo_DbException("No Mongo collection selected to insert into");
+			throw new \Mongo_DbException("No Mongo collection selected to insert");
 		}
 
 		if (empty($insert) or ! is_array($insert))
 		{
-			throw new \Mongo_DbException("Nothing to insert into Mongo collection or insert is not an array");
+			throw new \Mongo_DbException("Nothing to insert into Mongo collection or insert value is not an array");
 		}
 
 		try
@@ -796,7 +796,7 @@ class Mongo_Db
 				'payload'		=> $insert,
 				));
 
-				$benchmark = \Profiler::start("Database {$this->db}", $query);
+				$benchmark = \Profiler::start((string) $this->db, $query);
 			}
 
 			$this->db->{$collection}->insert($insert, array('fsync' => true));
@@ -817,7 +817,7 @@ class Mongo_Db
 		}
 		catch (\MongoCursorException $e)
 		{
-			throw new \Mongo_DbException("Insert of data into MongoDB failed: {$e->getMessage()}");
+			throw new \Mongo_DbException("Insert of data into MongoDB failed: {$e->getMessage()}", $e->getCode());
 		}
 	}
 
@@ -838,7 +838,7 @@ class Mongo_Db
 
 		if (empty($data) or ! is_array($data))
 		{
-			throw new \Mongo_DbException("Nothing to update in Mongo collection or update is not an array");
+			throw new \Mongo_DbException("Nothing to update in Mongo collection or update value is not an array");
 		}
 
 		try
@@ -855,7 +855,7 @@ class Mongo_Db
 				'options'		=> $options,
 				));
 
-				$benchmark = \Profiler::start("Database {$this->db}", $query);
+				$benchmark = \Profiler::start((string) $this->db, $query);
 			}
 
 			$this->db->{$collection}->update($this->wheres, (($literal) ? $data : array('$set' => $data)), $options);
@@ -870,7 +870,7 @@ class Mongo_Db
 		}
 		catch (\MongoCursorException $e)
 		{
-			throw new \Mongo_DbException("Update of data into MongoDB failed: {$e->getMessage()}");
+			throw new \Mongo_DbException("Update of data into MongoDB failed: {$e->getMessage()}", $e->getCode());
 		}
 	}
 
@@ -890,7 +890,7 @@ class Mongo_Db
 
 		if (empty($data) or ! is_array($data))
 		{
-			throw new \Mongo_DbException("Nothing to update in Mongo collection or update is not an array");
+			throw new \Mongo_DbException("Nothing to update in Mongo collection or update value is not an array");
 		}
 
 		try
@@ -905,7 +905,7 @@ class Mongo_Db
 				'literal'		=> $literal,
 				));
 
-				$benchmark = \Profiler::start("Database {$this->db}", $query);
+				$benchmark = \Profiler::start((string) $this->db, $query);
 			}
 
 			$this->db->{$collection}->update($this->wheres, (($literal) ? $data : array('$set' => $data)), array('fsync' => true, 'multiple' => true));
@@ -920,7 +920,7 @@ class Mongo_Db
 		}
 		catch (\MongoCursorException $e)
 		{
-			throw new \Mongo_DbException("Update of data into MongoDB failed: {$e->getMessage()}");
+			throw new \Mongo_DbException("Update of data into MongoDB failed: {$e->getMessage()}", $e->getCode());
 		}
 	}
 
@@ -947,7 +947,7 @@ class Mongo_Db
 				'where'			=> $this->wheres,
 				));
 
-				$benchmark = \Profiler::start("Database {$this->db}", $query);
+				$benchmark = \Profiler::start((string) $this->db, $query);
 			}
 
 			$this->db->{$collection}->remove($this->wheres, array('fsync' => true, 'justOne' => true));
@@ -962,7 +962,7 @@ class Mongo_Db
 		}
 		catch (\MongoCursorException $e)
 		{
-			throw new \Mongo_DbException("Delete of data into MongoDB failed: {$e->getMessage()}");
+			throw new \Mongo_DbException("Delete of data into MongoDB failed: {$e->getMessage()}", $e->getCode());
 		}
 	}
 
@@ -989,7 +989,7 @@ class Mongo_Db
 				'where'			=> $this->wheres,
 				));
 
-				$benchmark = \Profiler::start("Database {$this->db}", $query);
+				$benchmark = \Profiler::start((string) $this->db, $query);
 			}
 
 			$this->db->{$collection}->remove($this->wheres, array('fsync' => true, 'justOne' => false));
@@ -1004,7 +1004,7 @@ class Mongo_Db
 		}
 		catch (\MongoCursorException $e)
 		{
-			throw new \Mongo_DbException("Delete of data into MongoDB failed: {$e->getMessage()}");
+			throw new \Mongo_DbException("Delete of data from MongoDB failed: {$e->getMessage()}", $e->getCode());
 		}
 	}
 
@@ -1025,7 +1025,7 @@ class Mongo_Db
 
 		catch (\MongoCursorException $e)
 		{
-			throw new \Mongo_DbException("MongoDB command failed to execute: {$e->getMessage()}");
+			throw new \Mongo_DbException("MongoDB command failed to execute: {$e->getMessage()}", $e->getCode());
 		}
 	}
 
@@ -1043,7 +1043,7 @@ class Mongo_Db
 	{
 		if (empty($collection))
 		{
-			throw new \Mongo_DbException("No Mongo collection specified to add index to");
+			throw new \Mongo_DbException("No Mongo collection specified to add an index to");
 		}
 
 		if (empty($keys) or ! is_array($keys))
@@ -1087,7 +1087,7 @@ class Mongo_Db
 	{
 		if (empty($collection))
 		{
-			throw new \Mongo_DbException("No Mongo collection specified to remove index from");
+			throw new \Mongo_DbException("No Mongo collection specified to remove an index from");
 		}
 
 		if (empty($keys) or ! is_array($keys))

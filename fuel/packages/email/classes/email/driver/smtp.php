@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -45,7 +45,9 @@ class Email_Driver_Smtp extends \Email_Driver
 	/**
 	 * Initalted all needed for SMTP mailing.
 	 *
-	 * @return	bool	success boolean
+	 * @throws \FuelException   Must supply a SMTP host and port, none given
+	 *
+	 * @return  bool    Success boolean
 	 */
 	protected function _send()
 	{
@@ -79,7 +81,7 @@ class Email_Driver_Smtp extends \Email_Driver
 		// Prepare for data sending
 		$this->smtp_send('DATA', 354);
 
-		$lines = explode($this->config['newline'], $message['header'].$this->config['newline'].preg_replace('/^\./m', '..$1', $message['body']));
+		$lines = explode($this->config['newline'], $message['header'].preg_replace('/^\./m', '..$1', $message['body']));
 
 		foreach($lines as $line)
 		{
@@ -189,11 +191,14 @@ class Email_Driver_Smtp extends \Email_Driver
 	/**
 	 * Sends data to the SMTP host
 	 *
-	 * @param	 string   $data                the SMTP command
-	 * @param	 mixed    $expecting           the expected response
-	 * @param    bool     $return_number       set to true to return the status number
-	 * @return   mixed                         result or result number, false when expecting is false
-	 * @throws   SmtpCommandFailureException   when the command failed an expecting is not set to false.
+	 * @param   string              $data           The SMTP command
+	 * @param   string|bool|string  $expecting      The expected response
+	 * @param   bool                $return_number  Set to true to return the status number
+	 *
+	 * @throws \SmtpCommandFailureException When the command failed an expecting is not set to false.
+	 * @throws \SmtpTimeoutException        SMTP connection timed out
+	 *
+	 * @return   mixed                         Result or result number, false when expecting is false
 	 */
 	protected function smtp_send($data, $expecting, $return_number = false)
 	{
@@ -238,7 +243,9 @@ class Email_Driver_Smtp extends \Email_Driver
 	/**
 	 * Get SMTP response
 	 *
-	 * @return	string	SMTP response
+	 * @throws \SmtpTimeoutException
+	 *
+	 * @return  string  SMTP response
 	 */
 	protected function smtp_get_response()
 	{

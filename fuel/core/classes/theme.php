@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -212,6 +212,20 @@ class Theme
 	}
 
 	/**
+	 * Loads a viewmodel, and have it use the view from the currently active theme,
+	 * the fallback theme, or the standard FuelPHP cascading file system
+	 *
+	 * @param   string  ViewModel classname without View_ prefix or full classname
+	 * @param   string  Method to execute
+	 * @param   bool    $auto_filter  Auto filter the view data
+	 * @return  View    New View object
+	 */
+	public function viewmodel($view, $method = 'view', $auto_filter = null)
+	{
+		return \ViewModel::forge($view, $method, $auto_filter, $this->find_file($view));
+	}
+
+	/**
 	 * Loads an asset from the currently loaded theme.
 	 *
 	 * @param   string  $path  Relative path to the asset
@@ -288,6 +302,9 @@ class Theme
 			throw new \ThemeException('No valid template could be found. Use set_template() to define a page template.');
 		}
 
+		// storage for rendered results
+		$rendered = array();
+
 		// pre-process all defined partials
 		foreach ($this->partials as $key => $partials)
 		{
@@ -302,17 +319,17 @@ class Theme
 			if ( ! empty($output) and array_key_exists($key, $this->chrome))
 			{
 				// encapsulate the partial in the chrome template
-				$this->partials[$key] = $this->chrome[$key]['view']->set($this->chrome[$key]['var'], $output, false);
+				$rendered[$key] = $this->chrome[$key]['view']->set($this->chrome[$key]['var'], $output, false);
 			}
 			else
 			{
 				// store the partial output
-				$this->partials[$key] = $output;
+				$rendered[$key] = $output;
 			}
 		}
 
 		// assign the partials to the template
-		$this->template->set('partials', $this->partials, false);
+		$this->template->set('partials', $rendered, false);
 
 		// return the template
 		return $this->template;
@@ -684,7 +701,7 @@ class Theme
 		// determine the path prefix and optionally the module path
 		$path_prefix = '';
 		$module_path = null;
-		if ($this->config['use_modules'] and $module = \Request::active()->module)
+		if ($this->config['use_modules'] and class_exists('Request', false) and $request = \Request::active() and $module = $request->module)
 		{
 			// we're using module name prefixing
 			$path_prefix = $module.DS;

@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -401,9 +401,10 @@ class Cli
 	 * @param	string	$text		the text to color
 	 * @param	string	$foreground the foreground color
 	 * @param	string	$background the background color
+	 * @param	string	$format		other formatting to apply. Currently only 'underline' is understood
 	 * @return	string	the color coded string
 	 */
-	public static function color($text, $foreground, $background = null)
+	public static function color($text, $foreground, $background = null, $format=null)
 	{
 		if (static::is_windows() and ! \Input::server('ANSICON'))
 		{
@@ -425,6 +426,11 @@ class Cli
 		if ($background !== null)
 		{
 			$string .= "\033[".static::$background_colors[$background]."m";
+		}
+
+		if ($format === 'underline')
+		{
+			$string .= "\033[4m";
 		}
 
 		$string .= $text."\033[0m";

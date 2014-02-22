@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -64,7 +64,7 @@ class Generate_Scaffold
 
 			if ( ! isset($matches[1]))
 			{
-				throw new Exception('One or more fields were badly specified. Ensure they are name:type');
+				throw new Exception('Unable to determine the field definition for "'.$arg.'". Ensure they are name:type');
 			}
 
 			$data['fields'][] = array(
@@ -193,10 +193,10 @@ class Generate_Scaffold
 		}
 
 		// Add the default template if it doesnt exist
-		if ( ! file_exists($app_template = APPPATH.'views/template.php'))
+		if ( ! is_file($app_template = APPPATH.'views/template.php'))
 		{
 			// check if there's a template in app, and if so, use that
-			if (file_exists(APPPATH.'views/'.static::$view_subdir.$subfolder.'/views/template.php'))
+			if (is_file(APPPATH.'views/'.static::$view_subdir.$subfolder.'/views/template.php'))
 			{
 				Generate::create($app_template, file_get_contents(APPPATH.'views/'.static::$view_subdir.$subfolder.'/views/template.php'), 'view');
 			}

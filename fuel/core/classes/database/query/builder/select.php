@@ -13,38 +13,52 @@ namespace Fuel\Core;
 
 class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 {
-
-	// SELECT ...
+	/**
+	 * @var array  $_select  columns to select
+	 */
 	protected $_select = array();
 
-	// DISTINCT
-	protected $_distinct = FALSE;
+	/**
+	 * @var bool  $_distinct  wether to select distinct values
+	 */
+	protected $_distinct = false;
 
-	// FROM ...
+	/**
+	 * @var array  $_from  table name
+	 */
 	protected $_from = array();
 
-	// JOIN ...
+	/**
+	 * @var array  $_join  join objects
+	 */
 	protected $_join = array();
 
-	// GROUP BY ...
+	/**
+	 * @var array  $_group_by  group by clauses
+	 */
 	protected $_group_by = array();
 
-	// HAVING ...
+	/**
+	 * @var array  $_having  having clauses
+	 */
 	protected $_having = array();
 
-	// OFFSET ...
-	protected $_offset = NULL;
+	/**
+	 * @var integer  $_offset  offset
+	 */
+	protected $_offset = null;
 
-	// The last JOIN statement created
+	/**
+	 * @var  Database_Query_Builder_Join  $_last_join  last join statement
+	 */
 	protected $_last_join;
 
 	/**
 	 * Sets the initial columns to select from.
 	 *
-	 * @param   array  column list
-	 * @return  void
+	 * @param  array  $columns  column list
 	 */
-	public function __construct(array $columns = NULL)
+	public function __construct(array $columns = null)
 	{
 		if ( ! empty($columns))
 		{
@@ -59,7 +73,7 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 	/**
 	 * Enables or disables selecting only unique columns using "SELECT DISTINCT"
 	 *
-	 * @param   boolean  enable or disable distinct columns
+	 * @param   boolean  $value  enable or disable distinct columns
 	 * @return  $this
 	 */
 	public function distinct($value = true)
@@ -72,11 +86,12 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 	/**
 	 * Choose the columns to select from.
 	 *
-	 * @param   mixed  column name or array($column, $alias) or object
+	 * @param   mixed  $columns  column name or array($column, $alias) or object
 	 * @param   ...
+	 *
 	 * @return  $this
 	 */
-	public function select($columns = NULL)
+	public function select($columns = null)
 	{
 		$columns = func_get_args();
 
@@ -88,8 +103,9 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 	/**
 	 * Choose the columns to select from, using an array.
 	 *
-	 * @param   array  list of column names or aliases
-	 * @param	bool	if true, don't merge but overwrite
+	 * @param   array  $columns  list of column names or aliases
+	 * @param   bool   $reset    if true, don't merge but overwrite
+	 *
 	 * @return  $this
 	 */
 	public function select_array(array $columns, $reset = false)
@@ -102,8 +118,9 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 	/**
 	 * Choose the tables to select "FROM ..."
 	 *
-	 * @param   mixed  table name or array($table, $alias) or object
+	 * @param   mixed  $tables  table name or array($table, $alias)
 	 * @param   ...
+	 *
 	 * @return  $this
 	 */
 	public function from($tables)
@@ -118,8 +135,9 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 	/**
 	 * Adds addition tables to "JOIN ...".
 	 *
-	 * @param   mixed   column name or array($column, $alias) or object
-	 * @param   string  join type (LEFT, RIGHT, INNER, etc)
+	 * @param   mixed   $table  column name or array($column, $alias)
+	 * @param   string  $type   join type (LEFT, RIGHT, INNER, etc)
+	 *
 	 * @return  $this
 	 */
 	public function join($table, $type = NULL)
@@ -132,9 +150,10 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 	/**
 	 * Adds "ON ..." conditions for the last created JOIN statement.
 	 *
-	 * @param   mixed   column name or array($column, $alias) or object
-	 * @param   string  logic operator
-	 * @param   mixed   column name or array($column, $alias) or object
+	 * @param   mixed   $c1  column name or array($column, $alias) or object
+	 * @param   string  $op  logic operator
+	 * @param   mixed   $c2  column name or array($column, $alias) or object
+	 *
 	 * @return  $this
 	 */
 	public function on($c1, $op, $c2)
@@ -147,9 +166,10 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 	/**
 	 * Adds "AND ON ..." conditions for the last created JOIN statement.
 	 *
-	 * @param   mixed   column name or array($column, $alias) or object
-	 * @param   string  logic operator
-	 * @param   mixed   column name or array($column, $alias) or object
+	 * @param   mixed   $c1  column name or array($column, $alias) or object
+	 * @param   string  $op  logic operator
+	 * @param   mixed   $c2  column name or array($column, $alias) or object
+	 *
 	 * @return  $this
 	 */
 	public function and_on($c1, $op, $c2)
@@ -162,9 +182,10 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 	/**
 	 * Adds "OR ON ..." conditions for the last created JOIN statement.
 	 *
-	 * @param   mixed   column name or array($column, $alias) or object
-	 * @param   string  logic operator
-	 * @param   mixed   column name or array($column, $alias) or object
+	 * @param   mixed   $c1  column name or array($column, $alias) or object
+	 * @param   string  $op  logic operator
+	 * @param   mixed   $c2  column name or array($column, $alias) or object
+	 *
 	 * @return  $this
 	 */
 	public function or_on($c1, $op, $c2)
@@ -177,8 +198,9 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 	/**
 	 * Creates a "GROUP BY ..." filter.
 	 *
-	 * @param   mixed   column name or array($column, $column) or object
+	 * @param   mixed  $columns  column name or array($column, $column) or object
 	 * @param   ...
+	 *
 	 * @return  $this
 	 */
 	public function group_by($columns)
@@ -206,22 +228,24 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 	/**
 	 * Alias of and_having()
 	 *
-	 * @param   mixed   column name or array($column, $alias) or object
-	 * @param   string  logic operator
-	 * @param   mixed   column value
+	 * @param   mixed  $column column name or array($column, $alias) or object
+	 * @param   string $op     logic operator
+	 * @param   mixed  $value  column value
+	 *
 	 * @return  $this
 	 */
-	public function having($column, $op = null, $value = NULL)
+	public function having($column, $op = null, $value = null)
 	{
-		return call_user_func_array(array($this, 'and_having'), func_get_args());
+		return call_fuel_func_array(array($this, 'and_having'), func_get_args());
 	}
 
 	/**
 	 * Creates a new "AND HAVING" condition for the query.
 	 *
-	 * @param   mixed   column name or array($column, $alias) or object
-	 * @param   string  logic operator
-	 * @param   mixed   column value
+	 * @param   mixed  $column column name or array($column, $alias) or object
+	 * @param   string $op     logic operator
+	 * @param   mixed  $value  column value
+	 *
 	 * @return  $this
 	 */
 	public function and_having($column, $op = null, $value = null)
@@ -248,9 +272,10 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 	/**
 	 * Creates a new "OR HAVING" condition for the query.
 	 *
-	 * @param   mixed   column name or array($column, $alias) or object
-	 * @param   string  logic operator
-	 * @param   mixed   column value
+	 * @param   mixed   $column  column name or array($column, $alias) or object
+	 * @param   string  $op      logic operator
+	 * @param   mixed   $value   column value
+	 *
 	 * @return  $this
 	 */
 	public function or_having($column, $op = null, $value = null)
@@ -345,7 +370,8 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 	/**
 	 * Start returning results after "OFFSET ..."
 	 *
-	 * @param   integer   starting result number
+	 * @param   integer  $number  starting result number
+	 *
 	 * @return  $this
 	 */
 	public function offset($number)
@@ -358,7 +384,8 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 	/**
 	 * Compile the SQL query and return it.
 	 *
-	 * @param   mixed  Database instance or instance name
+	 * @param   mixed  $db  Database_Connection instance or instance name
+	 *
 	 * @return  string
 	 */
 	public function compile($db = null)
@@ -366,7 +393,7 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 		if ( ! $db instanceof \Database_Connection)
 		{
 			// Get the database instance
-			$db = \Database_Connection::instance($db);
+			$db = $this->_connection ?: \Database_Connection::instance($db);
 		}
 
 		// Callback to quote identifiers
@@ -446,6 +473,10 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 		return $query;
 	}
 
+	/**
+	 * Reset the query parameters
+	 * @return $this
+	 */
 	public function reset()
 	{
 		$this->_select   = array();
@@ -455,16 +486,13 @@ class Database_Query_Builder_Select extends \Database_Query_Builder_Where
 		$this->_group_by = array();
 		$this->_having   = array();
 		$this->_order_by = array();
-
-		$this->_distinct = FALSE;
-
-		$this->_limit     = NULL;
-		$this->_offset    = NULL;
-		$this->_last_join = NULL;
-
+		$this->_distinct = false;
+		$this->_limit     = null;
+		$this->_offset    = null;
+		$this->_last_join = null;
 		$this->_parameters = array();
 
 		return $this;
 	}
 
-} // End Database_Query_Select
+}

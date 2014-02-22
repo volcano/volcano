@@ -5,7 +5,7 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.7
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -64,6 +64,7 @@ class Command
 						case 'model':
 						case 'migration':
 						case 'task':
+						case 'package':
 							call_user_func('Oil\Generate::'.$action, array_slice($args, 3));
 						break;
 
@@ -87,7 +88,17 @@ class Command
 
 				case 'c':
 				case 'console':
-					new Console;
+
+					if (isset($args[2]) and $args[2] == 'help')
+					{
+						Console::help();
+					}
+					else
+					{
+						new Console;
+					}
+
+				break;
 
 				case 'p':
 				case 'package':
@@ -98,7 +109,7 @@ class Command
 					{
 						case 'install':
 						case 'uninstall':
-							call_user_func_array('Oil\Package::'.$action, array_slice($args, 3));
+							call_fuel_func_array('Oil\Package::'.$action, array_slice($args, 3));
 						break;
 
 						default:
@@ -130,12 +141,12 @@ class Command
 						case 'install':
 						case 'upgrade':
 						case 'uninstall':
-							call_user_func_array('Oil\Cell::'.$action, array_slice($args, 3));
+							call_fuel_func_array('Oil\Cell::'.$action, array_slice($args, 3));
 						break;
 
 						case 'info':
 						case 'details':
-							call_user_func_array('Oil\Cell::info', array_slice($args, 3));
+							call_fuel_func_array('Oil\Cell::info', array_slice($args, 3));
 						break;
 
 						default:
@@ -147,53 +158,102 @@ class Command
 				case 't':
 				case 'test':
 
-					// Suppressing this because if the file does not exist... well thats a bad thing and we can't really check
-					// I know that supressing errors is bad, but if you're going to complain: shut up. - Phil
-					$phpunit_autoload_path = \Config::get('oil.phpunit.autoload_path', 'PHPUnit/Autoload.php' );
-					@include_once($phpunit_autoload_path);
-
-					// Attempt to load PHUnit.  If it fails, we are done.
-					if ( ! class_exists('PHPUnit_Framework_TestCase'))
+					if (isset($args[2]) and $args[2] == 'help')
 					{
-						throw new Exception('PHPUnit does not appear to be installed.'.PHP_EOL.PHP_EOL."\tPlease visit http://phpunit.de and install.");
-					}
+		$output = <<<HELP
 
-					// Check for a custom phpunit config, but default to the one from core
-					if (file_exists(APPPATH.'phpunit.xml'))
-					{
-						$phpunit_config = APPPATH.'phpunit.xml';
+Usage:
+  php oil [t|test]
+
+Runtime options:
+  --file=<file>              # Run a test on a specific file only.
+  --group=<group>            # Only runs tests from the specified group(s).
+  --exclude-group=<group>    # Exclude tests from the specified group(s).
+  --coverage-clover=<file>   # Generate code coverage report in Clover XML format.
+  --coverage-html=<dir>      # Generate code coverage report in HTML format.
+  --coverage-php=<file>      # Serialize PHP_CodeCoverage object to file.
+  --coverage-text=<file>     # Generate code coverage report in text format.
+  --log-junit=<file>         # Generate report of test execution in JUnit XML format to file.
+
+Description:
+  Run phpunit on all or a subset of tests defined for the current application.
+
+Examples:
+  php oil test
+
+Documentation:
+  http://fuelphp.com/docs/packages/oil/test.html
+HELP;
+		\Cli::write($output);
 					}
 					else
 					{
-						$phpunit_config = COREPATH.'phpunit.xml';
+						$phpunit_command = \Config::get('oil.phpunit.binary_path', 'phpunit');
+
+						// Check if we might be using the phar library
+						$is_phar = false;
+						foreach(explode(':', getenv('PATH')) as $path)
+						{
+							if (is_file($path.DS.$phpunit_command))
+							{
+								$handle = fopen($path.DS.$phpunit_command, 'r');
+								$is_phar = fread($handle, 18) == '#!/usr/bin/env php';
+								fclose($handle);
+								if ($is_phar)
+								{
+									break;
+								}
+							}
+						}
+
+						// Suppressing this because if the file does not exist... well thats a bad thing and we can't really check
+						// I know that supressing errors is bad, but if you're going to complain: shut up. - Phil
+						$phpunit_autoload_path = \Config::get('oil.phpunit.autoload_path', 'PHPUnit/Autoload.php' );
+						@include_once($phpunit_autoload_path);
+
+						// Attempt to load PHUnit.  If it fails, we are done.
+						if ( ! $is_phar and ! class_exists('PHPUnit_Framework_TestCase'))
+						{
+							throw new Exception('PHPUnit does not appear to be installed.'.PHP_EOL.PHP_EOL."\tPlease visit http://phpunit.de and install.");
+						}
+
+						// Check for a custom phpunit config, but default to the one from core
+						if (is_file(APPPATH.'phpunit.xml'))
+						{
+							$phpunit_config = APPPATH.'phpunit.xml';
+						}
+						else
+						{
+							$phpunit_config = COREPATH.'phpunit.xml';
+						}
+
+						// CD to the root of Fuel and call up phpunit with the path to our config
+						$command = 'cd '.DOCROOT.'; '.$phpunit_command.' -c "'.$phpunit_config.'"';
+
+						// Respect the group options
+						\Cli::option('group') and $command .= ' --group '.\Cli::option('group');
+						\Cli::option('exclude-group') and $command .= ' --exclude-group '.\Cli::option('exclude-group');
+
+						// Respect the coverage-html option
+						\Cli::option('coverage-html') and $command .= ' --coverage-html '.\Cli::option('coverage-html');
+						\Cli::option('coverage-clover') and $command .= ' --coverage-clover '.\Cli::option('coverage-clover');
+						\Cli::option('coverage-text') and $command .= ' --coverage-text='.\Cli::option('coverage-text');
+						\Cli::option('coverage-php') and $command .= ' --coverage-php '.\Cli::option('coverage-php');
+						\Cli::option('log-junit') and $command .= ' --log-junit '.\Cli::option('log-junit');
+						\Cli::option('file') and $command .= ' '.\Cli::option('file');
+
+						\Cli::write('Tests Running...This may take a few moments.', 'green');
+
+						$return_code = 0;
+						foreach(explode(';', $command) as $c)
+						{
+							passthru($c, $return_code_task);
+							// Return failure if any subtask fails
+							$return_code |= $return_code_task;
+						}
+						exit($return_code);
 					}
 
-					// CD to the root of Fuel and call up phpunit with the path to our config
-					$phpunit_command = \Config::get('oil.phpunit.binary_path', 'phpunit');
-					$command = 'cd '.DOCROOT.'; '.$phpunit_command.' -c "'.$phpunit_config.'"';
-
-					// Respect the group options
-					\Cli::option('group') and $command .= ' --group '.\Cli::option('group');
-					\Cli::option('exclude-group') and $command .= ' --exclude-group '.\Cli::option('exclude-group');
-
-					// Respect the coverage-html option
-					\Cli::option('coverage-html') and $command .= ' --coverage-html '.\Cli::option('coverage-html');
-					\Cli::option('coverage-clover') and $command .= ' --coverage-clover '.\Cli::option('coverage-clover');
-					\Cli::option('coverage-text') and $command .= ' --coverage-text='.\Cli::option('coverage-text');
-					\Cli::option('coverage-php') and $command .= ' --coverage-php '.\Cli::option('coverage-php');
-					\Cli::option('log-junit') and $command .= ' --log-junit '.\Cli::option('log-junit');
-					\Cli::option('file') and $command .= ' '.\Cli::option('file');
-
-					\Cli::write('Tests Running...This may take a few moments.', 'green');
-
-					$return_code = 0;
-					foreach(explode(';', $command) as $c)
-					{
-						passthru($c, $return_code_task);
-						// Return failure if any subtask fails
-						$return_code |= $return_code_task;
-					}
-					exit($return_code);
 				break;
 
 				case 's':
@@ -217,6 +277,10 @@ class Command
 					passthru("$php -S $host:$port -t $docroot $router");
 				break;
 
+				case 'create':
+					\Cli::write('You can not use "oil create", a valid FuelPHP installation already exists in this directory', 'red');
+					break;
+
 				default:
 
 					static::help();
@@ -230,13 +294,15 @@ class Command
 		}
 	}
 
-	private static function print_exception(\Exception $ex)
+	protected static function print_exception(\Exception $ex)
 	{
 		\Cli::error('Uncaught exception '.get_class($ex).': '.$ex->getMessage());
-		\Cli::error('Callstack: ');
-		\Cli::error($ex->getTraceAsString());
+		if (\Fuel::$env != \Fuel::PRODUCTION)
+		{
+			\Cli::error('Callstack: ');
+			\Cli::error($ex->getTraceAsString());
+		}
 		\Cli::beep();
-
 		\Cli::option('speak') and `say --voice="Trinoids" "{$ex->getMessage()}"`;
 
 		if (($previous = $ex->getPrevious()) != null)
@@ -268,6 +334,10 @@ Environment:
   If you want to specify a specific environment oil has to run in, overload the environment
   variable on the commandline: FUEL_ENV=staging php oil <commands>
 
+More information:
+  You can pass the parameter "help" to each of the defined command to get information
+  about that specific command: php oil package help
+
 Documentation:
   http://docs.fuelphp.com/packages/oil/intro.html
 
@@ -275,7 +345,7 @@ HELP;
 
 	}
 
-	private static function _clear_args($actions = array())
+	protected static function _clear_args($actions = array())
 	{
 		foreach ($actions as $key => $action)
 		{

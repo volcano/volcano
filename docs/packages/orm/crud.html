@@ -91,8 +91,8 @@ $new->save();</code></pre>
 					<h2>Read</h2>
 
 					<p>Or actually <kbd>find()</kbd>. The find method can be used in 3 ways: find a specific id (primary
-						key), find first/last or all entries with conditions, or use method chaining to fetch. All possible
-						selection methods (where, or_where, order_by, etc) can be found at the bottom of the page.</p>
+						key), find first/last or all entries with conditions. All possible selection methods (where,
+						or_where, order_by, etc) can be found at the bottom of the page.</p>
 
 					<h3 id="find_by_id">Find by ID</h3>
 
@@ -142,9 +142,8 @@ $entry = Model_Article::find('all', array(
 					<h3 id="find_chaining">Find using method chaining</h3>
 
 					<p class="note">
-						When you use the <kbd>find()</kbd> method without properties, it will be considered to be an
-						error situation. Currently it will return an Orm\Query object which you can use, and possibly
-						reuse to find entries. This behaviour might change in the future, so using this is <strong>discouraged</strong>,
+						You can not call the <kbd>find()</kbd> method without properties, or call it with <kbd>null</kbd> or a variable
+						that contains <kbd>null</kbd> as argument. If you do, <kbd>null</kbd> is returned. If you want to chain methods,
 						use the <kbd>query()</kbd> method instead.</p>
 
 					<pre class="php"><code>$query = Model_Article::query()->where('category_id', 1)->order_by('date', 'desc');
@@ -253,13 +252,32 @@ Model_Article::find('all', array('select' =&gt; array(array('name' =&gt; false))
 Model_Article::query()-&gt;related(array('author', 'comments'));
 Model_Article::find('all', array('related' =&gt; array('author', 'comments')));
 
-// include conditions on the relation (only supported when chaining)
+//=============================
+// Include one or more conditions on a relation (only supported when chaining)
+//=============================
+
+// First method - using an array
+//----------------------------
+// one condition
 Model_Article::query()
     -&gt;related('author', array('where' =&gt; array(array('active', '=', 1))));
 
-// include multiple conditions on the relation
+// multiple conditions
 Model_Article::query()
     -&gt;related('author', array('where' =&gt; array(array('active', '=', 1), array('status', '=', 'X'))));
+
+// Second method - use dot notation
+//----------------------------
+// one condition
+Model_Article::query()
+	-&gt;related('author')
+	-&gt;where('author.active', 1);
+
+// multiple conditions
+Model_Article::query()
+	-&gt;related('author')
+	-&gt;where('author.active', 1);
+	-&gt;where('author.status', 1);
 </code></pre>
 								</td>
 							</tr>

@@ -10,7 +10,7 @@
 </head>
 <body>
 	<div class="container">
-		<div class="span12">
+		<div class="col-md-12">
 			<h1><?php echo $title; ?></h1>
 			<hr>
 <?php if (Session::get_flash('success')): ?>
@@ -30,7 +30,7 @@
 			</div>
 <?php endif; ?>
 		</div>
-		<div class="span12">
+		<div class="col-md-12">
 <?php echo $content; ?>
 		</div>
 		<footer>
