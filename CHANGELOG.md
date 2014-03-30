@@ -1,5 +1,77 @@
 # Changelog
 
+## v1.7.1
+
+### Important fixes, changes, notes. Read them carefully.
+
+* The index.php has been updated to make sure the Response body is rendered, and rendered only once. When upgrading to 1.7.1, **don't forget** to apply these changes!
+* When using the REST controller and returning an array as a response, the controller now checks if the response format is compatible. If not, it will return an error messsage and set a 406 HTTP status when in production mode. In other modes, it will return a warning and a JSON encoded dump of the array.
+
+### Backward compatibility notes
+
+None.
+
+### Removed code (because it was deprecated in v1.7 or earlier)
+
+None.
+
+### Security related
+
+There were one security advisory issued for 1.7, which also impact all previous versions (see http://fuelphp.com/security-advisories). These issues are addressed in 1.7.1, it is strongly advised that you upgrade as soon as possible.
+
+### System changes
+
+A new **Sanitization** interface has been introduced to the core. Objects can implement this interface, and when you pass such an object to a View, the object will not be cleaned, but the individual properties will be cleaned by the object itself when the properties are requested by the view.
+
+ORM and Model_Crud models now implement the sanitization interface by default, and when enabled, they will return a cleaned copy of the property, instead of the property itself. This means you can now pass ORM model objects to Views, without the ORM object being destroyed.
+
+### Specific classes
+
+* __Cache_Storage_Redis__: Support for non-default Redis DB configs has been fixed.
+* __Arr__: `get()` now allows you to get array values using a key that contains a dot.
+* __Arr__: `search()` now has a new parameter to enforce a strict search.
+* __Asset__: `css()` now accepts the 'type' attribute.
+* __DB__: Now allows a DB connection to be set, to make sure SQL is compiled using the correct driver.
+* __DB__: You can now `disconnect()` and `connect()`, allowing you to reconnect when the connection has dropped.
+* __DBUtil__: `set_connection()` now accepts `null` to reset the connection instance set previously.
+* __DBUtil__: `add_foreign_key()` now has support for custom DB connections.
+* __DBUtil__: `create_index` now allows you to create a PRIMARY KEY index.
+* __DBUtil__: `drop_index` now allows you to drop a PRIMARY KEY index.
+* __File__: `download()` will now be executed after cookies have been written.
+* __Form__: `select()` now accepts zero or null as selected value.
+* __Format__: `from_xml()` now has support for XML namespaces.
+* __Format__: `to_json()` now accepts JSON encoding options, with configured default options.
+* __Fuel__: Make sure the locale is set before processing 'always_load'.
+* __Image__: `create_hex_color()` now correctly processes the alpha value.
+* __Image__: `convert_number()` can now deal properly with numbers using a decimal comma.
+* __Image__: Imagemagick driver now correctly stores the image size in its cache.
+* __Input__: `uri()` now always returns the URI with a leading slash.
+* __Input__: You can now control double decoding of urlencoded forms.
+* __Lang__: No longer uses a fixed path delimiter, causing issues on Windows.
+* __Lang__: When multiple languages are defined, the files are now loaded in the correct order.
+* __Migrate__: Now displays the correct migration version when migrating down.
+* __Migrate__: Now checks for existence of packages and modules before attempting to migrate them.
+* __Model_Crud__: Now implements lazy sanitation when an object is passed to a View.
+* __Theme__: You can now call `render()` more than once.
+* __Uri__: When $_GET is reassembled, it will now be security cleaned.
+
+### Packages
+
+* __Auth__: Problems with direct updates of permission join tables (PK=FK) have been fixed.
+* __Auth__: The `multiple-logins` config setting is now ignored unless there actually are multiple login drivers.
+* __Email__: A background color (#aabbcc) in an img tag is no longer seen as an attachment.
+* __Parser__: `auth_has_access` has been added as a Twig function.
+* __Oil__: Improved error reporting when it is unable to parse the given field definition.
+* __Oil__: When running a module task, the module path is now added at the front of the finder path list.
+* __Oil__: Duplicate migration filename detection has been fixed.
+* __Oil__: Refine will no longer dump the callstack when an exception occurs in production mode.
+* __Oil__: Generating a drop table migration has been fixed.
+* __Orm__: Models now implement lazy sanitation when an object is passed to a View.
+* __Orm__: Missing config for Temporal models has been fixed.
+* __Orm__: Model_Temporal `find_revision()` no longer throws an exception when no revision could be found.
+* __Orm__: The `UpdatedAt` observer now has the option to mark the object as updated if a related object was changed.
+* __Orm__: The `Slug` observer now has the option to define a custom separator.
+
 ## v1.7
 
 [Full List of core changes since 1.6.1](https://github.com/fuel/core/compare/1.6/master...1.7/master)
@@ -40,7 +112,7 @@ There were two security advisories issued for 1.6.1, which also impact all previ
 * Twitter Bootstrap has been upgraded to 3.0. Check for dependencies with your current code if you upgrade, oil will now generates 3.0 compliant view files.
 * FuelPHP\Upload has been switched to version 2.0.1. If you upgrade, don't forget to change your composer.json and run `php composer.phar update`.
 * Exception handling in the index.php now resets the main Request, to avoid subsequent Requests to be seen as HMVC calls.
-* index.php now only updates the output with profiling data if the placeholders are present in the output. 
+* index.php now only updates the output with profiling data if the placeholders are present in the output.
 * All code using preg_replace() with the \e modifier has been rewritten to be compliant with PHP 5.5+.
 * Reverse routing now works with regex routes.
 
@@ -121,6 +193,76 @@ There were two security advisories issued for 1.6.1, which also impact all previ
 * __Orm__: `Model::to_array()` has better object tracking to prevent recursion.
 * __Orm__: `from_array()` now has support for the EAV extension. Importing non-model properties will now create EAV records instead of custom data if the model has an EAV container configured.
 * __Orm__: There is now support for EAV containers in `Model_Nestedset`.
+
+## v1.6.1
+
+### Backward compability notes
+
+__Orm__: You can no longer use property assignment to create a custom property on a model object if that model implements an EAV container. It will set an EAV value instead.
+
+### Removed code (because it was deprecated in v1.6 or earlier)
+
+__Orm__: calling `find()` with no parameters or with a single parameter that is `null` will return `null` as a result. It will no longer throw an exception.
+
+### System changes
+
+* Fixed broken CSS code in the welcome controller views.
+* Improvement to the query analysis information displayed in the profiler (MySQL only).
+* The included __Markdown__ library has been upgraded to v1.2.6.
+* Lots of path processing improvement to have the framework work better on Windows.
+* Finder now ignores the cache if there are permission issues on the cache file.
+
+### Specific classes
+
+* __Agent__: Don't try to fetch browser information if no user agent is present in the server data.
+* __Arr__: New `previous_by_key()` method to fetch the previous key or value from an array using the current key.
+* __Arr__: New `previous_by_value()` method to fetch the previous key or value from an array using the current value.
+* __Arr__: New `next_by_key()` method to fetch the next key or value from an array using the current key.
+* __Arr__: New `next_by_value()` method to fetch the next key or value from an array using the current value.
+* __Cache__: `delete_all` in the File driver now properly recurses all folders.
+* __Controller__: Now has a `response_status` property to set the HTTP status for automatically created responses.
+* __Controller_Rest__: Fixed using a controller method to determine the authentication status.
+* __Controller_Rest__: Fixed warning when the format passed in the URL is not a valid format.
+* __Crypt__: Now uses the file permissions defined in the file.php configuration file when generating the crypt configuration file.
+* __Format__: "to" methods now deal with a passed null value correctly.
+* __Html__: Now enforces HTML5 by default.
+* __Input__: New `headers` method allows you to fetch HTTP headers.
+* __Input__: New `allow_x_headers` configuration key controls if using X-headers are acceptable.
+* __Inflector__: Method `friendly_title()` now correctly deals with apostrophes by replacing them with a separator.
+* __Request_Curl__: Added support for the 'HEAD' method to the cURL driver.
+* __Response__: New `redirect_back()` method to redirect back to the previous page in your application.
+* __Session__: Now supports passing the session id as a string in get/post variables.
+* __Session__: Now supports passing the session id in the "Session-Id" HTTP header.
+* __Session__: Now allows you to disable creating a session cookie if you want to pass it manually.
+* __Session_Redis__ : Fixed recovering from expired sessions when using the Redis driver.
+* __Theme__: Now allows you to store module theme views inside the module folder.
+* __Theme__: New `partial_count` and `has_partials` methods.
+* __Upload__: Implemented missing save() argument behavior, for backward compatibility.
+* __Viewmodel__: New `get_view()` method returns the associated View object.
+
+### Packages
+
+* __Auth__: Now includes secure "remember_me" functionality.
+* __Auth__: Fixed typo in the Simpleauth migation file, causing a missing 'group' column
+* __Auth__: Ormauth's `create_user()` method now supports updating profile fields (which are mapped to EAV attributes) for compatibility with Simpleauth.
+* __Auth__: Now includes an [OpAuth](http://opauth.org/) interface to integrate OAuth authentication with Simpleauth or Ormauth.
+* __Auth__: When running migrations for Ormauth, groups and roles created now mimic the functionality of Simpleauth.
+* __Email__: Support added for pipelining, sending multiple emails out over a single connection. Currently only supported by the SMTP driver.
+* __Oil__: Command processor updated to work from Windows' powershell.
+* __Oil__: The `refine()` method of the Command processor now accepts arguments so you can call it from code with the same arguments as from the commandline.
+* __Oil__: New "--csrf" switch adds the CSRF token to generated forms.
+* __Oil__: CSS in generated forms has been updated to the new Bootstrap version.
+* __Oil__: Generated Admin code now has support for Ormauth.
+* __Orm__: You can now create new EAV attributes by simply assigning a value to a new property (note: this disables Custom data for models with EAV support!).
+* __Orm__: You can now use `unset()` to delete an EAV attribute.
+* __Orm__: Several bugfixes in Model_Soft and Model_Temporal.
+* __Orm__: New "Nestedset" Model to work with nested sets (hierarchical structures).
+* __Orm__: No longer signals an insert failure if you don't use auto-increment PK's.
+* __Orm__: Observer_Slug now works correctly with Model_Temporal.
+* __Orm__: Added `count()`, `min()` and `max()` support to Model_Soft and Model_Temporal.
+* __Orm__: Complex `find_this_and_that_or_other()` calls now work correctly.
+* __Parser__: You can now call `Markdown::parse()` from within a Twig template.
+* __Parser__: You can now call `Session::get_flash()` and `Session::set_flash()` from within a Twig template.
 
 ## v1.6
 
