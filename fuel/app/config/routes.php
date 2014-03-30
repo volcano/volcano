@@ -25,7 +25,7 @@ return array(
 	'(:segment)/(:num)/(:segment)/(:segment)'                      => '$1/$3/$4/$2',
 	'(:segment)/(:num)/(:segment)/(:num)/(edit)'                   => '$1/$3/$5/$2/$4',
 	
-	'(:segment)/(:num)/(:segment)/(:num)/(:segment)'               => '$1/$3/$5/index/$2/$4',
+	'(:segment)/(:num)/(:segment)/(:num)/(:segment)'               => '$1/$3/$5/index/$4',
 	'(:segment)/(:num)/(:segment)/(:num)/(:segment)/(:segment)'    => '$1/$3/$5/$6/$4',
 	'(:segment)/(:num)/(:segment)/(:num)/(:segment)/(:num)/(edit)' => '$1/$3/$5/$7/$4/$6',
 );
