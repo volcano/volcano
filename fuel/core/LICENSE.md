@@ -1,3 +1,5 @@
+The MIT License (MIT)
+
 Copyright (c) 2010-2013 Fuel Development Team
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
