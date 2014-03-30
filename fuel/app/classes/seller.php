@@ -28,9 +28,14 @@ class Seller
 	 */
 	public static function load()
 	{
+		Config::load('api', true);
+
 		$seller_id = Session::get(self::$namespace . '.id');
 		if ($seller_id) {
 			$seller = Service_Seller::find_one($seller_id);
+		} elseif ($api_key = Input::param('api_key', Config::get('api.key'))) {
+			$api_key = Service_Api_Key::find_one(array('key' => $api_key));
+			$seller  = $api_key->seller;
 		} else {
 			$seller = Service_Seller::find_one();
 		}
