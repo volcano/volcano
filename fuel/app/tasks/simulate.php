@@ -204,8 +204,32 @@ class Simulate
 					array('created_at' => $customer->created_at)
 				);
 			}
+			
+			// Reset the models' updated_at.
+			self::updateUpdatedAt($customer);
+			self::updateUpdatedAt($order);
+			foreach ($customer->products as $product) {
+				self::updateUpdatedAt($product);
+			}
 		}
 		
 		\Cli::write('Customer Simulation Complete', 'green');
+	}
+	
+	/**
+	 * Updates a model's updated_at via manual query.
+	 * Fuel does not currently support setting a record's updated_at via the ORM.
+	 * This hack is needed in order to allow accurate statistics for simulated data.
+	 * 
+	 * @param Model $model The model record to update.
+	 * 
+	 * @return void
+	 */
+	protected static function updateUpdatedAt(\Model $model)
+	{
+		\DB::update($model->table())
+			->set(array('updated_at' => $model->created_at))
+			->where('id', $model->id)
+			->execute();
 	}
 }
