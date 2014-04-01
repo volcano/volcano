@@ -75,26 +75,28 @@ class Service_Customer_Paymentmethod extends Service
 			}
 		}
 		
-		$gateway_instance = Gateway::instance($gateway, $customer);
-		
-		$gateway_payment_method_id = $gateway_instance->paymentmethod()->create(array(
-			'account' => $account,
-			'contact' => $contact,
-		));
-		
-		if (!$gateway_payment_method_id) {
-			return false;
-		}
-		
-		$gateway_payment_method = $gateway_instance->paymentmethod($gateway_payment_method_id);
-		
 		$payment_method = Model_Customer_Paymentmethod::forge();
 		$payment_method->customer    = $customer;
 		$payment_method->contact     = $contact;
 		$payment_method->gateway     = $gateway;
-		$payment_method->external_id = $gateway_payment_method->data('id');
 		$payment_method->provider    = Arr::get($data, 'account.provider');
-		$payment_method->account     = $gateway_payment_method->data('account');
+		$payment_method->account     = '****' . substr(Arr::get($data, 'account.number'), -4);
+		
+		$gateway_instance = Gateway::instance($gateway, $customer);
+		if ($gateway_instance) {
+			$gateway_payment_method_id = $gateway_instance->paymentmethod()->create(array(
+				'account' => $account,
+				'contact' => $contact,
+			));
+			
+			if (!$gateway_payment_method_id) {
+				return false;
+			}
+			
+			$gateway_payment_method = $gateway_instance->paymentmethod($gateway_payment_method_id);
+			
+			$payment_method->external_id = $gateway_payment_method->data('id');
+		}
 		
 		try {
 			$payment_method->save();
