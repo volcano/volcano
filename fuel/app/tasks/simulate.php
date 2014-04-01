@@ -87,12 +87,12 @@ class Simulate
 		// July 1st, 2013.
 		$date = date("Y-m-d H:i:s", self::BEGIN_DATETIME);
 		
-		$companies = array('Catalog', 'Static');
+		$companies = array('Stella Labs, Inc', 'Star Point Industries');
 		foreach ($companies as $company) {
 			$seller = \Service_Seller::create($company, array(
-				'contact'    => array(
-					'company_name' => "$company.com, Inc",
-					'email'        => "support@$company.com",
+				'contact' => array(
+					'company_name' => $company,
+					'email'        => 'support@' . \Inflector::friendly_title($company) . '.com',
 					'address'      => mt_rand(1, 5000) . ' Quail Springs Pkwy',
 					'city'         => 'Oklahoma City',
 					'state'        => 'Oklahoma',
@@ -145,13 +145,13 @@ class Simulate
 	{
 		$balances = array(0, 5, 10, 12.50, 24.30);
 		
-		$first_names = array('Daniel', 'Steve', 'Elon', 'Bill', 'Stephen', 'Olivia', 'Mae', 'Caroline', 'Porschia', 'Marie');
-		$last_names  = array('Sposito', 'Jacobson', 'Jenkins', 'Gates', 'Jobs', 'Musk', 'Smith', 'Wyrick', 'Natalie', 'Stevens');
+		$first_names = array('Daniel', 'Steve', 'Elon', 'Bill', 'Stephan', 'Olivia', 'Keithia', 'Caroline', 'Porschia', 'Marie');
+		$last_names  = array('Sposito', 'Manos', 'Myers', 'Jenkins', 'Gates', 'Jobs', 'Musk', 'Wyrick', 'Natalie', 'Stevens');
 		
-		$streets = array('Wisteria Ln', 'Pebble Creek Blvd', 'Bakerstreet Dr', 'Miranda Point', 'Infinite Loop');
-		$cities  = array('Oklahoma City', 'Phoenix', 'Palo Alto', 'Saigon', 'Caracas');
-		$states  = array('OK', 'NY', 'CA', 'WA', 'FL');
-		$countries = array('US', 'VN', 'VZ');
+		$streets   = array('Wisteria Ln', 'Pebble Creek Blvd', 'Bakerstreet Dr', 'Miranda Point', 'Infinite Loop');
+		$cities    = array('Oklahoma City', 'Phoenix', 'Palo Alto', 'Saigon', 'Caracas');
+		$states    = array('OK', 'NY', 'CA', 'WA', 'FL');
+		$countries = array('US', 'VN', 'VE');
 		
 		$customers = array();
 		
@@ -167,7 +167,7 @@ class Simulate
 				'contact'    => array(
 					'first_name' => $first_name,
 					'last_name'  => $last_name,
-					'email'      => $first_name . '.' . $last_name . mt_rand(1, 100) . '@catalog.com',
+					'email'      => $first_name . '.' . $last_name . mt_rand(1, 100) . '@gmail.com',
 					'address'    => mt_rand(1, 5000) . ' ' . $streets[array_rand($streets)],
 					'city'       => $cities[array_rand($cities)],
 					'state'      => $states[array_rand($states)],
