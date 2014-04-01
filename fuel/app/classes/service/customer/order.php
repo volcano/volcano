@@ -39,10 +39,11 @@ class Service_Customer_Order extends Service
 	 * @param Model_Customer               $customer      The customer the order belongs to.
 	 * @param array                        $products      An array of one or more products to order.
 	 * @param Model_Customer_Paymentmethod $paymentmethod The payment method to use for the transaction.
+	 * @param array                        $data          Optional data.
 	 *
 	 * @return Model_Customer_Order
 	 */
-	public static function create(Model_Customer $customer, array $products, Model_Customer_Paymentmethod $paymentmethod = null)
+	public static function create(Model_Customer $customer, array $products, Model_Customer_Paymentmethod $paymentmethod = null, $data = array())
 	{
 		if ($paymentmethod && $paymentmethod->customer != $customer) {
 			return false;
@@ -77,6 +78,8 @@ class Service_Customer_Order extends Service
 		$order->customer = $customer;
 		$order->transaction = $transaction;
 		
+		$order->populate($data);
+		
 		try {
 			$order->save();
 		} catch (FuelException $e) {
@@ -86,7 +89,7 @@ class Service_Customer_Order extends Service
 		
 		// Link products to customer.
 		foreach ($product_options as $option) {
-			Service_Customer_Product_Option::create(Arr::get($products, $option->id), $order, $option);
+			Service_Customer_Product_Option::create(Arr::get($products, $option->id), $order, $option, $data);
 		}
 		
 		// Mark the order as completed.
