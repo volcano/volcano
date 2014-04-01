@@ -20,6 +20,7 @@ class Model_Customer extends Model
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
 			'mysql_timestamp' => true,
+			'overwrite' => false,
 		),
 		'Orm\Observer_UpdatedAt' => array(
 			'events' => array('before_save'),
