@@ -25,6 +25,13 @@ class Simulate
 	const TOTAL_CUSTOMERS = 2000;
 	
 	/**
+	 * Generated gateway.
+	 *
+	 * @var Model_Gateway
+	 */
+	protected static $gateway;
+	
+	/**
 	 * Array of generated sellers.
 	 *
 	 * @var array
@@ -41,12 +48,14 @@ class Simulate
 	
 	/**
 	 * Populates the database with dummy data.
-	 * Run setup:reset to reset database.
+	 * Run setup:reset to revert (WARNING: This wipes the entire database).
 	 *
 	 * @return void
 	 */
 	public static function run()
 	{
+		self::gateway();
+		
 		self::sellers();
 		
 		self::products();
@@ -54,6 +63,18 @@ class Simulate
 		self::customers();
 		
 		\Cli::write('All Simulations Complete', 'green');
+	}
+	
+	/**
+	 * Generates an internal-only gateway.
+	 *
+	 * @return void
+	 */
+	protected static function gateway()
+	{
+		self::$gateway = \Service_Gateway::create('credit_card', 'none');
+		
+		\Cli::write('Gateway Simulation Complete', 'green');
 	}
 	
 	/**
