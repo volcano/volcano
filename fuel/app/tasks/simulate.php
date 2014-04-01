@@ -10,14 +10,9 @@ namespace Fuel\Tasks;
 class Simulate
 {
 	/**
-	 * May 1st, 2013
+	 * July 1st, 2013
 	 */
-	const BEGIN_DATETIME = 1367384400;
-	
-	/**
-	 * August 31st, 2013
-	 */
-	const END_DATETIME = 1377925200;
+	const BEGIN_DATETIME = 1372636800;
 	
 	/**
 	 * Total number of customers to create.
@@ -84,7 +79,6 @@ class Simulate
 	 */
 	protected static function sellers()
 	{
-		// July 1st, 2013.
 		$date = date("Y-m-d H:i:s", self::BEGIN_DATETIME);
 		
 		$companies = array('Stella Labs, Inc', 'Star Point Industries');
@@ -159,8 +153,8 @@ class Simulate
 			$first_name = $first_names[array_rand($first_names)];
 			$last_name  = $last_names[array_rand($last_names)];
 			
-			// Random created_at between July 1st, 2013 and August 31st, 2013.
-			$date = date("Y-m-d H:i:s", mt_rand(self::BEGIN_DATETIME, self::END_DATETIME));
+			// Random created_at between the begin date and now.
+			$date = date("Y-m-d H:i:s", mt_rand(self::BEGIN_DATETIME, time()));
 			
 			$customers[] = array(
 				'balance'    => $balances[array_rand($balances)],
