@@ -92,11 +92,8 @@ class Simulate
 					'state'        => 'Oklahoma',
 					'zip'          => mt_rand(10000, 99999),
 					'country'      => 'US',
-					'created_at'   => $date,
-					'updated_at'   => $date,
 				),
 				'created_at' => $date,
-				'updated_at' => $date,
 			));
 			
 			if ($seller) {
@@ -170,12 +167,9 @@ class Simulate
 					'state'      => $states[array_rand($states)],
 					'zip'        => mt_rand(10000, 99999),
 					'country'    => $countries[array_rand($countries)],
-					'created_at' => $date,
-					'updated_at' => $date,
 				),
 				'status'     => mt_rand(1, 10) <= 8 ? 'active' : 'deleted',
 				'created_at' => $date,
-				'updated_at' => $date,
 			);
 		}
 		
