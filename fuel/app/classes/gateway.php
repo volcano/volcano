@@ -27,13 +27,17 @@ class Gateway
 	 * @param Model_Gateway  $gateway  The gateway model to use (for gateway auth and such).
 	 * @param Model_Customer $customer The customer model to use.
 	 *
-	 * @return Gateway_Driver
+	 * @return Gateway_Driver|bool
 	 */
 	public static function forge(Model_Gateway $gateway, Model_Customer $customer = null)
 	{
 		$driver_name = $gateway->processor;
 		
 		$class = 'Gateway_' . Str::ucwords(Inflector::denamespace($driver_name)) . '_Driver';
+		if (!class_exists($class)) {
+			return false;
+		}
+		
 		$driver = new $class($gateway, $customer);
 		
 		static::$_instances[$driver_name] = $driver;
