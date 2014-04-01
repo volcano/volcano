@@ -44,13 +44,18 @@ class Service_Customer_Transaction extends Service
 	 */
 	public static function create(Model_Customer_Paymentmethod $payment_method, $amount, array $data = array())
 	{
-		$external_id = Gateway::instance($payment_method->gateway, $payment_method->customer)->transaction()->create(array(
-			'payment_method' => $payment_method,
-			'amount'         => $amount,
-		));
-		
-		if (!$external_id) {
-			return false;
+		$gateway_instance = Gateway::instance($payment_method->gateway, $payment_method->customer);
+		if ($gateway_instance) {
+			$external_id = $gateway_instance->transaction()->create(array(
+				'payment_method' => $payment_method,
+				'amount'         => $amount,
+			));
+			
+			if (!$external_id) {
+				return false;
+			}
+		} else {
+			$external_id = null;
 		}
 		
 		$transaction = Model_Customer_Transaction::forge();
