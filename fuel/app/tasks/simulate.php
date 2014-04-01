@@ -17,7 +17,7 @@ class Simulate
 	/**
 	 * Total number of customers to create.
 	 */
-	const TOTAL_CUSTOMERS = 2000;
+	const TOTAL_CUSTOMERS = 1000;
 	
 	/**
 	 * Generated gateway.
