@@ -101,6 +101,9 @@ class Simulate
 			
 			if ($seller) {
 				self::$sellers[] = $seller;
+				
+				// Link the seller to the gateway.
+				\Service_Gateway::link(self::$gateway, $seller);
 			}
 		}
 		
@@ -181,19 +184,30 @@ class Simulate
 			
 			$customer = \Service_Customer::create($seller, $data);
 			
+			// Create a payment method for the faux customer.
+			$payment_method = \Service_Customer_Paymentmethod::create(
+				$customer,
+				self::$gateway,
+				array(
+					'contact' => $data['contact'],
+					'account' => array(
+						'provider'         => 'Volcano',
+						'number'           => '6011000000000012',
+						'expiration_month' => '12',
+						'expiration_year'  => '5',
+					),
+				)
+			);
+			
 			// Subscribe a random number of customers to a product option.
 			if ($customer && mt_rand(1, 10) >= 5) {
 				$option = self::$product_options[$seller->id][array_rand(self::$product_options[$seller->id])];
 				
-				\Service_Customer_Product_Option::create(
-					'My ' . \Str::random('alpha', 5),
+				$order = \Service_Customer_Order::create(
 					$customer,
-					$option,
-					array(
-						'status'     => mt_rand(1, 10) <= 8 ? 'active' : 'canceled',
-						'created_at' => $customer->created_at,
-						'updated_at' => $customer->updated_at,
-					)
+					array($option->id => 'My ' . \Str::random('alpha', 5)),
+					null,
+					array('created_at' => $customer->created_at)
 				);
 			}
 		}
