@@ -15,7 +15,7 @@ class Create_Customer_Transactions
 			'id'          => array('type' => 'int', 'constraint' => 11, 'auto_increment' => true),
 			'customer_id' => array('type' => 'int', 'constraint' => 11),
 			'gateway_id'  => array('type' => 'int', 'constraint' => 11),
-			'external_id' => array('type' => 'varchar', 'constraint' => 255),
+			'external_id' => array('type' => 'varchar', 'constraint' => 255, 'null' => true),
 			'type'        => array('type' => 'varchar', 'constraint' => 50),
 			'provider'    => array('type' => 'varchar', 'constraint' => 50),
 			'account'     => array('type' => 'varchar', 'constraint' => 50),
