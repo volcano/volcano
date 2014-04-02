@@ -48,9 +48,10 @@ Setup the __statistics__ and __recurring__ tasks as [crons](http://en.wikipedia.
 	$ 00 00 * * * FUEL_ENV=production /usr/bin/php oil r recurring
 	$ 00 01 * * * FUEL_ENV=production /usr/bin/php oil r statistics
 
-Optional: Run the __simulate__ task to auto-generate faux seller, product, customer and order data. This will allow you to more easily test out various control panel features.
+Optional: Run the __simulate__ task to auto-generate faux seller, product, customer and order data. This will allow you to more easily test out various control panel features. Run the __statistics__ task to compute stats for the simulated data.
 
 	$ php oil r simulate
+	$ php oil r statistics
 
 #### API
 For API development and testing, you'll want to first create a seller (see "Usage" below) and then create an API key via the Settings tab in the control panel.
