@@ -1,0 +1,26 @@
+<?php
+
+return array(
+	'product.create',
+	'product.update',
+	'product.delete',
+	'product.option.create',
+	'product.option.update',
+	'product.option.delete',
+	'product.option.fee.create',
+	'product.option.fee.update',
+	'product.option.fee.delete',
+	'customer.create',
+	'customer.update',
+	'customer.delete',
+	'customer.paymentmethod.create',
+	'customer.paymentmethod.update',
+	'customer.paymentmethod.delete',
+	'customer.product.option.create',
+	'customer.product.option.update',
+	'customer.product.option.delete',
+	'customer.order.create',
+	'customer.order.update',
+	'customer.transaction.create',
+	'statistic.create',
+);
