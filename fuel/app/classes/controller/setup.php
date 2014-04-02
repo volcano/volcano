@@ -2,8 +2,6 @@
 
 /**
  * The setup controller.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Setup extends Controller
 {

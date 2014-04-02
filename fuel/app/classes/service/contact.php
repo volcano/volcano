@@ -2,8 +2,6 @@
 
 /**
  * Contact service.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Service_Contact extends Service
 {

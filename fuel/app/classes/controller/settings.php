@@ -2,8 +2,6 @@
 
 /**
  * The settings controller.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Settings extends Controller
 {

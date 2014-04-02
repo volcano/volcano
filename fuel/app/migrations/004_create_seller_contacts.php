@@ -4,8 +4,6 @@ namespace Fuel\Migrations;
 
 /**
  * Seller contacts migration.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Create_Seller_Contacts
 {

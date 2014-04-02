@@ -2,8 +2,6 @@
 
 /**
  * Authorize.net gateway payment method class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Gateway_Authorizenet_Paymentmethod extends Gateway_Core_Paymentmethod
 {

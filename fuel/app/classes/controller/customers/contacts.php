@@ -2,8 +2,6 @@
 
 /**
  * The customer contacts controller.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Customers_Contacts extends Controller_Customers
 {

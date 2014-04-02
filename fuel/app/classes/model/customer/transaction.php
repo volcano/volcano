@@ -2,8 +2,6 @@
 
 /**
  * Customer transaction model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Customer_Transaction extends Model
 {

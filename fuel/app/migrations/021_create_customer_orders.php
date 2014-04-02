@@ -4,8 +4,6 @@ namespace Fuel\Migrations;
 
 /**
  * Customer orders migration.
- *
- * @author Keithia Stegmann <kstegmann@static.com>
  */
 class Create_Customer_Orders
 {

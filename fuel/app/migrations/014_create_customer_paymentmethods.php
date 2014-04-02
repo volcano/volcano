@@ -4,8 +4,6 @@ namespace Fuel\Migrations;
 
 /**
  * Customer payment methods migration.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Create_Customer_Paymentmethods
 {

@@ -3,9 +3,7 @@
 namespace Api;
 
 /**
- * Sellers Controller.
- * 
- * @author Daniel Sposito <dsposito@static.com>
+ * Sellers controller.
  */
 class Controller_Sellers extends Controller
 {

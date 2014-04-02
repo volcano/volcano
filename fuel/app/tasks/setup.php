@@ -4,8 +4,6 @@ namespace Fuel\Tasks;
 
 /**
  * Setup task.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Setup
 {

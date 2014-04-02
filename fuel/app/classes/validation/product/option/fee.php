@@ -2,8 +2,6 @@
 
 /**
  * Validation product option fee class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Validation_Product_Option_Fee
 {

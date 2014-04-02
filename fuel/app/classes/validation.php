@@ -2,8 +2,6 @@
 
 /**
  * Validation class.
- * 
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Validation extends \Fuel\Core\Validation
 {

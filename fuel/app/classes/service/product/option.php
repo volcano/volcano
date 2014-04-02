@@ -2,8 +2,6 @@
 
 /**
  * Product option service.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Service_Product_Option extends Service
 {

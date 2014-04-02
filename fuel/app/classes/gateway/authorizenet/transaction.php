@@ -2,8 +2,6 @@
 
 /**
  * Authorize.net gateway transaction class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Gateway_Authorizenet_Transaction extends Gateway_Core_Transaction
 {

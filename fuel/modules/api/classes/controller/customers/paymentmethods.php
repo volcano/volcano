@@ -3,9 +3,7 @@
 namespace Api;
 
 /**
- * Customer payment methods Controller.
- * 
- * @author Daniel Sposito <dsposito@static.com>
+ * Customer payment methods controller.
  */
 class Controller_Customers_Paymentmethods extends Controller
 {

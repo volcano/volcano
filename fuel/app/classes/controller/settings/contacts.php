@@ -2,8 +2,6 @@
 
 /**
  * The seller contacts controller.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Settings_Contacts extends Controller
 {

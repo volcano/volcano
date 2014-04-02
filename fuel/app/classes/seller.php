@@ -2,8 +2,6 @@
 
 /**
  * Seller class.
- * 
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Seller
 {

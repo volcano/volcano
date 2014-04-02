@@ -2,8 +2,6 @@
 
 /**
  * The customers controller.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Customers extends Controller
 {

@@ -2,8 +2,6 @@
 
 /**
  * Session class.
- *
- * @author Derek Myers <dmyers@static.com>
  */
 class Session extends \Fuel\Core\Session
 {

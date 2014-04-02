@@ -2,8 +2,6 @@
 
 /**
  * Gateway driver class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 abstract class Gateway_Driver
 {

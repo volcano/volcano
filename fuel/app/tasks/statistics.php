@@ -4,8 +4,6 @@ namespace Fuel\Tasks;
 
 /**
  * Statistics task.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Statistics
 {

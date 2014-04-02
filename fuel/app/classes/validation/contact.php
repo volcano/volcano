@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Validation Contact class.
- *
- * @author Daniel Sposito <dsposito@static.com>
+ * Validation contact class.
  */
 class Validation_Contact extends Validation
 {

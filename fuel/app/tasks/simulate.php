@@ -4,8 +4,6 @@ namespace Fuel\Tasks;
 
 /**
  * Simulate task.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Simulate
 {

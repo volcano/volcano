@@ -3,10 +3,7 @@
 namespace Api;
 
 /**
- * Seller gateways Controller.
- * 
- * @author Keithia Stegmann <kstegmann@static.com>
- * @author Daniel Sposito <dsposito@static.com>
+ * Seller gateways controller.
  */
 class Controller_Sellers_Gateways extends Controller
 {

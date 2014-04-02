@@ -2,8 +2,6 @@
 
 /**
  * API key service.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Service_Api_Key extends Service
 {

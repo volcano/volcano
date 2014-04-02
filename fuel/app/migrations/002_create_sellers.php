@@ -4,8 +4,6 @@ namespace Fuel\Migrations;
 
 /**
  * Sellers migration.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Create_Sellers
 {

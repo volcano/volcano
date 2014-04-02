@@ -2,8 +2,6 @@
 
 /**
  * Statistic task service.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Service_Statistic_Task extends Service
 {

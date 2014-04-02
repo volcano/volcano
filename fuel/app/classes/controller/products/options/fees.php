@@ -2,8 +2,6 @@
 
 /**
  * The product option fees controller.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Products_Options_Fees extends Controller_Products_Options
 {

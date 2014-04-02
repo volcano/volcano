@@ -2,8 +2,6 @@
 
 /**
  * Casset class.
- *
- * @author Derek Myers <dmyers@static.com>
  */
 class Casset extends \Less\Casset
 {

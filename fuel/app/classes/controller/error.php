@@ -1,10 +1,7 @@
 <?php
 
 /**
- * The Error Controller.
- *
- * @author Mark Manos <mmanos@static.com>
- * @author Daniel Sposito <dsposito@static.com>
+ * The error controller.
  */
 class Controller_Error extends Controller
 {

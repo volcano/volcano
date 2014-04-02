@@ -2,8 +2,6 @@
 
 /**
  * Customer payment method service.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Service_Customer_Paymentmethod extends Service
 {

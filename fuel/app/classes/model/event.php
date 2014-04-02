@@ -2,8 +2,6 @@
 
 /**
  * Event model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Event extends Model
 {

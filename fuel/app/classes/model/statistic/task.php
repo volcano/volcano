@@ -2,8 +2,6 @@
 
 /**
  * Statistic task model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Statistic_Task extends Model
 {

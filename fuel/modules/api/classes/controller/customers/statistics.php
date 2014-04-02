@@ -4,8 +4,6 @@ namespace Api;
 
 /**
  * Customer statistics controller.
- * 
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Customers_Statistics extends Controller
 {

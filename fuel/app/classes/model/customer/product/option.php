@@ -2,8 +2,6 @@
 
 /**
  * Customer product options model.
- *
- * @author Keithia Stegmann <kstegmann@static.com>
  */
 class Model_Customer_Product_Option extends Model
 {

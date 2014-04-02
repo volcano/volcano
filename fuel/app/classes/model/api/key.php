@@ -2,8 +2,6 @@
 
 /**
  * Api Key model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Api_Key extends Model
 {

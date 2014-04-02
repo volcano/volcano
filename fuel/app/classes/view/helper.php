@@ -2,9 +2,6 @@
 
 /**
  * View helper class.
- *
- * @author Derek Myers <dmyers@static.com>
- * @author Mark Manos <mmanos@static.com>
  */
 class View_Helper
 {

@@ -4,8 +4,6 @@ namespace Fuel\Migrations;
 
 /**
  * Products migration.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Create_Products
 {

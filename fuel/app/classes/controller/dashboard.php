@@ -1,9 +1,7 @@
 <?php
 
 /**
- * The Dashboard Controller.
- *
- * @author Daniel Sposito <dsposito@static.com>
+ * The dashboard controller.
  */
 class Controller_Dashboard extends Controller
 {

@@ -2,8 +2,6 @@
 
 /**
  * Gateway model class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 abstract class Gateway_Model extends Gateway_Core
 {

@@ -2,8 +2,6 @@
 
 /**
  * Statistic model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Statistic extends Model
 {

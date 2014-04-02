@@ -4,8 +4,6 @@ namespace Fuel\Migrations;
 
 /**
  * Gateways migration.
- *
- * @author Keithia Stegmann <kstegmann@static.com>
  */
 class Create_Gateways
 {

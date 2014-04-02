@@ -4,8 +4,6 @@ namespace Api;
 
 /**
  * Http exceptions.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class HttpErrorException extends \HttpException
 {

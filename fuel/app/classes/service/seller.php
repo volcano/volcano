@@ -2,8 +2,6 @@
 
 /**
  * Seller service.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Service_Seller extends Service
 {

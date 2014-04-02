@@ -2,8 +2,6 @@
 
 /**
  * Event service.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Service_Event extends Service
 {

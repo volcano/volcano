@@ -3,9 +3,7 @@
 namespace Api;
 
 /**
- * Product Options Controller.
- * 
- * @author Daniel Sposito <dsposito@static.com>
+ * Product options controller.
  */
 class Controller_Products_Options extends Controller
 {

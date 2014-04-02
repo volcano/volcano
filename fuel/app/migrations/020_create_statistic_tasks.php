@@ -3,9 +3,7 @@
 namespace Fuel\Migrations;
 
 /**
- * statistic_tasks migration.
- *
- * @author Daniel Sposito <dsposito@static.com>
+ * Statistic tasks migration.
  */
 class Create_Statistic_Tasks
 {

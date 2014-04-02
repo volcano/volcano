@@ -4,8 +4,6 @@ namespace Fuel\Migrations;
 
 /**
  * Customers migration.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Create_Customers
 {

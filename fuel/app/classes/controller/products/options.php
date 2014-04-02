@@ -2,8 +2,6 @@
 
 /**
  * The product options controller.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Products_Options extends Controller_Products
 {

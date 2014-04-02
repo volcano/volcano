@@ -4,8 +4,6 @@ namespace Fuel\Migrations;
 
 /**
  * Api Keys migration.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Create_Api_Keys
 {

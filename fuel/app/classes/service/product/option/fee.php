@@ -2,8 +2,6 @@
 
 /**
  * Product option fee service.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Service_Product_Option_Fee extends Service
 {

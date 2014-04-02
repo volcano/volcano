@@ -2,8 +2,6 @@
 
 /**
  * Base inflector class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Inflector extends \Fuel\Core\Inflector
 {

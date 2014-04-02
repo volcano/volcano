@@ -2,8 +2,6 @@
 
 /**
  * The customer transactions controller.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Customers_Transactions extends Controller_Customers
 {

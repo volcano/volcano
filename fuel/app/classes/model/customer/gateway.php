@@ -2,8 +2,6 @@
 
 /**
  * Customer gateway model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Customer_Gateway extends Model
 {

@@ -4,8 +4,6 @@ namespace Fuel\Migrations;
 
 /**
  * Contacts migration.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Create_Contacts
 {

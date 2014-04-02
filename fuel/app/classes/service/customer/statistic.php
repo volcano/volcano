@@ -2,8 +2,6 @@
 
 /**
  * Customer statistic service.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Service_Customer_Statistic extends Service
 {

@@ -2,8 +2,6 @@
 
 /**
  * Product option fee model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Product_Option_Fee extends Model
 {

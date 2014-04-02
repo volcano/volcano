@@ -2,9 +2,6 @@
 
 /**
  * Customer order model.
- *
- * @author Keithia Stegmann <kstegmann@static.com>
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Customer_Order extends Model
 {

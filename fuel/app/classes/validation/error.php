@@ -2,8 +2,6 @@
 
 /**
  * Validation error class.
- *
- * @author Derek Myers <dmyers@static.com>
  */
 class Validation_Error extends \Fuel\Core\Validation_Error
 {

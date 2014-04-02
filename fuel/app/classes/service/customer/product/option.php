@@ -2,8 +2,6 @@
 
 /**
  * Customer product option service.
- *
- * @author Keithia Stegmann <kstegmann@static.com>
  */
 class Service_Customer_Product_Option extends Service
 {

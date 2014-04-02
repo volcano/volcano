@@ -3,9 +3,7 @@
 namespace Api;
 
 /**
- * Contacts Controller.
- * 
- * @author Daniel Sposito <dsposito@static.com>
+ * Contacts controller.
  */
 class Controller_Contacts extends Controller
 {

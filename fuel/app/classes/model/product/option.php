@@ -2,8 +2,6 @@
 
 /**
  * Product option model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Product_Option extends Model
 {

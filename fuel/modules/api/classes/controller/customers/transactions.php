@@ -3,9 +3,7 @@
 namespace Api;
 
 /**
- * Customer transactions Controller.
- * 
- * @author Daniel Sposito <dsposito@static.com>
+ * Customer transactions controller.
  */
 class Controller_Customers_Transactions extends Controller
 {

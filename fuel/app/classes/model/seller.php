@@ -2,8 +2,6 @@
 
 /**
  * Seller model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Seller extends Model
 {

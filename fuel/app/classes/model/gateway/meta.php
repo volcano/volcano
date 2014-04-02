@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Gateway Meta model.
- *
- * @author Keithia Stegmann <kstegmann@static.com>
+ * Gateway meta model.
  */
 class Model_Gateway_Meta extends Model
 {

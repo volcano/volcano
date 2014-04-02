@@ -2,8 +2,6 @@
 
 /**
  * The products controller.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Products extends Controller
 {

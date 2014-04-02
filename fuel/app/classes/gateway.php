@@ -2,8 +2,6 @@
 
 /**
  * Gateway class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Gateway
 {

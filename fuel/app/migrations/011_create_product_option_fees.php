@@ -4,8 +4,6 @@ namespace Fuel\Migrations;
 
 /**
  * Product option fees migration.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Create_Product_Option_Fees
 {

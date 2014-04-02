@@ -2,8 +2,6 @@
 
 /**
  * The customer payment methods controller.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Customers_Paymentmethods extends Controller_Customers
 {

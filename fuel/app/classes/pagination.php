@@ -2,8 +2,6 @@
 
 /**
  * Base pagination class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Pagination extends \Fuel\Core\Pagination
 {

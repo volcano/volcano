@@ -3,9 +3,7 @@
 namespace Api;
 
 /**
- * Product Option Fees Controller.
- * 
- * @author Daniel Sposito <dsposito@static.com>
+ * Product option fees controller.
  */
 class Controller_Products_Options_Fees extends Controller
 {

@@ -2,8 +2,6 @@
 
 /**
  * Seller event model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Seller_Event extends Model
 {

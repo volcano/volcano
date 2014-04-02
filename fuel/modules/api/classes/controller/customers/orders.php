@@ -4,8 +4,6 @@ namespace Api;
 
 /**
  * Customer orders controller.
- * 
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Customers_Orders extends Controller
 {

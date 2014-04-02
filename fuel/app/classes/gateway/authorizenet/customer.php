@@ -2,8 +2,6 @@
 
 /**
  * Authorize.net gateway customer class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Gateway_Authorizenet_Customer extends Gateway_Core_Customer
 {

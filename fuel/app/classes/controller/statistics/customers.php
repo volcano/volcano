@@ -2,8 +2,6 @@
 
 /**
  * The customer statistics controller.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Statistics_Customers extends Controller
 {

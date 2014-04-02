@@ -2,8 +2,6 @@
 
 /**
  * Customer order service.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Service_Customer_Order extends Service
 {

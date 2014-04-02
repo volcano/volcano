@@ -2,8 +2,6 @@
 
 /**
  * Validation customer order class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Validation_Customer_Order
 {

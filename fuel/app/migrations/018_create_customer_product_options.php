@@ -4,8 +4,6 @@ namespace Fuel\Migrations;
 
 /**
  * Customer product options migration.
- *
- * @author Keithia Stegmann <kstegmann@static.com>
  */
 class Create_Customer_Product_Options
 {

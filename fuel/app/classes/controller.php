@@ -2,9 +2,6 @@
 
 /**
  * Base controller class.
- *
- * @author Mark Manos <mmanos@static.com>
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller extends \Fuel\Core\Controller
 {

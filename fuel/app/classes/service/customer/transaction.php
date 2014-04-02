@@ -2,8 +2,6 @@
 
 /**
  * Customer transaction service.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Service_Customer_Transaction extends Service
 {

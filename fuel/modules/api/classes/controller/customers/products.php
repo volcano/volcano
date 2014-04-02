@@ -3,9 +3,7 @@
 namespace Api;
 
 /**
- * Customer products Controller.
- * 
- * @author Daniel Sposito <dsposito@static.com>
+ * Customer products controller.
  */
 class Controller_Customers_Products extends Controller
 {

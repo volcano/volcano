@@ -2,8 +2,6 @@
 
 /**
  * Statistic service.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Service_Statistic extends Service
 {

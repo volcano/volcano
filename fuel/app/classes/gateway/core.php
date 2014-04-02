@@ -2,8 +2,6 @@
 
 /**
  * Core gateway class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 abstract class Gateway_Core
 {

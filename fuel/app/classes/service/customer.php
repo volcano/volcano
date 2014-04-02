@@ -2,8 +2,6 @@
 
 /**
  * Customer service.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Service_Customer extends Service
 {

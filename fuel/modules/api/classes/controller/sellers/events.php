@@ -4,8 +4,6 @@ namespace Api;
 
 /**
  * Seller events controller.
- * 
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Sellers_Events extends Controller
 {

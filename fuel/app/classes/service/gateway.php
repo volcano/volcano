@@ -2,8 +2,6 @@
 
 /**
  * Gateway service.
- *
- * @author Keithia Stegmann <kstegmann@static.com>
  */
 class Service_Gateway extends Service
 {

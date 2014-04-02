@@ -2,8 +2,6 @@
 
 /**
  * Customer payment method model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Customer_Paymentmethod extends Model
 {

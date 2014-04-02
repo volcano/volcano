@@ -2,8 +2,6 @@
 
 /**
  * The seller API controller.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Controller_Settings_Api extends Controller
 {

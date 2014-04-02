@@ -2,8 +2,6 @@
 
 /**
  * Validation seller event class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Validation_Seller_Event
 {

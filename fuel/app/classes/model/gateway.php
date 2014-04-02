@@ -2,8 +2,6 @@
 
 /**
  * Gateway model.
- *
- * @author Keithia Stegmann <kstegmann@static.com>
  */
 class Model_Gateway extends Model
 {

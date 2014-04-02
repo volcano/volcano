@@ -2,8 +2,6 @@
 
 /**
  * Customer model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Customer extends Model
 {

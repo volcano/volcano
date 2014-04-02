@@ -2,8 +2,6 @@
 
 /**
  * Base model class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model extends \Orm\Model
 {

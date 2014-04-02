@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Validation Gateway class.
- *
- * @author Keithia Stegmann <kstegmann@static.com>
+ * Validation gateway class.
  */
 class Validation_Gateway
 {

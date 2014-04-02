@@ -2,8 +2,6 @@
 
 /**
  * Product model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Product extends Model
 {

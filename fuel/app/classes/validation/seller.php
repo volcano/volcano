@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Validation Seller class.
- *
- * @author Daniel Sposito <dsposito@static.com>
+ * Validation seller class.
  */
 class Validation_Seller
 {

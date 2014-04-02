@@ -2,8 +2,6 @@
 
 /**
  * Authorize.net gateway driver class.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Gateway_Authorizenet_Driver extends Gateway_Driver
 {

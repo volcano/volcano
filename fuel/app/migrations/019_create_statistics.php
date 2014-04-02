@@ -4,8 +4,6 @@ namespace Fuel\Migrations;
 
 /**
  * Statistics migration.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Create_Statistics
 {

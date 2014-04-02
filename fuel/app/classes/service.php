@@ -2,8 +2,6 @@
 
 /**
  * Base service class.
- *
- * @author Derek Myers <dmyers@static.com>
  */
 class Service
 {

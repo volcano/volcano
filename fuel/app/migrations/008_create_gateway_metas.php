@@ -3,9 +3,7 @@
 namespace Fuel\Migrations;
 
 /**
- * Gateway Metas migration.
- *
- * @author Keithia Stegmann <kstegmann@static.com>
+ * Gateway metas migration.
  */
 class Create_Gateway_Metas
 {

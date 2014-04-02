@@ -2,8 +2,6 @@
 
 /**
  * Contact model.
- *
- * @author Daniel Sposito <dsposito@static.com>
  */
 class Model_Contact extends Model
 {
