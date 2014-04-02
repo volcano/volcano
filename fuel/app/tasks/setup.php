@@ -113,12 +113,10 @@ class Setup
 			\Cli::write('Migration Config Removed', 'green');
 		}
 		
-		// Migrate all.
-		\Migrate::latest();
-		
-		\Cli::write('Migration Complete', 'green');
-		
 		// Truncate sessions table.
 		\Oil\Refine::run('session:clear');
+		
+		// Rerun setup.
+		\Oil\Refine::run('setup');
 	}
 }
