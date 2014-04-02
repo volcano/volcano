@@ -1,4 +1,6 @@
-# Volcano
+![Volcano Logo](https://raw.githubusercontent.com/volcano/billing/master/public/assets/img/logo-large.png)
+
+# Volcano - Billing
 
 ## Introduction
 
