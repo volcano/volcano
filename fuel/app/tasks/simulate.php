@@ -201,11 +201,13 @@ class Simulate
 					null,
 					array('created_at' => $customer->created_at)
 				);
+				
+				// Reset the order's updated_at.
+				self::updateUpdatedAt($order);
 			}
 			
 			// Reset the models' updated_at.
 			self::updateUpdatedAt($customer);
-			self::updateUpdatedAt($order);
 			foreach ($customer->products as $product) {
 				self::updateUpdatedAt($product);
 			}
