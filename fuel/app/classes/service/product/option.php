@@ -60,6 +60,8 @@ class Service_Product_Option extends Service
 			return false;
 		}
 		
+		Service_Event::trigger('product.option.create', $option->product->seller, $option->to_array());
+		
 		return $option;
 	}
 	
@@ -82,6 +84,8 @@ class Service_Product_Option extends Service
 			return false;
 		}
 		
+		Service_Event::trigger('product.option.update', $option->product->seller, $option->to_array());
+		
 		return $option;
 	}
 	
@@ -102,6 +106,8 @@ class Service_Product_Option extends Service
 			Log::error($e);
 			return false;
 		}
+		
+		Service_Event::trigger('product.option.delete', $option->product->seller, $option->to_array());
 		
 		return true;
 	}

@@ -72,6 +72,12 @@ class Service_Customer_Transaction extends Service
 			return false;
 		}
 		
+		Service_Event::trigger(
+			'customer.transaction.create',
+			$transaction->customer->seller,
+			$transaction->to_array()
+		);
+		
 		return $transaction;
 	}
 }

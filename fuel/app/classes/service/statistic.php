@@ -76,6 +76,8 @@ class Service_Statistic extends Service
 			return false;
 		}
 		
+		Service_Event::trigger('statistic.create', $statistic->seller, $statistic->to_array());
+		
 		return $statistic;
 	}
 	

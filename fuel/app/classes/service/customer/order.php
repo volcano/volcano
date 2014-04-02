@@ -93,6 +93,8 @@ class Service_Customer_Order extends Service
 		// Mark the order as completed.
 		self::update($order, array('status' => 'completed'));
 		
+		Service_Event::trigger('customer.order.create', $customer->seller, $order->to_array());
+		
 		return $order;
 	}
 	
@@ -114,6 +116,8 @@ class Service_Customer_Order extends Service
 			Log::error($e);
 			return false;
 		}
+		
+		Service_Event::trigger('customer.order.update', $order->customer->seller, $order->to_array());
 		
 		return $order;
 	}

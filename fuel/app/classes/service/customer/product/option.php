@@ -62,6 +62,12 @@ class Service_Customer_Product_Option extends Service
 			return false;
 		}
 		
+		Service_Event::trigger(
+			'customer.product.option.create',
+			$customer_option->customer->seller,
+			$customer_option->to_array()
+		);
+		
 		return $customer_option;
 	}
 	
@@ -84,6 +90,12 @@ class Service_Customer_Product_Option extends Service
 			return false;
 		}
 		
+		Service_Event::trigger(
+			'customer.product.option.update',
+			$customer_option->customer->seller,
+			$customer_option->to_array()
+		);
+		
 		return $option;
 	}
 	
@@ -104,6 +116,12 @@ class Service_Customer_Product_Option extends Service
 			Log::error($e);
 			return false;
 		}
+		
+		Service_Event::trigger(
+			'customer.product.option.delete',
+			$customer_option->customer->seller,
+			$customer_option->to_array()
+		);
 		
 		return true;
 	}

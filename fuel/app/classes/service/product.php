@@ -59,6 +59,8 @@ class Service_Product extends Service
 			return false;
 		}
 		
+		Service_Event::trigger('product.create', $product->seller, $product->to_array());
+		
 		return $product;
 	}
 	
@@ -81,6 +83,8 @@ class Service_Product extends Service
 			return false;
 		}
 		
+		Service_Event::trigger('product.update', $product->seller, $product->to_array());
+		
 		return $product;
 	}
 	
@@ -101,6 +105,8 @@ class Service_Product extends Service
 			Log::error($e);
 			return false;
 		}
+		
+		Service_Event::trigger('product.delete', $product->seller, $product->to_array());
 		
 		return true;
 	}

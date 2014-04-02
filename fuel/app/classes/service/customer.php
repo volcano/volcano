@@ -71,6 +71,8 @@ class Service_Customer extends Service
 			return false;
 		}
 		
+		Service_Event::trigger('customer.create', $customer->seller, $customer->to_array());
+		
 		return $customer;
 	}
 	
@@ -93,6 +95,8 @@ class Service_Customer extends Service
 			return false;
 		}
 		
+		Service_Event::trigger('customer.update', $customer->seller, $customer->to_array());
+		
 		return $customer;
 	}
 	
@@ -113,6 +117,8 @@ class Service_Customer extends Service
 			Log::error($e);
 			return false;
 		}
+		
+		Service_Event::trigger('customer.delete', $customer->seller, $customer->to_array());
 		
 		return true;
 	}

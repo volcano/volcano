@@ -109,6 +109,12 @@ class Service_Customer_Paymentmethod extends Service
 			self::set_primary($payment_method);
 		}
 		
+		Service_Event::trigger(
+			'customer.paymentmethod.create',
+			$payment_method->customer->seller,
+			$payment_method->to_array()
+		);
+		
 		return $payment_method;
 	}
 	
@@ -163,6 +169,12 @@ class Service_Customer_Paymentmethod extends Service
 			self::set_primary($payment_method);
 		}
 		
+		Service_Event::trigger(
+			'customer.paymentmethod.update',
+			$payment_method->customer->seller,
+			$payment_method->to_array()
+		);
+		
 		return $payment_method;
 	}
 	
@@ -200,6 +212,12 @@ class Service_Customer_Paymentmethod extends Service
 			Log::error($e);
 			return false;
 		}
+		
+		Service_Event::trigger(
+			'customer.paymentmethod.delete',
+			$payment_method->customer->seller,
+			$payment_method->to_array()
+		);
 		
 		return true;
 	}

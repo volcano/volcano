@@ -66,6 +66,8 @@ class Service_Product_Option_Fee extends Service
 			return false;
 		}
 		
+		Service_Event::trigger('product.option.fee.create', $fee->option->product->seller, $fee->to_array());
+		
 		return $fee;
 	}
 	
@@ -88,6 +90,8 @@ class Service_Product_Option_Fee extends Service
 			return false;
 		}
 		
+		Service_Event::trigger('product.option.fee.update', $fee->option->product->seller, $fee->to_array());
+		
 		return $fee;
 	}
 	
@@ -108,6 +112,8 @@ class Service_Product_Option_Fee extends Service
 			Log::error($e);
 			return false;
 		}
+		
+		Service_Event::trigger('product.option.fee.delete', $fee->option->product->seller, $fee->to_array());
 		
 		return true;
 	}
