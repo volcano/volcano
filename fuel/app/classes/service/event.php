@@ -28,6 +28,28 @@ class Service_Event extends Service
 	}
 	
 	/**
+	 * Creates a new event.
+	 *
+	 * @param string $name The name of the event.
+	 *
+	 * @return Model_Event
+	 */
+	public static function create($name)
+	{
+		$event = Model_Event::forge();
+		$event->name = $name;
+		
+		try {
+			$event->save();
+		} catch (FuelException $e) {
+			Log::error($e);
+			return false;
+		}
+		
+		return $event;
+	}
+	
+	/**
 	 * Triggers an event.
 	 *
 	 * @param string       $name   The name of the event to trigger.
