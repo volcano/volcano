@@ -26,6 +26,9 @@ class Setup
 		// Create the session table.
 		\Oil\Refine::run('session:create');
 		
+		// Seed the database.
+		\Oil\Refine::run('setup:seed');
+		
 		\Cli::write('Migration Complete', 'green');
 	}
 	
@@ -49,6 +52,23 @@ class Setup
 				\Cli::write('Failed to make writable: ' .  $path, 'red');
 			}
 		}
+	}
+	
+	/**
+	 * Seeds the database with initial data.
+	 *
+	 * @return void
+	 */
+	public static function seed()
+	{
+		\Config::load('events', true);
+		
+		$events = \Config::get('events');
+		foreach ($events as $event) {
+			\Service_Event::create($event);
+		}
+		
+		\Cli::write('Database Seeding Complete', 'green');
 	}
 	
 	/**
