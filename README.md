@@ -27,10 +27,11 @@ Initialize all submodules:
 
 	$ cd volcano && git submodule update --init --recursive
 
-Update Composer and dependencies:
+Install [Composer](https://getcomposer.org/doc/00-intro.md)
 
-	$ php composer.phar self-update
-	$ php composer.phar update
+Install Composer dependencies:
+
+	$ php composer.phar install
 
 ## Configuration
 
