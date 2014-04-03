@@ -18,7 +18,6 @@ Thumbs.db
 Gemfile.lock
 
 # fuel
-/composer.lock
 fuel/app/cache/*
 fuel/app/logs/*
 fuel/app/tmp/*
