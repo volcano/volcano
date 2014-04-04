@@ -30,4 +30,21 @@ class Model_Seller_Callback extends Model
 		'seller',
 		'event',
 	);
+
+	/**
+	 * Returns the callback action link.
+	 *
+	 * @param string $action The action to link to.
+	 *
+	 * @return string
+	 */
+	public function link($action = '')
+	{
+		$uri = 'settings/callbacks/' . $this->id;
+		if ($action) {
+			$uri .= '/' . $action;
+		}
+		
+		return Uri::create($uri);
+	}
 }
