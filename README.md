@@ -27,7 +27,7 @@ Initialize all submodules:
 
 	$ cd volcano && git submodule update --init --recursive
 
-Install [Composer](https://getcomposer.org/doc/00-intro.md)
+Install [Composer](https://getcomposer.org/doc/00-intro.md).
 
 Install Composer dependencies:
 
