@@ -60,19 +60,19 @@ class Service_Event extends Service
 	 */
 	public static function trigger($name, Model_Seller $seller, array $data = array())
 	{
-		$seller_event = Service_Seller_Callback::find_one(array(
+		$callback = Service_Seller_Callback::find_one(array(
 			'seller' => $seller,
 			'event'  => $name,
 		));
 		
-		if (!$seller_event) {
+		if (!$callback) {
 			return false;
 		}
 		
 		// Event name should always be included in the post data.
 		$data['event'] = $name;
 		
-		$request = Request::forge($seller_event->callback, 'curl');
+		$request = Request::forge($callback->url, 'curl');
 		$request->set_method('post');
 		$request->set_params($data);
 		$request->execute();
