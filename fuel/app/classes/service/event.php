@@ -60,7 +60,7 @@ class Service_Event extends Service
 	 */
 	public static function trigger($name, Model_Seller $seller, array $data = array())
 	{
-		$seller_event = Service_Seller_Event::find_one(array(
+		$seller_event = Service_Seller_Callback::find_one(array(
 			'seller' => $seller,
 			'event'  => $name,
 		));
