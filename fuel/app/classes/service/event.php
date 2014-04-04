@@ -75,7 +75,13 @@ class Service_Event extends Service
 		$request = Request::forge($callback->url, 'curl');
 		$request->set_method('post');
 		$request->set_params($data);
-		$request->execute();
+		
+		try {
+			$request->execute();
+		} catch (FuelException $e) {
+			Log::error($e);
+			return false;
+		}
 		
 		return true;
 	}
