@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Seller event model.
+ * Seller callback model.
  */
-class Model_Seller_Event extends Model
+class Model_Seller_Callback extends Model
 {
 	protected static $_properties = array(
 		'id',
 		'seller_id',
 		'event_id',
-		'callback',
+		'url',
 		'status' => array('default' => 'active'),
 		'created_at',
 		'updated_at',

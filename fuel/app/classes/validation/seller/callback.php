@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Validation seller event class.
+ * Validation seller callback class.
  */
-class Validation_Seller_Event
+class Validation_Seller_Callback
 {
 	/**
-	 * Creates a new validation instance for seller event create.
+	 * Creates a new validation instance for seller callback create.
 	 *
 	 * @return Validation
 	 */
 	public static function create()
 	{
-		$validator = Validation::forge('seller_event');
+		$validator = Validation::forge('callback');
 		
 		$validator->add('event', 'Event Name')->add_rule('trim')->add_rule('required')->add_rule(array('invalid_event_name' => function ($event_name) {
 			$event = Service_Event::find_one(array('name' => $event_name));
@@ -23,19 +23,19 @@ class Validation_Seller_Event
 			return true;
 		}));
 		
-		$validator->add('callback', 'Callback URL')->add_rule('trim')->add_rule('valid_url')->add_rule('required');
+		$validator->add('url', 'Callback URL')->add_rule('trim')->add_rule('valid_url')->add_rule('required');
 		
 		return $validator;
 	}
 	
 	/**
-	 * Creates a new validation instance for seller event update.
+	 * Creates a new validation instance for seller callback update.
 	 *
 	 * @return Validation
 	 */
 	public static function update()
 	{
-		$validator = Validation::forge('seller_event');
+		$validator = Validation::forge('callback');
 		
 		$input = Input::param();
 		
@@ -50,8 +50,8 @@ class Validation_Seller_Event
 			}));
 		}
 		
-		if (array_key_exists('callback', $input)) {
-			$validator->add('callback', 'Callback URL')->add_rule('trim')->add_rule('valid_url')->add_rule('required');
+		if (array_key_exists('url', $input)) {
+			$validator->add('url', 'Callback URL')->add_rule('trim')->add_rule('valid_url')->add_rule('required');
 		}
 		
 		return $validator;
