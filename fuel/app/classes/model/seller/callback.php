@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Seller event model.
+ * Seller callback model.
  */
-class Model_Seller_Event extends Model
+class Model_Seller_Callback extends Model
 {
 	protected static $_properties = array(
 		'id',
 		'seller_id',
 		'event_id',
-		'callback',
+		'url',
 		'status' => array('default' => 'active'),
 		'created_at',
 		'updated_at',
@@ -30,4 +30,21 @@ class Model_Seller_Event extends Model
 		'seller',
 		'event',
 	);
+
+	/**
+	 * Returns the callback action link.
+	 *
+	 * @param string $action The action to link to.
+	 *
+	 * @return string
+	 */
+	public function link($action = '')
+	{
+		$uri = 'settings/callbacks/' . $this->id;
+		if ($action) {
+			$uri .= '/' . $action;
+		}
+		
+		return Uri::create($uri);
+	}
 }

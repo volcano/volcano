@@ -3,33 +3,33 @@
 namespace Api;
 
 /**
- * Seller events controller.
+ * Seller callbacks controller.
  */
-class Controller_Sellers_Events extends Controller
+class Controller_Sellers_Callbacks extends Controller
 {
 	/**
-	 * Gets one or more seller events.
+	 * Gets one or more seller callbacks.
 	 *
 	 * @param int $seller_id Seller ID.
-	 * @param int $id        Event ID.
+	 * @param int $id        Callback ID.
 	 *
 	 * @return void
 	 */
 	public function get_index($seller_id = null, $id = null)
 	{
 		if (!$id) {
-			$seller_events = \Service_Seller_Event::find(array(
+			$callbacks = \Service_Seller_Callback::find(array(
 				'seller' => \Seller::active(),
 			));
 		} else {
-			$seller_events = $this->get_event($id);
+			$callbacks = $this->get_callback($id);
 		}
 		
-		$this->response($seller_events);
+		$this->response($callbacks);
 	}
 	
 	/**
-	 * Creates a seller event.
+	 * Creates a seller callback.
 	 *
 	 * @param int $seller_id Seller ID.
 	 *
@@ -37,7 +37,7 @@ class Controller_Sellers_Events extends Controller
 	 */
 	public function post_index($seller_id = null)
 	{
-		$validator = \Validation_Seller_Event::create();
+		$validator = \Validation_Seller_Callback::create();
 		if (!$validator->run()) {
 			throw new HttpBadRequestException($validator->errors());
 		}
@@ -46,81 +46,81 @@ class Controller_Sellers_Events extends Controller
 		
 		$event = \Service_Event::find_one(array('name' => $data['event']));
 		
-		$seller_event = \Service_Seller_Event::create(\Seller::active(), $event, $data['callback']);
-		if (!$seller_event) {
+		$callback = \Service_Seller_Callback::create(\Seller::active(), $event, $data['url']);
+		if (!$callback) {
 			throw new HttpServerErrorException;
 		}
 		
-		$this->response($seller_event);
+		$this->response($callback);
 	}
 	
 	/**
-	 * Updates a seller event.
+	 * Updates a seller callback.
 	 *
 	 * @param int $seller_id Seller ID.
-	 * @param int $id        Seller event ID.
+	 * @param int $id        Seller callback ID.
 	 *
 	 * @return void
 	 */
 	public function put_index($seller_id = null, $id = null)
 	{
-		$seller_event = $this->get_event($id);
+		$callback = $this->get_callback($id);
 		
-		$validator = \Validation_Seller_Event::update();
+		$validator = \Validation_Seller_Callback::update();
 		if (!$validator->run(\Input::put())) {
 			throw new HttpBadRequestException($validator->errors());
 		}
 		
 		$data = $validator->validated();
 		
-		$seller_event = \Service_Seller_Event::update($seller_event, $data);
-		if (!$seller_event) {
+		$callback = \Service_Seller_Callback::update($callback, $data);
+		if (!$callback) {
 			throw new HttpServerErrorException;
 		}
 		
-		$this->response($seller_event);
+		$this->response($callback);
 	}
 	
 	/**
-	 * Deletes a seller event.
+	 * Deletes a seller callback.
 	 *
 	 * @param int $seller_id Seller ID.
-	 * @param int $id        Seller event ID.
+	 * @param int $id        Seller callback ID.
 	 *
 	 * @return void
 	 */
 	public function delete_index($seller_id = null, $id = null)
 	{
-		$seller_event = $this->get_event($id);
+		$callback = $this->get_callback($id);
 		
-		$deleted = \Service_Seller_Event::delete($seller_event);
+		$deleted = \Service_Seller_Callback::delete($callback);
 		if (!$deleted) {
 			throw new HttpServerErrorException;
 		}
 	}
 	
 	/**
-	 * Attempts to get a seller event from a given ID.
+	 * Attempts to get a seller callback from a given ID.
 	 *
-	 * @param int $id Seller event ID.
+	 * @param int $id Seller callback ID.
 	 *
-	 * @return \Model_Seller_Event
+	 * @return \Model_Seller_Callback
 	 */
-	protected function get_event($id)
+	protected function get_callback($id)
 	{
 		if (!$id) {
 			throw new HttpNotFoundException;
 		}
 		
-		$seller_event = \Service_Seller_Event::find_one(array(
+		$callback = \Service_Seller_Callback::find_one(array(
 			'id'     => $id,
 			'seller' => \Seller::active(),
 		));
 		
-		if (!$seller_event) {
+		if (!$callback) {
 			throw new HttpNotFoundException;
 		}
 		
-		return $seller_event;
+		return $callback;
 	}
 }
