@@ -21,7 +21,7 @@ First, ensure that your system meets [FuelPHP's minimum requirements](http://fue
 
 Next, clone the repo:
 
-	$ git clone -b master https://github.com/volcano/billing.git volcano
+	$ git clone -b master git://github.com/volcano/billing.git volcano
 
 Initialize all submodules:
 
