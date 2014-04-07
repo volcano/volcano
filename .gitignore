@@ -5,6 +5,7 @@
 .settings
 *.sublime-project
 *.sublime-workspace
+composer.phar
 
 # OS Files
 .DS_Store
