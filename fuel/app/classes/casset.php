@@ -5,8 +5,6 @@
  */
 class Casset extends \Less\Casset
 {
-	public static $cache_path = 'assets/cache/';
-	
 	public static function less($sheet, $sheet_min = false, $group = 'global')
 	{
 		$sheet = (array) $sheet;

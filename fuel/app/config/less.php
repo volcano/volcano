@@ -19,7 +19,7 @@ return array(
 	 *
 	 * Default: Config::get('asset.paths.0').Config::get('asset.css_dir'),
 	 */
-	'output_dir' => Casset::$cache_path,
+	'output_dir' => Casset::get_cache_path(),
 	
 	/**
 	 * Whether or not to keep the directory that the file is in or just
