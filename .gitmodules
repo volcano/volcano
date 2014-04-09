@@ -22,3 +22,6 @@
 [submodule "fuel/packages/authorizenet"]
 	path = fuel/packages/authorizenet
 	url = git://github.com/dmyers/fuel-authorizenet
+[submodule "fuel/packages/less"]
+	path = fuel/packages/less
+	url = git://github.com/dmyers/fuel-less.git
