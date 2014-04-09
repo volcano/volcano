@@ -40,7 +40,7 @@ class Setup
 	public static function directories()
 	{
 		$paths = array(
-			rtrim(\Casset::$cache_path, '/'),
+			rtrim(\Casset::get_cache_path(), '/'),
 		);
 		
 		foreach ($paths as $path) {
@@ -82,7 +82,7 @@ class Setup
 		$types = array('js', 'css');
 		
 		foreach ($types as $type) {
-			$files = glob(DOCROOT . 'public' . DS . \Casset::$cache_path . '*.' . $type);
+			$files = glob(DOCROOT . 'public' . DS . \Casset::get_cache_path() . '*.' . $type);
 			
 			foreach ($files as $file) {
 				unlink($file);
