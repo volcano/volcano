@@ -20,4 +20,11 @@ return array(
 	 * Default: Config::get('asset.paths.0').Config::get('asset.css_dir'),
 	 */
 	'output_dir' => Casset::get_cache_path(),
+	
+	/**
+	 * Path key for assets if using Casset.
+	 * 
+	 * Default: false
+	 */
+	'casset_path_key' => 'cache',
 );
