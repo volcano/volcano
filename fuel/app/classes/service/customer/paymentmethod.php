@@ -196,13 +196,16 @@ class Service_Customer_Paymentmethod extends Service
 		$gateway  = $payment_method->gateway;
 		$customer = $payment_method->customer;
 		
-		$gateway_payment_method = Gateway::instance($gateway, $customer)->paymentmethod($payment_method->external_id);
-		if (!$gateway_payment_method) {
-			return false;
-		}
-		
-		if (!$gateway_payment_method->delete()) {
-			return false;
+		$gateway_instance = Gateway::instance($gateway, $customer);
+		if ($gateway_instance) {
+			$gateway_payment_method = $gateway_instance->paymentmethod($payment_method->external_id);
+			if (!$gateway_payment_method) {
+				return false;
+			}
+			
+			if (!$gateway_payment_method->delete()) {
+				return false;
+			}
 		}
 		
 		$payment_method->status = 'deleted';
