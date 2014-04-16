@@ -140,22 +140,23 @@ class Service_Customer_Paymentmethod extends Service
 		$customer = $payment_method->customer;
 		
 		$gateway_instance = Gateway::instance($gateway, $customer);
-		
-		$gateway_payment_method = $gateway_instance->paymentmethod($payment_method->external_id);
-		if (!$gateway_payment_method) {
-			return false;
+		if ($gateway_instance) {
+			$gateway_payment_method = $gateway_instance->paymentmethod($payment_method->external_id);
+			if (!$gateway_payment_method) {
+				return false;
+			}
+			
+			$updated = $gateway_payment_method->update($data);
+			if (!$updated) {
+				return false;
+			}
+			
+			$gateway_payment_method  = $gateway_instance->paymentmethod($payment_method->external_id);
+			$payment_method->account = $gateway_payment_method->data('account');
 		}
-		
-		$updated = $gateway_payment_method->update($data);
-		if (!$updated) {
-			return false;
-		}
-		
-		$gateway_payment_method = $gateway_instance->paymentmethod($payment_method->external_id);
 		
 		// Update the model.
 		$payment_method->provider = Arr::get($account, 'provider');
-		$payment_method->account  = $gateway_payment_method->data('account');
 		$payment_method->contact->populate($contact);
 		
 		try {
