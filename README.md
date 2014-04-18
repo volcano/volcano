@@ -4,7 +4,7 @@
 
 ## Introduction
 
-Volcano is an API-first billing solution that is capable of interfacing with a variety of payment gateways. Volcano offers both a robust, RESTful API as well as a fully-featured front-end control panel.
+Volcano is an API-first billing solution that is capable of interfacing with a variety of payment gateways. Volcano offers both a robust, [RESTful API](https://github.com/volcano/billing/wiki/API) as well as a fully-featured front-end control panel.
 
 ## Mission
 Volcano is meant to be a flexible, gateway-agnostic billing system. The system can be setup with one or more sellers, each of which has its own set of configurable products and customer base. Volcano's core elements include sellers, customers, products, product options, product fees, orders and transactions. Current goals for the project include additional features for these core elements and new light-weight CRM tools such as customer support ticket management.
@@ -12,7 +12,7 @@ Volcano is meant to be a flexible, gateway-agnostic billing system. The system c
 ## Design
 Volcano is built on top of the [FuelPHP](http://fuelphp.com) framework. The app is designed with [multitenancy](http://en.wikipedia.org/wiki/Multitenancy) in mind and heavily leverages the [adapter pattern](http://en.wikipedia.org/wiki/Adapter_pattern) for multi-gateway support and the [service pattern](http://en.wikipedia.org/wiki/Service_layers_pattern) for the core structure that powers both the API and front-end control panel. Additionally, both the API and control panel use the same core validation classes.
 
-Volcano supports event-based callbacks. For example, Volcano can POST data to an external callback URL when a new customer is created. This allows 3rd party apps to handle their own email product messaging and feature ACL. Event callbacks can be setup via the API or control panel Settings page.
+Volcano supports event-based [callbacks](https://github.com/volcano/billing/wiki/Callbacks). For example, Volcano can POST data to an external callback URL when a new customer is created. This allows 3rd party apps to handle their own email product messaging and feature ACL. Event callbacks can be setup [via the API](https://github.com/volcano/billing/wiki/API#callbacks) or the control panel Settings page.
 
 ## Installation
 
@@ -55,7 +55,7 @@ Optional: Run the __simulate__ task to auto-generate faux seller, product, custo
 	$ php oil r statistics
 
 #### API
-For API development and testing, you'll want to first create a seller (see "Usage" below) and then create an API key via the Settings tab in the control panel.
+For API [development and testing](https://github.com/volcano/billing/wiki/API), you'll want to first create a seller (see "Usage" below) and then create an API key via the control panel Settings page.
 
 Next, copy the new seller API key and add it to `fuel/app/config/development/api.php` so that you don't have to specify the api_key param when testing locally.
 
@@ -65,16 +65,16 @@ Next, copy the new seller API key and add it to `fuel/app/config/development/api
 You'll be redirected to `[YOUR DOMAIN]/setup` the first time you access the Volcano control panel. This will allow you to create your first Seller. You may access `[YOUR DOMAIN]/setup` at any time to easily create additional sellers.
 
 #### API
-Listed below are a few example API calls (using [HTTPie](http://httpie.org)).
+The [API documentation](https://github.com/volcano/billing/wiki/API) contains a full list of available APIs. Here are a few examples:
 
 Create a Product:
 
-	$ http -f POST volcano.dev/api/products/71687/options name="Product ABC"
+	$ http -f POST /api/products/71687/options name="Product ABC"
 
 Create a Customer:
 
-	$ http -f POST volcano.dev/api/customers contact[first_name]=Scatman contact[last_name]=John contact[email]=imthescatman@scatman.com
+	$ http -f POST /api/customers contact[first_name]=Scatman contact[last_name]=John contact[email]=imthescatman@scatman.com
 
 Create a Multi-Product Order for a Customer:
 
-	$ http -f POST volcano.dev/api/customers/120488428/orders products[4]="myappdomain.com" products[7]="My App Instance"
+	$ http -f POST /api/customers/120488428/orders products[4]="myappdomain.com" products[7]="My App Instance"
