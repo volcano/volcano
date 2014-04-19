@@ -1,7 +1,5 @@
 ![Volcano Logo](https://raw.githubusercontent.com/volcano/billing/master/public/assets/img/logo-large.png)
 
-# Volcano - Billing
-
 ## Introduction
 
 Volcano is an API-first billing solution that is capable of interfacing with a variety of payment gateways. Volcano offers both a robust, [RESTful API](https://github.com/volcano/billing/wiki/API) as well as a fully-featured front-end control panel.
