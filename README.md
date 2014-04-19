@@ -6,6 +6,8 @@
 
 Volcano is an API-first billing solution that is capable of interfacing with a variety of payment gateways. Volcano offers both a robust, [RESTful API](https://github.com/volcano/billing/wiki/API) as well as a fully-featured front-end control panel.
 
+![Volcano Control Panel](https://raw.githubusercontent.com/volcano/billing/master/public/assets/img/screenshot-customer.png)
+
 ## Mission
 Volcano is meant to be a flexible, gateway-agnostic billing system. The system can be setup with one or more sellers, each of which has its own set of configurable products and customer base. Volcano's core elements include sellers, customers, products, product options, product fees, orders and transactions. Current goals for the project include additional features for these core elements and new light-weight CRM tools such as customer support ticket management.
 
