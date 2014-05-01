@@ -62,11 +62,7 @@ class Service_Customer_Paymentmethod extends Service
 		}
 		
 		if (!$contact instanceof Model_Contact) {
-			$contact = Service_Contact::create(
-				Arr::get($contact, 'first_name'),
-				Arr::get($contact, 'last_name'),
-				$contact
-			);
+			$contact = Service_Contact::create($contact);
 			
 			if (!$contact) {
 				return false;
