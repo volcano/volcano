@@ -135,6 +135,15 @@ class Service_Customer_Paymentmethod extends Service
 			return false;
 		}
 		
+		if (is_numeric($contact)) {
+			$contact = Service_Contact::find_one($contact);
+			if (!$contact) {
+				return false;
+			}
+			
+			$data['contact'] = $contact;
+		}
+		
 		$gateway  = $payment_method->gateway;
 		$customer = $payment_method->customer;
 		
@@ -156,7 +165,12 @@ class Service_Customer_Paymentmethod extends Service
 		
 		// Update the model.
 		$payment_method->provider = Arr::get($account, 'provider');
-		$payment_method->contact->populate($contact);
+		
+		if ($contact instanceof Model_Contact) {
+			$payment_method->contact = $contact;
+		} else {
+			$payment_method->contact->populate($contact);
+		}
 		
 		try {
 			$payment_method->save();
