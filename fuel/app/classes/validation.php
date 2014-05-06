@@ -67,6 +67,15 @@ class Validation extends \Fuel\Core\Validation
 	 */
 	public function _validation_contact($data, $type = 'customer', $action = 'create')
 	{
+		// Allow an existing contact ID to be used for payment methods.
+		if ($type == 'paymentmethod' && is_numeric($data)) {
+			if (Service_Contact::find_one($data)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
 		$data = !is_array($data) ? (array) $data : $data;
 		
 		if (!in_array($action, array('create', 'update'))) {
