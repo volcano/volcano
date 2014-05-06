@@ -57,7 +57,7 @@ class Service_Contact extends Service
 	 * Updates a contact.
 	 *
 	 * @param Model_Contact $contact The contact to update.
-	 * @param array          $data   The data to use to update the contact.
+	 * @param array         $data    The data to use to update the contact.
 	 *
 	 * @return Model_Contact
 	 */
