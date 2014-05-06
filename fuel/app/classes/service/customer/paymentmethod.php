@@ -61,12 +61,15 @@ class Service_Customer_Paymentmethod extends Service
 			return false;
 		}
 		
-		if (!$contact instanceof Model_Contact) {
+		// Find or create the payment method's contact.
+		if (is_numeric($contact)) {
+			$contact = Service_Contact::find_one($contact);
+		} elseif (is_array($contact)) {
 			$contact = Service_Contact::create($contact);
-			
-			if (!$contact) {
-				return false;
-			}
+		}
+		
+		if (!$contact) {
+			return false;
 		}
 		
 		$payment_method = Model_Customer_Paymentmethod::forge();
