@@ -169,7 +169,7 @@ class Service_Customer_Paymentmethod extends Service
 		if ($contact instanceof Model_Contact) {
 			$payment_method->contact = $contact;
 		} else {
-			$payment_method->contact->populate($contact);
+			Service_Contact::update($payment_method->contact, $contact);
 		}
 		
 		try {
