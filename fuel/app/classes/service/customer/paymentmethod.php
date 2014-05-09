@@ -61,16 +61,15 @@ class Service_Customer_Paymentmethod extends Service
 			return false;
 		}
 		
-		if (!$contact instanceof Model_Contact) {
-			$contact = Service_Contact::create(
-				Arr::get($contact, 'first_name'),
-				Arr::get($contact, 'last_name'),
-				$contact
-			);
-			
-			if (!$contact) {
-				return false;
-			}
+		// Find or create the payment method's contact.
+		if (is_numeric($contact)) {
+			$contact = Service_Contact::find_one($contact);
+		} elseif (is_array($contact)) {
+			$contact = Service_Contact::create($contact);
+		}
+		
+		if (!$contact) {
+			return false;
 		}
 		
 		$payment_method = Model_Customer_Paymentmethod::forge();
@@ -136,6 +135,15 @@ class Service_Customer_Paymentmethod extends Service
 			return false;
 		}
 		
+		if (is_numeric($contact)) {
+			$contact = Service_Contact::find_one($contact);
+			if (!$contact) {
+				return false;
+			}
+			
+			$data['contact'] = $contact;
+		}
+		
 		$gateway  = $payment_method->gateway;
 		$customer = $payment_method->customer;
 		
@@ -157,7 +165,12 @@ class Service_Customer_Paymentmethod extends Service
 		
 		// Update the model.
 		$payment_method->provider = Arr::get($account, 'provider');
-		$payment_method->contact->populate($contact);
+		
+		if ($contact instanceof Model_Contact) {
+			$payment_method->contact = $contact;
+		} else {
+			Service_Contact::update($payment_method->contact, $contact);
+		}
 		
 		try {
 			$payment_method->save();

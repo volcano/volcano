@@ -8,7 +8,7 @@ namespace Api;
 class Controller_Sellers extends Controller
 {
 	/**
-	 * Gets a seller (find() not allowed for this API).
+	 * Gets the active seller.
 	 *
 	 * @param int $id Seller ID.
 	 *
