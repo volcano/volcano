@@ -33,6 +33,11 @@ class Service
 			$query->rows_limit($options['limit']);
 		}
 		
+		if (!empty($options['sort'])) {
+			$dir = strtolower($options['sort']['dir']) == "asc" ? "asc" : "desc";
+			$query->order_by($options['sort']['field'], $dir);
+		}
+		
 		return $query->get();
 	}
 	

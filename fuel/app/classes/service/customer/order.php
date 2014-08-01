@@ -28,6 +28,10 @@ class Service_Customer_Order extends Service
 			$orders->where('status', $options['status']);
 		}
 		
+		if (!empty($options['seller'])) {
+			$orders->related('customer')->where('customer.seller_id', $options['seller']->id);
+		}
+		
 		return $orders;
 	}
 	
