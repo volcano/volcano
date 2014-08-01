@@ -29,3 +29,4 @@
 		$this->view->pagination = $pagination;
     }
  }
+ 
