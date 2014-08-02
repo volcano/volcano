@@ -56,12 +56,18 @@ $sellers = Seller::all();
 									<?php if ($item == $seller) continue ?>
 									<li><?php echo Html::anchor($item->link('switch'), $item->name) ?></li>
 								<?php endforeach ?>
+								<li>
+									<?php echo Html::anchor('/setup', '<i class="icon icon-plus"></i> New Seller') ?>
+								</li>
 							</ul>
 						</li>
 					</ul>
 				<?php else: ?>
 					<ul class="pull-right nav nav-seller-single">
 						<li><?php echo $seller->name ?></li>
+						<li>
+							<?php echo Html::anchor('/setup', '<i class="icon icon-plus"></i> New Seller') ?>
+						</li>
 					</ul>
 				<?php endif ?>
 			</div>
