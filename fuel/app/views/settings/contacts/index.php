@@ -1,6 +1,7 @@
 <?php
 $layout->title = 'Contacts';
 $layout->leftnav = render('settings/leftnav');
+$layout->pagenav = render('settings/contacts/pagenav');
 $layout->breadcrumbs['Settings'] = 'settings';
 $layout->breadcrumbs['Contacts'] = '';
 ?>
