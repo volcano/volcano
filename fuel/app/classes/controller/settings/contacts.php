@@ -45,13 +45,15 @@ class Controller_Settings_Contacts extends Controller
 		}
 		
 		$data    = $validator->validated();
+		$data['first_name'] = '';
+		$data['last_name'] = '';
 		
-		if (!$contact = Service_Contact::create('', '', $data)) {
+		if (!$new_contact = Service_Contact::create($data)) {
 			Session::set_alert('error', 'There was an error creating the contact.');
 			return;
 		}
 		
-		Service_Contact::link($contact, Seller::active());
+		Service_Contact::link($new_contact, Seller::active());
 		
 		Session::set_alert('success', 'The contact has been created.');
 		Response::redirect('settings/contacts');
