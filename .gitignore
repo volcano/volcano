@@ -5,6 +5,7 @@
 .settings
 *.sublime-project
 *.sublime-workspace
+composer.phar
 
 # OS Files
 .DS_Store
@@ -18,7 +19,6 @@ Thumbs.db
 Gemfile.lock
 
 # fuel
-/composer.lock
 fuel/app/cache/*
 fuel/app/logs/*
 fuel/app/tmp/*

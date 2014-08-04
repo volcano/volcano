@@ -34,18 +34,13 @@ class Service_Contact extends Service
 	/**
 	 * Creates a new contact.
 	 *
-	 * @param string $first_name Contact first name.
-	 * @param string $last_name  Contact last name.
-	 * @param array  $data       Optional data.
+	 * @param array $data Contact data.
 	 *
 	 * @return Model_Contact
 	 */
-	public static function create($first_name, $last_name, array $data = array())
+	public static function create(array $data)
 	{
 		$contact = Model_Contact::forge();
-		$contact->first_name = $first_name;
-		$contact->last_name = $last_name;
-		
 		$contact->populate($data);
 		
 		try {
@@ -62,7 +57,7 @@ class Service_Contact extends Service
 	 * Updates a contact.
 	 *
 	 * @param Model_Contact $contact The contact to update.
-	 * @param array          $data   The data to use to update the contact.
+	 * @param array         $data    The data to use to update the contact.
 	 *
 	 * @return Model_Contact
 	 */

@@ -92,8 +92,8 @@ class Service_Customer_Product_Option extends Service
 		
 		Service_Event::trigger(
 			'customer.product.option.update',
-			$customer_option->customer->seller,
-			$customer_option->to_array()
+			$option->customer->seller,
+			$option->to_array()
 		);
 		
 		return $option;
@@ -119,8 +119,8 @@ class Service_Customer_Product_Option extends Service
 		
 		Service_Event::trigger(
 			'customer.product.option.delete',
-			$customer_option->customer->seller,
-			$customer_option->to_array()
+			$option->customer->seller,
+			$option->to_array()
 		);
 		
 		return true;

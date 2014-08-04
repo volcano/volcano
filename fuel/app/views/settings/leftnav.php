@@ -17,6 +17,10 @@ $nav = array(
 		'href'  => 'settings/api',
 		'value' => 'API Keys',
 	),
+	array(
+		'href'  => 'settings/callbacks',
+		'value' => 'Event Callbacks',
+	),
 );
 
 echo View_Helper::nav($nav);
