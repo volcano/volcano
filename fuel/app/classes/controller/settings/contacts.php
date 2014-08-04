@@ -19,6 +19,47 @@ class Controller_Settings_Contacts extends Controller
 	}
 	
 	/**
+	 * GET create action.
+	 * 
+	 * @return void
+	 */
+	public function get_create() {}
+	
+	/**
+	 * POST create action.
+	 * 
+	 * @return void
+	 */
+	public function post_create()
+	{
+		$this->get_create();
+		
+		$contact = new Model_Contact;
+		$contact->populate(Input::post());
+		
+		$validator = Validation_Contact::create('seller');
+		if (!$validator->run()) {
+			Session::set_alert('error', __('form.error'));
+			$this->view->errors = $validator->error();
+			return;
+		}
+		
+		$data    = $validator->validated();
+		$data['first_name'] = '';
+		$data['last_name'] = '';
+		
+		if (!$new_contact = Service_Contact::create($data)) {
+			Session::set_alert('error', 'There was an error creating the contact.');
+			return;
+		}
+		
+		Service_Contact::link($new_contact, Seller::active());
+		
+		Session::set_alert('success', 'The contact has been created.');
+		Response::redirect('settings/contacts');
+	}
+	
+	/**
 	 * GET Edit action.
 	 *
 	 * @param int $id Contact ID.
