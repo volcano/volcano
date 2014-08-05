@@ -32,7 +32,11 @@ return array(
 			'js_dir'  => Config::get('asset.js_dir'),
 			'css_dir' => Config::get('asset.css_dir'),
 			'img_dir' => Config::get('asset.img_dir'),
-		)
+		),
+		'cache' => array(
+			'path'    => 'assets/',
+			'css_dir' => 'cache/',
+		),
 	),
 	
 	/**

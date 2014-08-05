@@ -16,13 +16,12 @@ class Inflector extends \Fuel\Core\Inflector
 	 */
 	public static function titleize($string, $separator = '_', $ucwords = true)
 	{
-		// Allow dash, otherwise default to underscore.
-		$separator = $separator != '-' ? '_' : $separator;
+		$string = str_replace($separator, ' ', strval($string));
 		
 		if ($ucwords) {
 			$string = Str::ucwords($string);
 		}
 		
-		return str_replace($separator, ' ', strval($string));
+		return $string;
 	}
 }
