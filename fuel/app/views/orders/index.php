@@ -19,7 +19,7 @@ $layout->breadcrumbs['Orders'] = 'orders';
 				<td><?php 
 				    echo Html::anchor($order->customer->link('contacts'), $order->customer->name())
 				?></td>
-				<td><?php echo Html::anchor('customers/' . $order->customer->id . '/transactions', $order->transaction_id) ?></td>
+				<td><?php echo Html::anchor($order->customer->link('transactions'), $order->transaction_id) ?></td>
 				<td>$<?php echo $order->transaction->amount ?></td>
 				<td><?php echo View_Helper::date($order->created_at) ?></td>
 				<td><?php echo ($order->updated_at != $order->created_at) ? View_Helper::date($order->updated_at) : '' ?></td>
