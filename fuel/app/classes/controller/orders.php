@@ -19,9 +19,8 @@
         $orders = Service_Customer_Order::find(array_merge($args, array(
             'offset' => $pagination->offset,
             'limit'  => $pagination->per_page,
-            'sort'  => array(
-                'field' => 'updated_at',
-                'dir'   => 'desc',
+            'order_by'  => array(
+                'updated_at' => 'desc',
              ),
         )));
         
