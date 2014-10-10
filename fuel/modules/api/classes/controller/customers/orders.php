@@ -25,7 +25,7 @@ class Controller_Customers_Orders extends Controller
 			));
 		} else {
 			$orders = \Service_Customer_Order::find_one($id);
-			if (!$orders || $orders->customer != $customer || $order->customer->seller != \Seller::active()) {
+			if (!$orders || $orders->customer != $customer || $orders->customer->seller != \Seller::active()) {
 				throw new HttpNotFoundException;
 			}
 		}
