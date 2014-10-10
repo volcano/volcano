@@ -42,4 +42,8 @@ return array(
 	$prefix . '/products/(:num)/options/(:num)/fees'        => $prefix . '/products/options/fees/index/$1/$2',
 	$prefix . '/products/(:num)/options/(:num)/fees/(:num)' => $prefix . '/products/options/fees/index/$2/$3',
 	
+	/**
+	 * API endpoints.
+	 */
+	$prefix . '/endpoints' => $prefix . '/endpoints/index',
 );
