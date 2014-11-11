@@ -19,6 +19,19 @@ $(function() {
 		});
 	});
 	
+	// Handles the toggling of "Add Meta" form group inputs.
+	$('#add-meta').on('click', function () {
+		var element = $('#meta-fields').find('.control-group.hide:first');
+		
+		if (element.length) {
+			element.removeClass('hide');
+		}
+		
+		if (!element.next().length) {
+			$('#add-meta').addClass('hide');
+		}
+	});
+	
 	/* Functions */
 	titleize = function(string)
 	{
