@@ -17,6 +17,7 @@ $layout->pagenav = render('products/options/pagenav', array('product' => $produc
 	<thead>
 		<th>ID</th>
 		<th>Name</th>
+		<th>Meta</th>
 		<th>Date Created</th>
 		<th>Date Updated</th>
 		<th>Status</th>
@@ -27,6 +28,11 @@ $layout->pagenav = render('products/options/pagenav', array('product' => $produc
 			<tr>
 				<td><?php echo $option->id ?></td>
 				<td><?php echo $option->name ?></td>
+				<td>
+					<?php foreach ($option->metas as $meta): ?>
+						<span class="label"><?= $meta->meta->name . ': ' . $meta->value ?></span>
+					<?php endforeach ?>
+				</td>
 				<td><?php echo View_Helper::date($option->created_at) ?></td>
 				<td><?php echo ($option->updated_at != $option->created_at) ? View_Helper::date($option->updated_at) : '' ?></td>
 				<td>
