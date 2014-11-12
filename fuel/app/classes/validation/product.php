@@ -15,6 +15,7 @@ class Validation_Product
 		$validator = Validation::forge('product');
 		
 		$validator->add('name', 'Name')->add_rule('trim')->add_rule('required');
+		$validator->add('meta', 'Meta Data');
 		
 		return $validator;
 	}
@@ -32,6 +33,10 @@ class Validation_Product
 		
 		if (array_key_exists('name', $input)) {
 			$validator->add('name', 'Name')->add_rule('trim')->add_rule('required');
+		}
+		
+		if (array_key_exists('meta', $input)) {
+			$validator->add('meta', 'Meta Data');
 		}
 		
 		return $validator;
