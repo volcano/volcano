@@ -33,7 +33,14 @@ class Controller_Products_Options extends Controller_Products
 	 */
 	public function get_create($product_id = null)
 	{
-		$this->view->product = $this->get_product($product_id);
+		$product = $this->get_product($product_id);
+		
+		$product_metas = Service_Product_Meta::find(array(
+			'product' => $product,
+		));
+		
+		$this->view->product       = $product;
+		$this->view->product_metas = $product_metas;
 	}
 	
 	/**
