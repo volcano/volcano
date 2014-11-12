@@ -35,8 +35,17 @@ class Controller_Products extends Controller
 	{
 		$this->get_create();
 		
+		$data = Input::post();
+		$data['meta'] = array();
+		
+		foreach (Input::post('meta') as $meta) {
+			if ($name = Arr::get($meta, 'name')) {
+				$data['meta'][$name] = Arr::get($meta, 'value');
+			}
+		}
+		
 		$validator = Validation_Product::create();
-		if (!$validator->run()) {
+		if (!$validator->run($data)) {
 			Session::set_alert('error', __('form.error'));
 			$this->view->errors = $validator->error();
 			return;
