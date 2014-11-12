@@ -29,6 +29,17 @@ class Model_Product_Option extends Model
 		'product',
 	);
 	
+	protected static $_many_many = array(
+		'metas' => array(
+			'key_from'         => 'id',
+			'key_through_from' => 'product_option_id',
+			'table_through'    => 'product_option_metas',
+			'key_through_to'   => 'product_meta_option_id',
+			'model_to'         => 'Model_Product_Meta_Option',
+			'key_to'           => 'id',
+		),
+	);
+	
 	protected static $_has_many = array(
 		'fees' => array(
 			'key_from'   => 'id',

@@ -36,6 +36,9 @@ class Model_Product extends Model
 				'where' => array('status' => 'active'),
 			),
 		),
+		'metas' => array(
+			'model_to' => 'Model_Product_Meta',
+		),
 	);
 	
 	/**
