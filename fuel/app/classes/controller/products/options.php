@@ -54,8 +54,15 @@ class Controller_Products_Options extends Controller_Products
 	{
 		$this->get_create($product_id);
 		
+		$data = Input::post();
+		$data['meta'] = array();
+		
+		foreach (Input::post('meta') as $meta_option_id) {
+			$data['meta'][] = $meta_option_id;
+		}
+		
 		$validator = Validation_Product_Option::create();
-		if (!$validator->run()) {
+		if (!$validator->run($data)) {
 			Session::set_alert('error', __('form.error'));
 			$this->view->errors = $validator->error();
 			return;
