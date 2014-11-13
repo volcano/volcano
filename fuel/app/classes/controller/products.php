@@ -92,7 +92,7 @@ class Controller_Products extends Controller
 		}
 		
 		Session::set_alert('success', 'The product has been updated.');
-		Response::redirect('products');
+		Response::redirect($product->link('edit'));
 	}
 	
 	/**
