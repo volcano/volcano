@@ -59,17 +59,6 @@ class Service_Product extends Service
 			return false;
 		}
 		
-		if (!empty($data['meta'])) {
-			foreach ($data['meta'] as $name => $values) {
-				$meta = Service_Product_Meta::create($name, $product);
-				
-				$values = array_filter($values);
-				foreach ($values as $value) {
-					Service_Product_Meta_Option::create($value, $meta);
-				}
-			}
-		}
-		
 		Service_Event::trigger('product.create', $product->seller, $product->to_array());
 		
 		return $product;
