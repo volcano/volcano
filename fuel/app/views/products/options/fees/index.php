@@ -1,9 +1,12 @@
 <?php
 $layout->title = 'Fees';
 $layout->subtitle = $option->name;
+$layout->leftnav = render('products/options/leftnav', array('option' => $option));
 $layout->breadcrumbs['Product Lines'] = 'products';
-$layout->breadcrumbs[$product->name] = $product->link('options');
-$layout->breadcrumbs['Fees: ' . $option->name] = '';
+$layout->breadcrumbs[$product->name] = $product->link('edit');
+$layout->breadcrumbs['Options'] = $product->link('options');
+$layout->breadcrumbs[$option->name] = $option->link('edit');
+$layout->breadcrumbs['Fees'] = '';
 $layout->pagenav = render('products/options/fees/pagenav', array('option' => $option));
 ?>
 
