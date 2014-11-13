@@ -33,7 +33,7 @@ $layout->pagenav = render('products/options/fees/pagenav', array('option' => $op
 				<td><?php echo $fee->id ?></td>
 				<td><?php echo $fee->name ?></td>
 				<td>
-					$<?php echo number_format($fee->interval_price) ?>
+					$<?php echo number_format($fee->interval_price, 2) ?>
 					<?php if (!$fee->recurring()): ?>
 						(nonrecurring)
 					<?php else: ?>
