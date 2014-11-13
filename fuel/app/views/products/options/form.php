@@ -45,7 +45,10 @@ $metas  = $option ? $option->metas : array();
 	<?php endforeach ?>
 	
 	<div class="form-actions">
-		<?php echo Html::anchor($product->link('options'), __('form.cancel.label'), array('class' => 'btn')) ?>
+		<?php if (empty($option)): ?>
+			<?php echo Html::anchor($product->link('options'), __('form.cancel.label'), array('class' => 'btn')) ?>
+		<?php endif ?>
+		
 		<?php echo Form::button('submit', __('form.submit.label'), array('class' => 'btn btn-primary')) ?>
 	</div>
 <?php echo Form::close() ?>
