@@ -33,4 +33,21 @@ class Model_Product_Meta extends Model
 			'model_to'   => 'Model_Product_Meta_Option',
 		),
 	);
+	
+	/**
+	 * Returns the product meta action link.
+	 *
+	 * @param string $action The action to link to.
+	 *
+	 * @return string
+	 */
+	public function link($action = '')
+	{
+		$uri = 'products/' . $this->product_id . '/metas/' . $this->id;
+		if ($action) {
+			$uri .= '/' . $action;
+		}
+		
+		return Uri::create($uri);
+	}
 }
