@@ -54,10 +54,7 @@ $layout->pagenav = render('products/options/pagenav', array('product' => $produc
 						<?php echo Str::ucfirst($option->status) ?>
 					</span>
 				</td>
-				<td>
-					<?php echo Html::anchor($option->link('edit'), '<i class="icon icon-pencil"></i> Edit', array('class' => 'action-link')) ?>
-					<?php echo Html::anchor($option->link('fees'), '<i class="icon icon-wrench"></i> Manage', array('class' => 'action-link')) ?>
-				</td>
+				<td><?php echo Html::anchor($option->link('edit'), '<i class="icon icon-wrench"></i> Configure', array('class' => 'action-link')) ?></td>
 			</tr>
 		<?php endforeach ?>
 	</tbody>
