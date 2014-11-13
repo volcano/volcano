@@ -1,8 +1,11 @@
 <?php
 $layout->title = 'Options';
 $layout->subtitle = $product->name;
+$layout->leftnav = render('products/leftnav', array('product' => $product));
 $layout->breadcrumbs['Product Lines'] = 'products';
-$layout->breadcrumbs['Options: ' . $product->name] = '';
+$layout->breadcrumbs[$product->name] = $product->link('edit');
+$layout->breadcrumbs['Options'] = '';
+
 $layout->pagenav = render('products/options/pagenav', array('product' => $product));
 ?>
 
