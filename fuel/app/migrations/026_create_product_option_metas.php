@@ -17,7 +17,7 @@ class Create_Product_Option_Metas
 		
 		\DBUtil::create_index('product_option_metas', 'product_option_id', 'product_option_id');
 	}
-
+	
 	public function down()
 	{
 		\DBUtil::drop_table('product_option_metas');
