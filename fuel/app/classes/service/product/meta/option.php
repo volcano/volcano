@@ -14,6 +14,10 @@ class Service_Product_Meta_Option extends Service
 	 */
 	protected static function query(array $args = array())
 	{
+		$args = array_merge(array(
+			'order_by' => array('value' => 'asc'),
+		), $args);
+		
 		$options = Model_Product_Meta_Option::query();
 		
 		if (!empty($args['id'])) {
@@ -23,6 +27,12 @@ class Service_Product_Meta_Option extends Service
 		if (!empty($args['meta'])) {
 			$options->related('meta');
 			$options->where('meta.id', $args['meta']->id);
+		}
+		
+		if (!empty($args['order_by'])) {
+			foreach ($args['order_by'] as $field => $direction) {
+				$options->order_by($field, $direction);
+			}
 		}
 		
 		return $options;
