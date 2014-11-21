@@ -52,6 +52,24 @@ class Model_Product_Option extends Model
 	);
 	
 	/**
+	 * Builds an array of api-safe model data.
+	 *
+	 * @return array
+	 */
+	public function to_api_array()
+	{
+		return array(
+			'id'          => $this->id,
+			'product_id'  => $this->product_id,
+			'name'        => $this->name,
+			'metas'       => $this->metas,
+			'status'      => $this->status,
+			'created_at'  => $this->created_at,
+			'updated_at'  => $this->updated_at,
+		);
+	}
+	
+	/**
 	 * Returns the product option action link.
 	 *
 	 * @param string $action The action to link to.
