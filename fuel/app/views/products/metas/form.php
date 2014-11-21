@@ -27,7 +27,7 @@ $options = $meta ? array_values($meta->options) : array();
 				$option_key   = $option ? $option->id : null;
 				$option_value = $option ? $option->value : null;
 				?>
-				<?php echo Form::input("option[$option_key]", Input::post("option[$option_key]", $option_value), array('placeholder' => "Option $i")) ?>
+				<?php echo Form::input("value[$option_key]", Input::post("value[$option_key]", $option_value), array('placeholder' => "Option $i")) ?>
 			<?php endfor ?>
 		</div>
 	</div>

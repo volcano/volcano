@@ -62,8 +62,12 @@ class Controller_Products_Metas extends Controller_Products
 			return;
 		}
 		
-		foreach (array_filter($data['option']) as $value) {
-			Service_Product_Meta_Option::create($value, $meta);
+		foreach (array_filter(Input::post('value')) as $value) {
+			if (!$data = $this->validate_meta_option('create', array('value' => $value))) {
+				return;
+			}
+			
+			Service_Product_Meta_Option::create($data['value'], $meta);
 		}
 		
 		Session::set_alert('success', 'The product meta has been added.');
@@ -113,13 +117,26 @@ class Controller_Products_Metas extends Controller_Products
 		}
 		
 		$options = $meta->options;
-		foreach (array_filter($data['option']) as $option_id => $value) {
+		foreach (array_filter(Input::post('value')) as $option_id => $value) {
 			if ($option = Arr::get($options, $option_id)) {
 				// Update existing meta option.
-				Service_Product_Meta_Option::update($option, array('value' => $value));
+				if (!$data = $this->validate_meta_option('update', array('value' => $value))) {
+					return;
+				}
+				
+				$option = Service_Product_Meta_Option::update($option, $data);
 			} else {
 				// Create new meta option.
-				Service_Product_Meta_Option::create($value, $meta);
+				if (!$data = $this->validate_meta_option('create', array('value' => $value))) {
+					return;
+				}
+				
+				$option = Service_Product_Meta_Option::create($data['value'], $meta);
+			}
+			
+			if (!$option) {
+				Session::set_alert('error', 'There was an error updating the product meta option(s).');
+				return;
 			}
 		}
 		
@@ -142,5 +159,30 @@ class Controller_Products_Metas extends Controller_Products
 		}
 		
 		return $meta;
+	}
+	
+	/**
+	 * Validates meta option data for a given action type.
+	 *
+	 * @param string $type The action to process (create, update).
+	 * @param array  $data The data to validate.
+	 *
+	 * @return array|bool
+	 */
+	protected function validate_meta_option($type, $data)
+	{
+		if ($type == 'create') {
+			$validator = Validation_Product_Meta_Option::create();
+		} else {
+			$validator = Validation_Product_Meta_Option::update();
+		}
+		
+		if (!$validator->run($data)) {
+			Session::set_alert('error', __('form.error'));
+			$this->view->errors = $validator->error();
+			return;
+		}
+		
+		return $validator->validated();
 	}
 }
