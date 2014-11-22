@@ -21,14 +21,16 @@ $options = $meta ? array_values($meta->options) : array();
 	<div class="control-group control-group-vertical">
 		<?php echo Form::label('Options', 'Options', array('class' => 'control-label')) ?>
 		<div class="controls">
-			<?php for ($i = 1; $i <= 5; $i++): ?>
-				<?php
+			<?php
+			$options_limit = ($options ? count($options) : 0) + 5;
+			for ($i = 1; $i <= $options_limit; $i++) {
 				$option       = $meta ? Arr::get($options, $i - 1) : null;
 				$option_key   = $option ? $option->id : null;
 				$option_value = $option ? $option->value : null;
-				?>
-				<?php echo Form::input("value[$option_key]", Input::post("value[$option_key]", $option_value), array('placeholder' => "Option $i")) ?>
-			<?php endfor ?>
+				
+				echo Form::input("value[$option_key]", Input::post("value[$option_key]", $option_value), array('placeholder' => "Option $i"));
+			}
+			?>
 		</div>
 	</div>
 	
