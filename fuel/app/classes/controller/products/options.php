@@ -103,7 +103,7 @@ class Controller_Products_Options extends Controller_Products
 		$option  = $this->get_option($id);
 		$data    = $validator->validated();
 		
-		if (!Service_Product_Option::update($option, Arr::filter_recursive($data))) {
+		if (!Service_Product_Option::update($option, $data)) {
 			Session::set_alert('error', 'There was an error updating the product option.');
 			return;
 		}
