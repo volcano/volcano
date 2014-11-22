@@ -80,7 +80,7 @@ class Controller_Products_Options_Fees extends Controller_Products_Options
 	 */
 	public function get_edit($option_id = null, $id = null)
 	{
-		$option = $this->get_option($id);
+		$option = $this->get_option($option_id);
 		
 		$this->view->product = $option->product;
 		$this->view->option  = $option;
