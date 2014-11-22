@@ -50,4 +50,24 @@ class Model_Product_Meta extends Model
 		
 		return Uri::create($uri);
 	}
+	
+	/**
+	 * Gets a property or relation.
+	 *
+	 * @param string $property The property or relation to fetch.
+	 * 
+	 * @return mixed
+	 */
+	public function & __get($property)
+	{
+		$value = parent::__get($property);
+		if ($property == 'options') {
+			// Sort options alphabetically by option value property.
+			uasort($value, function($a, $b) {
+				return strcmp($a->value, $b->value);
+			});
+		}
+		
+		return $value;
+	}
 }
