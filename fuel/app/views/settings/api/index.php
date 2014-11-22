@@ -53,8 +53,8 @@ $layout->breadcrumbs['API Keys'] = '';
 					if ($key->active()) {
 						echo Html::anchor(
 							$key->link('delete'),
-							'<i class="icon icon-remove"></i> Remove',
-							array('class' => 'action-link confirm', 'data-msg' => "Are you sure you want to remove this API key?")
+							'<i class="icon icon-remove"></i> Delete',
+							array('class' => 'action-link confirm', 'data-msg' => "Are you sure you want to delete this API key?")
 						);
 					}
 					?>
