@@ -21,7 +21,7 @@ $metas  = $option ? $option->metas : array();
 			<?php echo Form::label($meta->name, 'meta-' . $meta->name, array('class' => 'control-label')) ?>
 			<div class="controls">
 				<?php
-				$meta_options = array();
+				$meta_options = array(0 => '-');
 				foreach ($meta->options as $meta_option) {
 					$meta_options[$meta_option->id] = $meta_option->value;
 				}
