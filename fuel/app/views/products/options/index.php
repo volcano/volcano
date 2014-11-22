@@ -1,8 +1,11 @@
 <?php
 $layout->title = 'Options';
 $layout->subtitle = $product->name;
+$layout->leftnav = render('products/leftnav', array('product' => $product));
 $layout->breadcrumbs['Product Lines'] = 'products';
-$layout->breadcrumbs['Options: ' . $product->name] = '';
+$layout->breadcrumbs[$product->name] = $product->link('edit');
+$layout->breadcrumbs['Options'] = '';
+
 $layout->pagenav = render('products/options/pagenav', array('product' => $product));
 ?>
 
@@ -17,6 +20,7 @@ $layout->pagenav = render('products/options/pagenav', array('product' => $produc
 	<thead>
 		<th>ID</th>
 		<th>Name</th>
+		<th>Meta</th>
 		<th>Date Created</th>
 		<th>Date Updated</th>
 		<th>Status</th>
@@ -27,6 +31,11 @@ $layout->pagenav = render('products/options/pagenav', array('product' => $produc
 			<tr>
 				<td><?php echo $option->id ?></td>
 				<td><?php echo $option->name ?></td>
+				<td>
+					<?php foreach ($option->metas as $meta): ?>
+						<span class="label"><?= $meta->meta->name . ': ' . $meta->value ?></span>
+					<?php endforeach ?>
+				</td>
 				<td><?php echo View_Helper::date($option->created_at) ?></td>
 				<td><?php echo ($option->updated_at != $option->created_at) ? View_Helper::date($option->updated_at) : '' ?></td>
 				<td>
@@ -48,10 +57,7 @@ $layout->pagenav = render('products/options/pagenav', array('product' => $produc
 						<?php echo Str::ucfirst($option->status) ?>
 					</span>
 				</td>
-				<td>
-					<?php echo Html::anchor($option->link('edit'), '<i class="icon icon-pencil"></i> Edit', array('class' => 'action-link')) ?>
-					<?php echo Html::anchor($option->link('fees'), '<i class="icon icon-wrench"></i> Manage', array('class' => 'action-link')) ?>
-				</td>
+				<td><?php echo Html::anchor($option->link('edit'), '<i class="icon icon-wrench"></i> Configure', array('class' => 'action-link')) ?></td>
 			</tr>
 		<?php endforeach ?>
 	</tbody>

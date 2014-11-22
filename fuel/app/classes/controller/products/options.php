@@ -109,7 +109,7 @@ class Controller_Products_Options extends Controller_Products
 		}
 		
 		Session::set_alert('success', 'The product option has been updated.');
-		Response::redirect($product->link('options'));
+		Response::redirect($option->link('edit'));
 	}
 	
 	/**

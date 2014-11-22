@@ -17,7 +17,10 @@ if (!empty($product)) {
 	</div>
 	
 	<div class="form-actions">
-		<?php echo Html::anchor('products', __('form.cancel.label'), array('class' => 'btn')) ?>
+		<?php if (empty($product)): ?>
+			<?php echo Html::anchor('products', __('form.cancel.label'), array('class' => 'btn')) ?>
+		<?php endif ?>
+		
 		<?php echo Form::button('submit', __('form.submit.label'), array('class' => 'btn btn-primary')) ?>
 	</div>
 <?php echo Form::close() ?>
