@@ -1,15 +1,14 @@
 <?php
 
 /**
- * Product model.
+ * Product meta model.
  */
-class Model_Product extends Model
+class Model_Product_Meta extends Model
 {
 	protected static $_properties = array(
 		'id',
-		'seller_id',
+		'product_id',
 		'name',
-		'status' => array('default' => 'active'),
 		'created_at',
 		'updated_at',
 	);
@@ -26,23 +25,17 @@ class Model_Product extends Model
 	);
 	
 	protected static $_belongs_to = array(
-		'seller',
+		'product',
 	);
 	
 	protected static $_has_many = array(
 		'options' => array(
-			'model_to'   => 'Model_Product_Option',
-			'conditions' => array(
-				'where' => array('status' => 'active'),
-			),
-		),
-		'metas' => array(
-			'model_to' => 'Model_Product_Meta',
+			'model_to'   => 'Model_Product_Meta_Option',
 		),
 	);
 	
 	/**
-	 * Returns the product action link.
+	 * Returns the product meta action link.
 	 *
 	 * @param string $action The action to link to.
 	 *
@@ -50,7 +43,7 @@ class Model_Product extends Model
 	 */
 	public function link($action = '')
 	{
-		$uri = 'products/' . $this->id;
+		$uri = 'products/' . $this->product_id . '/metas/' . $this->id;
 		if ($action) {
 			$uri .= '/' . $action;
 		}
@@ -68,10 +61,10 @@ class Model_Product extends Model
 	public function & __get($property)
 	{
 		$value = parent::__get($property);
-		if ($property == 'metas') {
-			// Sort metas alphabetically by meta name property.
+		if ($property == 'options') {
+			// Sort options alphabetically by option value property.
 			uasort($value, function($a, $b) {
-				return strcmp($a->name, $b->name);
+				return strcmp($a->value, $b->value);
 			});
 		}
 		

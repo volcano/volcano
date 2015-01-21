@@ -48,6 +48,9 @@ a:focus, .btn:focus{
 				li a {
 					padding: 3px 15px;
 				}
+				li.divider {
+					margin: 4px 1px;
+				}
 			}
 		}
 		.nav-seller-single {
@@ -251,8 +254,16 @@ fieldset {
 .form-horizontal .control-label {
 	font-weight: bold;
 }
-.control-group-plans .controls {
-	margin-left: 90px;
+.control-group-vertical {
+	.controls {
+		input:first-child {
+			margin-top: 0;
+		}
+		input {
+			display: block;
+			margin-top: 5px;
+		}
+	}
 }
 .control-group .controls span.display-as-field {
 	display: inline-block;

@@ -26,7 +26,7 @@ class Model_Gateway extends Model
 	);
 	
 	protected static $_has_many = array(
-		'meta' => array(
+		'metas' => array(
 			'model_to' => 'Model_Gateway_Meta',
 		),
 	);

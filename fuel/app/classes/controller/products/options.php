@@ -57,7 +57,7 @@ class Controller_Products_Options extends Controller_Products
 		$product = $this->get_product($product_id);
 		$data    = $validator->validated();
 		
-		if (!Service_Product_Option::create($data['name'], $product, $data)) {
+		if (!Service_Product_Option::create($data['name'], $product, Arr::filter_recursive($data))) {
 			Session::set_alert('error', 'There was an error adding the product option.');
 			return;
 		}
@@ -109,7 +109,7 @@ class Controller_Products_Options extends Controller_Products
 		}
 		
 		Session::set_alert('success', 'The product option has been updated.');
-		Response::redirect($product->link('options'));
+		Response::redirect($option->link('edit'));
 	}
 	
 	/**

@@ -53,6 +53,14 @@ class Service_Product_Option extends Service
 		
 		$option->populate($data);
 		
+		if (!empty($data['meta'])) {
+			foreach ($data['meta'] as $meta_option_id) {
+				if ($meta_option = Service_Product_Meta_Option::find_one($meta_option_id)) {
+					$option->metas[] = $meta_option;
+				}
+			}
+		}
+		
 		try {
 			$option->save();
 		} catch (FuelException $e) {
@@ -76,6 +84,17 @@ class Service_Product_Option extends Service
 	public static function update(Model_Product_Option $option, array $data = array())
 	{
 		$option->populate($data);
+		
+		if (!empty($data['meta'])) {
+			$option->metas = array();
+			foreach ($data['meta'] as $meta_id => $meta_option_id) {
+				if (empty($meta_option_id)) {
+					unset($option->metas[$meta_id]);
+				} else if ($meta_option = Service_Product_Meta_Option::find_one($meta_option_id)) {
+					$option->metas[] = $meta_option;
+				}
+			}
+		}
 		
 		try {
 			$option->save();

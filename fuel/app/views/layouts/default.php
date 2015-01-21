@@ -56,6 +56,7 @@ $sellers = Seller::all();
 									<?php if ($item == $seller) continue ?>
 									<li><?php echo Html::anchor($item->link('switch'), $item->name) ?></li>
 								<?php endforeach ?>
+								<li class="divider"></li>
 								<li>
 									<?php echo Html::anchor('/setup', '<i class="icon icon-plus"></i> New Seller') ?>
 								</li>

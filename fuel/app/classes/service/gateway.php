@@ -66,7 +66,7 @@ class Service_Gateway extends Service
 				$enc_value = Crypt::encode($value, $enc_key);
 				
 				$name_meta = Model_Gateway_Meta::name($name, $enc_value);
-				$gateway->meta[] = $name_meta;
+				$gateway->metas[] = $name_meta;
 			}
 		}
 		
@@ -106,7 +106,7 @@ class Service_Gateway extends Service
 				if (!isset($gateway_metas[$name])) {
 					$name_meta = Model_Gateway_Meta::name($name, $value);
 					
-					$gateway->meta[] = $name_meta;
+					$gateway->metas[] = $name_meta;
 				} else {
 					$name_meta = $gateway_metas[$name];
 					$name_meta->value = $value;

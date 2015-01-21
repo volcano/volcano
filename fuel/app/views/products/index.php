@@ -46,10 +46,7 @@ $layout->pagenav = render('products/pagenav');
 						<?php echo Str::ucfirst($product->status) ?>
 					</span>
 				</td>
-				<td>
-					<?php echo Html::anchor($product->link('edit'), '<i class="icon icon-pencil"></i> Edit', array('class' => 'action-link')) ?>
-					<?php echo Html::anchor($product->link('options'), '<i class="icon icon-wrench"></i> Manage', array('class' => 'action-link')) ?>
-				</td>
+				<td><?php echo Html::anchor($product->link('edit'), '<i class="icon icon-wrench"></i> Configure', array('class' => 'action-link')) ?></td>
 			</tr>
 		<?php endforeach ?>
 	</tbody>

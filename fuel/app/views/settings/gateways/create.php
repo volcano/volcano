@@ -4,8 +4,6 @@ $layout->breadcrumbs['Settings'] = 'settings';
 $layout->breadcrumbs['Gateways'] = 'settings/gateways';
 $layout->breadcrumbs['Add Gateway'] = '';
 
-Casset::js('js/controller/settings/gateways/create.js', true, 'page');
-
 $types = array();
 foreach (Arr::get($config, 'types') as $type) {
 	$types[$type] = Inflector::titleize($type);
