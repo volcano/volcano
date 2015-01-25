@@ -3,6 +3,7 @@
 namespace Api;
 
 use Config;
+use Inflector;
 
 /**
  * Endpoints controller.
@@ -20,6 +21,23 @@ class Controller_Endpoints extends Controller
 		
 		$routes = Config::get('api::routes');
 		
-		$this->response(array_keys($routes));
+		$endpoints = array();
+		foreach ($routes as $route => $actions) {
+			foreach ($actions as $namespace => $action) {
+				$namespaces = explode('.', $namespace);
+				
+				$namespace = array_shift($namespaces);
+				$name      = array_pop($namespaces) . Inflector::camelize(implode('_', $namespaces));
+				$method    = $action[0];
+				$path      = $action[1]->path;
+				
+				$endpoints[$namespace][$name] = array(
+					'method' => $method,
+					'path'   => $path,
+				);
+			}
+		}
+		
+		$this->response($endpoints);
 	}
 }
