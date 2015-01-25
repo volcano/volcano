@@ -1,49 +1,150 @@
 <?php
 
-$prefix = 'api';
-
 return array(
 	/**
 	 * Seller endpoints.
 	 */
-	$prefix . '/sellers/(:num)'                  => $prefix . '/sellers/index/$1',
-	$prefix . '/sellers/(:num)/callbacks'        => $prefix . '/sellers/callbacks/index/$1',
-	$prefix . '/sellers/(:num)/callbacks/(:num)' => $prefix . '/sellers/callbacks/index/$1/$2',
-	$prefix . '/sellers/(:num)/contacts'         => $prefix . '/sellers/contacts/index/$1',
-	$prefix . '/sellers/(:num)/contacts/(:num)'  => $prefix . '/sellers/contacts/index/$1/$2',
-	$prefix . '/sellers/(:num)/gateways'         => $prefix . '/sellers/gateways/index/$1',
-	$prefix . '/sellers/(:num)/gateways/(:num)'  => $prefix . '/sellers/gateways/index/$1/$2',
+	'api/sellers' => array(
+		'seller.create' => array('POST', new Route('api/sellers/index')),
+	),
+	'api/sellers/(:num)' => array(
+		'seller.get'    => array('GET', new Route('api/sellers/index/$1')),
+		'seller.update' => array('PUT', new Route('api/sellers/index/$1')),
+	),
+	'api/sellers/(:num)/callbacks' => array(
+		'seller.callback.list'   => array('GET', new Route('api/sellers/callbacks/index/$1')),
+		'seller.callback.create' => array('POST', new Route('api/sellers/callbacks/index/$1')),
+	),
+	'api/sellers/(:num)/callbacks/(:num)' => array(
+		'seller.callback.get'    => array('GET', new Route('api/sellers/callbacks/index/$1/$2')),
+		'seller.callback.update' => array('PUT', new Route('api/sellers/callbacks/index/$1/$2')),
+		'seller.callback.delete' => array('DELETE', new Route('api/sellers/callbacks/index/$1/$2')),
+	),
+	'api/sellers/(:num)/contacts' => array(
+		'seller.contact.list'   => array('GET', new Route('api/sellers/contacts/index/$1')),
+		'seller.contact.create' => array('POST', new Route('api/sellers/contacts/index/$1')),
+	),
+	'api/sellers/(:num)/contacts/(:num)' => array(
+		'seller.contact.get'    => array('GET', new Route('api/sellers/contacts/index/$1/$2')),
+		'seller.contact.update' => array('PUT', new Route('api/sellers/contacts/index/$1/$2')),
+		'seller.contact.delete' => array('DELETE', new Route('api/sellers/contacts/index/$1/$2')),
+	),
+	'api/sellers/(:num)/gateways' => array(
+		'seller.gateway.list'   => array('GET', new Route('api/sellers/gateways/index/$1')),
+		'seller.gateway.create' => array('POST', new Route('api/sellers/gateways/index/$1')),
+	),
+	'api/sellers/(:num)/gateways/(:num)' => array(
+		'seller.gateway.get'    => array('GET', new Route('api/sellers/gateways/index/$1/$2')),
+		'seller.gateway.update' => array('PUT', new Route('api/sellers/gateways/index/$1/$2')),
+		'seller.gateway.delete' => array('DELETE', new Route('api/sellers/gateways/index/$1/$2')),
+	),
 	
 	/**
 	 * Customer endpoints.
 	 */
-	$prefix . '/customers'                              => $prefix . '/customers/index',
-	$prefix . '/customers/(:num)'                       => $prefix . '/customers/index/$1',
-	$prefix . '/customers/(:num)/contacts'              => $prefix . '/customers/contacts/index/$1',
-	$prefix . '/customers/(:num)/contacts/(:num)'       => $prefix . '/customers/contacts/index/$1/$2',
-	$prefix . '/customers/(:num)/orders'                => $prefix . '/customers/orders/index/$1',
-	$prefix . '/customers/(:num)/orders/(:num)'         => $prefix . '/customers/orders/index/$1/$2',
-	$prefix . '/customers/(:num)/paymentmethods'        => $prefix . '/customers/paymentmethods/index/$1',
-	$prefix . '/customers/(:num)/paymentmethods/(:num)' => $prefix . '/customers/paymentmethods/index/$1/$2',
-	$prefix . '/customers/(:num)/products'              => $prefix . '/customers/products/index/$1',
-	$prefix . '/customers/(:num)/products/(:num)'       => $prefix . '/customers/products/index/$1/$2',
-	$prefix . '/customers/(:num)/statistics'            => $prefix . '/customers/statistics/index/$1',
-	$prefix . '/customers/(:num)/statistics/(:num)'     => $prefix . '/customers/statistics/index/$1/$2',
-	$prefix . '/customers/(:num)/transactions'          => $prefix . '/customers/transactions/index/$1',
-	$prefix . '/customers/(:num)/transactions/(:num)'   => $prefix . '/customers/transactions/index/$1/$2',
+	'api/customers' => array(
+		'customer.list'   => array('GET', new Route('api/customers/index')),
+		'customer.create' => array('POST', new Route('api/customers/index')),
+	),
+	'api/customers/(:num)' => array(
+		'customer.get'    => array('GET', new Route('api/customers/index/$1')),
+		'customer.update' => array('PUT', new Route('api/customers/index/$1')),
+		'customer.delete' => array('DELETE', new Route('api/customers/index/$1')),
+	),
+	'api/customers/(:num)/contacts' => array(
+		'customer.contact.list'   => array('GET', new Route('api/customers/contacts/index/$1')),
+		'customer.contact.create' => array('POST', new Route('api/customers/contacts/index/$1')),
+	),
+	'api/customers/(:num)/contacts/(:num)' => array(
+		'customer.contact.get'    => array('GET', new Route('api/customers/contacts/index/$1/$2')),
+		'customer.contact.update' => array('PUT', new Route('api/customers/contacts/index/$1/$2')),
+		'customer.contact.delete' => array('DELETE', new Route('api/customers/contacts/index/$1/$2')),
+	),
+	'api/customers/(:num)/orders' => array(
+		'customer.order.list'   => array('GET', new Route('api/customers/orders/index/$1')),
+		'customer.order.create' => array('POST', new Route('api/customers/orders/index/$1')),
+	),
+	'api/customers/(:num)/orders/(:num)' => array(
+		'customer.order.get' => array('GET', new Route('api/customers/orders/index/$1/$2')),
+	),
+	'api/customers/(:num)/paymentmethods' => array(
+		'customer.paymentmethod.list'   => array('GET', new Route('api/customers/paymentmethods/index/$1')),
+		'customer.paymentmethod.create' => array('POST', new Route('api/customers/paymentmethods/index/$1')),
+	),
+	'api/customers/(:num)/paymentmethods/(:num)' => array(
+		'customer.paymentmethod.get'    => array('GET', new Route('api/customers/paymentmethods/index/$1/$2')),
+		'customer.paymentmethod.update' => array('PUT', new Route('api/customers/paymentmethods/index/$1/$2')),
+		'customer.paymentmethod.delete' => array('DELETE', new Route('api/customers/paymentmethods/index/$1/$2')),
+	),
+	'api/customers/(:num)/products' => array(
+		'customer.product.list' => array('GET', new Route('api/customers/products/index/$1')),
+	),
+	'api/customers/(:num)/products/(:num)' => array(
+		'customer.product.get' => array('GET', new Route('api/customers/products/index/$1/$2')),
+	),
+	'api/customers/(:num)/transactions' => array(
+		'customer.transaction.list' => array('GET', new Route('api/customers/transactions/index/$1')),
+	),
+	'api/customers/(:num)/transactions/(:num)' => array(
+		'customer.transaction.get' => array('GET', new Route('api/customers/transactions/index/$1/$2')),
+	),
+	'api/customers/statistics/(:alpha)' => array(
+		'customer.statistic.activity'   => array('GET', new Route('api/customers/statistics/$1')),
+		'customer.statistic.conversion' => array('GET', new Route('api/customers/statistics/$1')),
+		'customer.statistic.totals'     => array('GET', new Route('api/customers/statistics/$1')),
+	),
 	
 	/**
 	 * Product endpoints.
 	 */
-	$prefix . '/products'                                   => $prefix . '/products/index',
-	$prefix . '/products/(:num)'                            => $prefix . '/products/index/$1',
-	$prefix . '/products/(:num)/options'                    => $prefix . '/products/options/index/$1',
-	$prefix . '/products/(:num)/options/(:num)'             => $prefix . '/products/options/index/$1/$2',
-	$prefix . '/products/(:num)/options/(:num)/fees'        => $prefix . '/products/options/fees/index/$1/$2',
-	$prefix . '/products/(:num)/options/(:num)/fees/(:num)' => $prefix . '/products/options/fees/index/$2/$3',
+	'api/products' => array(
+		'product.list'   => array('GET', new Route('api/products/index')),
+		'product.create' => array('POST', new Route('api/products/index')),
+	),
+	'api/products/(:num)' => array(
+		'product.get'    => array('GET', new Route('api/products/index/$1')),
+		'product.update' => array('PUT', new Route('api/products/index/$1')),
+		'product.delete' => array('DELETE', new Route('api/products/index/$1')),
+	),
+	'api/products/(:num)/metas' => array(
+		'product.meta.list'   => array('GET', new Route('api/products/metas/index/$1')),
+		'product.meta.create' => array('POST', new Route('api/products/metas/index/$1')),
+	),
+	'api/products/(:num)/metas/(:num)' => array(
+		'product.meta.get'    => array('GET', new Route('api/products/metas/index/$1/$2')),
+		'product.meta.update' => array('PUT', new Route('api/products/metas/index/$1/$2')),
+	),
+	'api/products/(:num)/metas/(:num)/options' => array(
+		'product.meta.option.list'   => array('GET', new Route('api/products/metas/options/index/$2')),
+		'product.meta.option.create' => array('POST', new Route('api/products/metas/options/index/$2')),
+	),
+	'api/products/(:num)/metas/(:num)/options/(:num)' => array(
+		'product.meta.option.get'    => array('GET', new Route('api/products/metas/options/index/$2/$3')),
+		'product.meta.option.update' => array('PUT', new Route('api/products/metas/options/index/$2/$3')),
+	),
+	'api/products/(:num)/options' => array(
+		'product.option.list'   => array('GET', new Route('api/products/options/index/$1')),
+		'product.option.create' => array('POST', new Route('api/products/options/index/$1')),
+	),
+	'api/products/(:num)/options/(:num)' => array(
+		'product.option.get'    => array('GET', new Route('api/products/options/index/$1/$2')),
+		'product.option.update' => array('PUT', new Route('api/products/options/index/$1/$2')),
+		'product.option.delete' => array('DELETE', new Route('api/products/options/index/$1/$2')),
+	),
+	'api/products/(:num)/options/(:num)/fees' => array(
+		'product.option.fee.list'   => array('GET', new Route('api/products/options/fees/index/$2')),
+		'product.option.fee.create' => array('POST', new Route('api/products/options/fees/index/$2')),
+	),
+	'api/products/(:num)/options/(:num)/fees/(:num)' => array(
+		'product.option.fee.get'    => array('GET', new Route('api/products/options/fees/index/$2/$3')),
+		'product.option.fee.update' => array('PUT', new Route('api/products/options/fees/index/$2/$3')),
+		'product.option.fee.delete' => array('DELETE', new Route('api/products/options/fees/index/$2/$3')),
+	),
 	
 	/**
 	 * API endpoints.
 	 */
-	$prefix . '/endpoints' => $prefix . '/endpoints/index',
+	'api/endpoints' => array(
+		'endpoint.list' => array('GET', new Route('api/endpoints/index')),
+	),
 );
