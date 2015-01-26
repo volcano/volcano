@@ -99,7 +99,7 @@ class Controller_Customers_Contacts extends Controller
 		$customer = $this->get_customer($customer_id);
 		$contact  = $this->get_contact($id, $customer);
 		
-		$deleted = \Service_Contact::delete($contact);
+		$deleted = \Service_Contact::unlink($contact, $customer);
 		if (!$deleted) {
 			throw new HttpServerErrorException;
 		}

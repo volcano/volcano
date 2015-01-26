@@ -93,7 +93,7 @@ class Controller_Sellers_Contacts extends Controller
     {
         $contact = $this->get_contact($id);
         
-        $deleted = \Service_Contact::delete($contact);
+        $deleted = \Service_Contact::unlink($contact, \Seller::active());
         if (!$deleted) {
             throw new HttpServerErrorException;
         }
