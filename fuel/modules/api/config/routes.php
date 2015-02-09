@@ -89,9 +89,9 @@ return array(
 		'customer.transaction.get' => array('GET', new Route('api/customers/transactions/index/$1/$2')),
 	),
 	'api/customers/statistics/(:alpha)' => array(
-		'customer.statistic.activity'   => array('GET', new Route('api/customers/statistics/$1')),
-		'customer.statistic.conversion' => array('GET', new Route('api/customers/statistics/$1')),
-		'customer.statistic.totals'     => array('GET', new Route('api/customers/statistics/$1')),
+		'customer.statistic.activity.list'   => array('GET', new Route('api/customers/statistics/$1')),
+		'customer.statistic.conversion.list' => array('GET', new Route('api/customers/statistics/$1')),
+		'customer.statistic.totals.list'     => array('GET', new Route('api/customers/statistics/$1')),
 	),
 	
 	/**
