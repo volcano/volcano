@@ -27,7 +27,11 @@ class Controller_Endpoints extends Controller
 				$namespaces = explode('.', $namespace);
 				
 				$namespace = array_shift($namespaces);
-				$name      = array_pop($namespaces) . Inflector::camelize(implode('_', $namespaces));
+				$name      = array_pop($namespaces);
+				if (!empty($namespaces)) {
+					$name .= '-' . implode('-', $namespaces);
+				}
+				
 				$method    = $action[0];
 				$path      = $action[1]->path;
 				
