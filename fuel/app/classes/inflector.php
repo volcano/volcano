@@ -24,4 +24,24 @@ class Inflector extends \Fuel\Core\Inflector
 		
 		return $string;
 	}
+	
+	/**
+	 * Converts a string, delimited by periods or underscores, to lowerCamelCase.
+	 *
+	 * @param string The delimited string.
+	 * 
+	 * @return string The lowerCamelCased version of $delimited_string.
+	 */
+	public static function lower_camelize($delimited_string)
+	{
+		$string = preg_replace_callback(
+			'/(^|[\._])(.)/',
+			function ($parm) {
+				return strtoupper($parm[2]);
+			},
+			strval($delimited_string)
+		);
+		
+		return lcfirst($string);
+	}
 }
