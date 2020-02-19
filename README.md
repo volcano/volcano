@@ -59,7 +59,7 @@ For API [development and testing](https://github.com/volcano/volcano/wiki/API), 
 
 Next, copy the new seller API key and add it to `fuel/app/config/development/api.php` so that you don't have to specify the api_key param when testing locally.
 
-##Usage
+## Usage
 
 #### App
 You'll be redirected to `[YOUR DOMAIN]/setup` the first time you access the Volcano control panel. This will allow you to create your first Seller. You may access `[YOUR DOMAIN]/setup` at any time to easily create additional sellers.
